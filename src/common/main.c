@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/01 12:42:04 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:14:10 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,16 @@ int main(int argc, char const *argv[], char **env)
 		conver_l_args_to_p(head_command);
 		set_path(head_command, env);
 		all_cmd = convert_linked_list_to_tr_p(head_command);
-		exec(all_cmd, head_command, env);
+		if(head_command && check_if_buil(head_command->cmd, head_command) == 0)
+			exec(all_cmd, head_command, env);
+		// else
+		// {
+		// 	exec_built(check_if_buil(head_command->cmd, head_command), head_command);
+		// }
 		// printf_commands(head_command);
 		free_commands(&head_command, all_cmd);
 		free(data.user_input);
-		usleep(50000);print_leaks();
+		// usleep(50000);print_leaks();
 	}
 	return 0;
 }

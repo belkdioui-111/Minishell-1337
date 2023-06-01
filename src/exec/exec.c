@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/01 12:47:36 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/01 17:43:32 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,34 +44,37 @@ void set_path(t_command *head_command, char **env)
 	tmp1 = head_command;
 	while(tmp1)
 	{
-		path = get_path(env);
-		i = 0;
-		while (path[i])
+		if(check_if_buil(tmp1->cmd, tmp1) == 0)
 		{
-			path[i] = ft_strjoin(path[i], "/");
-			path[i] = ft_strjoin(path[i], tmp1->cmd);
-			if (access(path[i], F_OK | X_OK) != -1)
+			path = get_path(env);
+			i = 0;
+			while (path[i])
 			{
-				tmp1->path = path[i];
-				break;
+				path[i] = ft_strjoin(path[i], "/");
+				path[i] = ft_strjoin(path[i], tmp1->cmd);
+				if (access(path[i], F_OK | X_OK) != -1)
+				{
+					tmp1->path = path[i];
+					break;
+				}
+				else
+					tmp1->path = NULL;
+				i++;
 			}
-			else
-				tmp1->path = NULL;
-			i++;
 		}
 		tmp1 = tmp1->next;
 	}
-	if (path != NULL) 
-	{
-   		char **current_arg = path;
-    	while (*current_arg != NULL)
-		{
-        	free(*current_arg);
-       		current_arg++;
-    	}
-    free(path);
-    path = NULL;
-	}
+	// if (path != NULL) 
+	// {
+   	// 	char **current_arg = path;
+    // 	while (*current_arg != NULL)
+	// 	{
+    //     	free(*current_arg);
+    //    		current_arg++;
+    // 	}
+    // free(path);
+    // path = NULL;
+	// }
 }
 
 int	calculate_num_of_cmd(t_command *all_cmd)
@@ -228,7 +231,6 @@ void	exec(char ***all_cmd, t_command *head, char **envp)
 	int status;
 	int pipefd_next[2];
 	int prev_pipe;
-
 	all_pid=malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
 	all_pid[calculate_num_of_cmd(head)] = 0;
 	i = 0;
