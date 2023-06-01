@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/31 21:29:05 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/01 12:41:08 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,12 +198,37 @@ void	free_linked(t_pre_tokens **head)
 	}
 }
 
-void	free_commands(t_command **head)
+void	free_commands(t_command **head, char ***all_cmd)
 {
 	t_command	*command;
 	t_command	*command_next;
 
 	command = *head;
+	if (command->db_args != NULL) 
+	{
+   		char **current_arg = command->db_args;
+    	while (*current_arg != NULL)
+		{
+        	free(*current_arg);
+       		current_arg++;
+    	}
+    free(command->db_args);
+    command->db_args = NULL;
+	}
+	if (all_cmd != NULL) {
+    char ***current_cmd = all_cmd;
+    while (*current_cmd != NULL) {
+        char **current_arg = *current_cmd;
+        while (*current_arg != NULL) {
+            free(*current_arg);
+            current_arg++;
+        }
+        free(*current_cmd);
+        current_cmd++;
+    }
+    free(all_cmd);
+    all_cmd = NULL;
+	}
 	while (command)
 	{
 		command_next = command->next;
@@ -287,7 +312,7 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 	head_command = ft_fill_commands(&head_args);
 	if (valid_commands(&head_command) == 1)
 	{
-		free_commands(&head_command);
+		free_commands(&head_command, NULL);
 		return (NULL);
 	}
 	ft_lexer(&head_command);
