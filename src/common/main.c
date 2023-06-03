@@ -19,8 +19,10 @@ int main(int argc, char const *argv[], char **env)
 	t_env			*env_head;
 	t_command		*head_command;
 	char			***all_cmd;
+	t_env			*export_head;
 	
 	env_head = ft_set_env(env);
+	export_head = ft_set_env(env);
 	while (1)
 	{
 		data.user_input = ft_read_input();
@@ -30,10 +32,10 @@ int main(int argc, char const *argv[], char **env)
 		all_cmd = convert_linked_list_to_tr_p(head_command);
 		if(head_command && check_if_buil(head_command->cmd, head_command) == 0)
 			exec(all_cmd, head_command, env);
-		// else
-		// {
-		// 	exec_built(check_if_buil(head_command->cmd, head_command), head_command);
-		// }
+		else
+		{
+			exec_built(check_if_buil(head_command->cmd, head_command), head_command, env_head, export_head);
+		}
 		// printf_commands(head_command);
 		free_commands(&head_command, all_cmd);
 		free(data.user_input);

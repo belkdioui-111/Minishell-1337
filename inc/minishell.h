@@ -15,6 +15,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "libft/libft.h"
+#include <wait.h>
 
 enum token_type
 {
@@ -126,7 +127,7 @@ char    ***convert_linked_list_to_tr_p(t_command *all_cmd);
 void    exec(char ***all_cmd, t_command *head, char **envp);
 void 	set_path(t_command *head_command, char  **env);
 int    check_if_buil(char *s, t_command *cmds);
-int    exec_built(int n, t_command *cmds);
+int    exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
 
 
 /*

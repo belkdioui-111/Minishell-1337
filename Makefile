@@ -39,7 +39,7 @@ all:	$(NAME)
 
 $(NAME):	$(COMM_OBJS) $(PARS_OBJS)
 	@make -C ./inc/libft/
-	$(CC) $(CFLAGS)  -fsanitize=address ./inc/libft/libft.a $(COMM_OBJS) $(PARS_OBJS) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) ./inc/libft/libft.a $(COMM_OBJS) $(PARS_OBJS) -lreadline -o $(NAME)
 
 pars:		$(PARS_OBJS)
 	@make -C ./inc/libft/
