@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 14:59:29 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/05 11:46:59 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:45:36 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,11 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
         }
     }
 }
+// void	exec_exit(int)
+// {
+// 	printf("exit\n");
+// 	exit(0);
+// }
 
 int exec_built(int n, t_command *cmds, t_env *env, t_env *export)
 {
@@ -327,7 +332,7 @@ int exec_built(int n, t_command *cmds, t_env *env, t_env *export)
     }
     else if (n == 5 || n == 15)
     {
-        // exec_exit(cmds);
+        // exec_exit();
         return(5);
     }
     else if (n == 4 || n == 14)

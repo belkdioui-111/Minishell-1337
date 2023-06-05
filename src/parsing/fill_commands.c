@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:13:40 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/31 01:02:04 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/04 19:03:36 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,26 @@ t_command	*get_last_command(t_command **input)
 	return (last_command);
 }
 
+void	set_null_memeber(t_command **command, int state)
+{
+	t_command	*new_command;
+
+	if (state)
+	{
+		new_command = *command;
+		new_command->args->prev = NULL;
+	}
+	new_command->next = NULL;
+	new_command->cmd = NULL;
+	new_command->output_files = NULL;
+	new_command->input_files = NULL;
+	new_command->append_files = NULL;
+	new_command->herdoc_files = NULL;
+	new_command->in_type = 0;
+	new_command->out_type = 0;
+	new_command->here_doc_data = NULL;
+}
+
 t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
 {
 	t_command		*new_command;
@@ -35,14 +55,8 @@ t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
 		return 0;
 	temp_node = node;
 	new_command->args = node;
-	new_command->args->prev = NULL;
-	new_command->next = NULL;
-	new_command->cmd = NULL;
-	new_command->output_files = NULL;
-	new_command->input_files = NULL;
-	new_command->append_files = NULL;
-	new_command->herdoc_files = NULL;
-	while (temp_node->next && (ft_strncmp(temp_node->next->content, "|", ft_strlen(temp_node->next->content)) != 0))
+	set_null_memeber(&new_command, 1);
+	while ((temp_node->next) && (temp_node->next->type != TYPE_RED_PIP))
 		temp_node = temp_node->next;
 	ret_node = temp_node->next;
 	if (temp_node)
@@ -68,13 +82,11 @@ t_command	*ft_fill_commands(t_pre_tokens **head)
 		return (0);
 	f_command = 0;
 	node = *head;
-	while (node && (ft_strncmp(node->content, "|", ft_strlen(node->content)) == 0))
-		node = node->next;
 	while (node)
 	{
 		temp_next = add_to_command(node, &f_command);
 		node = temp_next;
-		while (node && (ft_strncmp(node->content, "|", ft_strlen(node->content)) == 0))
+		while ((node) && (node->type == TYPE_RED_PIP))
 		{
 			temp_to_next = node->next;
 			free(node->content);

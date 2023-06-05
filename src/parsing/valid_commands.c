@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   valid_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 04:26:41 by macbook           #+#    #+#             */
-/*   Updated: 2023/05/31 02:37:21 by macbook          ###   ########.fr       */
+/*   Updated: 2023/06/05 11:18:31 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,26 @@ void	add_returned_to_files(char *data, t_command **command_ix, int ret_type)
 	t_command	*command;
 
 	command = *command_ix;
-	/* TYPE_RED_OUT */
 	if (ret_type == TYPE_RED_OUT)
-		add_pre_t(&(command->output_files), data);
-	/* TYPE_RED_IN */
+	{
+		add_pre_t_2(&(command->output_files), data, NULL);
+		command->out_type = 1;
+	}
 	if (ret_type == TYPE_RED_IN)
-		add_pre_t(&(command->input_files), data);
-	/* TYPE_RED_APP */
+	{
+		add_pre_t_2(&(command->input_files), data, NULL);
+		command->in_type = 1;
+	}
 	if (ret_type == TYPE_RED_APP)
-		add_pre_t(&(command->append_files), data);
-	/* TYPE_RED_HER */
+	{
+		add_pre_t_2(&(command->append_files), data, NULL);
+		command->out_type = 2;
+	}
 	if (ret_type == TYPE_RED_HER)
-		add_pre_t(&(command->herdoc_files), data);
+	{
+		add_pre_t_2(&(command->herdoc_files), data, NULL);
+		command->in_type = 2;
+	}
 	free(data);
 }
 
@@ -76,7 +84,7 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 				node = node->next;
 				continue;
 			}
-			add_pre_t(&new_arguments, node->content);
+			add_pre_t_2(&new_arguments, node->content, node);
 		}
 		node = node->next;
 	}
@@ -85,8 +93,9 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 
 int valid_commands(t_command **head_commands)
 {
-	int			ret;
-	t_command	*command;
+	int				ret;
+	t_command		*command;
+	t_pre_tokens	*temp;
 
 	ret = 0;
 	command = *head_commands;
@@ -98,17 +107,19 @@ int valid_commands(t_command **head_commands)
 			print_error("parsing error\n");
 			return (1);
 		}
-		command = command->next;
-	}
-	command = *head_commands;
-	while (command)
-	{
-		t_pre_tokens	*temp;
-
 		temp = command->args;
 		command->args = ft_set_files(&command);
 		free_linked(&temp);
+		ft_read_heredoc(&command);
 		command = command->next;
 	}
+	// command = *head_commands;
+	// while (command)
+	// {
+	// 	temp = command->args;
+	// 	command->args = ft_set_files(&command);
+	// 	free_linked(&temp);
+	// 	command = command->next;
+	// }
 	return (0);
 }

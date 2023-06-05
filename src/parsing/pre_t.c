@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:42 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/30 23:27:20 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/02 15:56:19 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int check_pre_t(char *content)
 	return (args.top < 0);
 }
 
-int add_pre_t(t_pre_tokens **head, char *content)
+int add_pre_t(t_pre_tokens **head, char *content, int state)
 {
 	t_pre_tokens *created_node;
 
@@ -85,10 +85,13 @@ int add_pre_t(t_pre_tokens **head, char *content)
 		return (1);
 	if (!(created_node = malloc(sizeof(t_pre_tokens))))
 		return (1);
-	if (!(check_pre_t(content)))
+	if (state == 0)
 	{
-		free(created_node);
-		return (1);
+		if (!(check_pre_t(content)))
+		{
+			free(created_node);
+			return (1);
+		}
 	}
 	if (ft_strlen(content) != 0)
 	{
@@ -99,5 +102,30 @@ int add_pre_t(t_pre_tokens **head, char *content)
 	}
 	else
 		free(created_node);
+	return (0);
+}
+
+int add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node)
+{
+	t_pre_tokens *created_node;
+
+	if (!(content))
+		return (1);
+	if (!(created_node = malloc(sizeof(t_pre_tokens))))
+		return (1);
+	if (ft_strlen(content) == 0)
+	{
+		if ((node) && (!(node->contain_quotes)))
+		{
+			free(created_node);
+			return (1);
+		}
+		created_node->content = ft_strdup("");
+	}
+	else
+		created_node->content = ft_strdup(content);
+	created_node->next = NULL;
+	created_node->prev = NULL;
+	add_to_last(head, created_node);
 	return (0);
 }

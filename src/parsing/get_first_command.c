@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_first_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/01 18:15:59 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:34:59 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,27 +59,21 @@ char	*say_type(enum token_type type)
 		case TYPE_ARG:
 			return ("_____Argument_____");
 		break;
-		// - - - - -
 		case TYPE_RED_IN:
 			return ("_Input-Redirection");
 		break;
-		// - - - - -
 		case TYPE_RED_OUT:
 			return ("Output-Redirection");
 		break;
-		// - - - - -
 		case TYPE_RED_APP:
 			return ("___Append-Output__");
 		break;
-		// - - - - -
 		case TYPE_RED_HER:
 			return ("___Here-Document__");
 		break;
-		// - - - - -
 		case TYPE_RED_PIP:
 			return ("________Pip_______");
 		break;
-		// - - - - -
 	}
 }
 
@@ -92,7 +86,7 @@ void printf_linked(t_pre_tokens *head)
 	i = 0;
 	while (node)
 	{
-		printf("[%s] ", node->content);
+		printf("[%s]", node->content);
 		node = node->next;
 	}
 	printf("\n");
@@ -101,7 +95,6 @@ void printf_linked(t_pre_tokens *head)
 void	printf_commands(t_command *head)
 {
 	t_command	*temp_comm;
-	int			i = 0;
 
 	temp_comm = head;
 	printf("--------------------------\n");
@@ -118,6 +111,12 @@ void	printf_commands(t_command *head)
 		printf_linked(temp_comm->append_files);
 		printf("Herdoc-Files : ");
 		printf_linked(temp_comm->herdoc_files);
+		printf("--------------------------\n");
+		printf("here_data :\n%s", temp_comm->here_doc_data);
+		printf("--------------------------\n");
+		printf("out_type : %d\n", temp_comm->out_type);
+		printf("--------------------------\n");
+		printf("in_type : %d\n", temp_comm->in_type);
 		printf("--------------------------\n");
 		temp_comm = temp_comm->next;
 	}
@@ -142,7 +141,7 @@ int	sub_and_add(char *user_input, int start, int end, t_pre_tokens **head)
 
 	ret = 0;
 	sub = ft_substr(user_input, start, end - start);
-	ret = add_pre_t(head, sub);
+	ret = add_pre_t(head, sub, 0);
 	free(sub);
 	return (ret);
 }
@@ -178,7 +177,7 @@ int	add_symbol(t_pre_tokens **head, char *user_input, int start, int *end)
 			(*end)++;
 		}
 	}
-	ret = add_pre_t(head, symbole_to_add);
+	ret = add_pre_t(head, symbole_to_add, 0);
 	free(symbole_to_add);
 	return (ret);
 }
@@ -198,37 +197,11 @@ void	free_linked(t_pre_tokens **head)
 	}
 }
 
-void	free_commands(t_command **head, char ***all_cmd)
+void	free_commands(t_command **head)
 {
 	t_command	*command;
 	t_command	*command_next;
 
-	command = *head;
-	if (command && command->db_args != NULL) 
-	{
-   		char **current_arg = command->db_args;
-    	while (*current_arg != NULL)
-		{
-        	free(*current_arg);
-       		current_arg++;
-    	}
-    free(command->db_args);
-    command->db_args = NULL;
-	}
-	if (all_cmd != NULL) {
-    char ***current_cmd = all_cmd;
-    while (*current_cmd != NULL) {
-        char **current_arg = *current_cmd;
-        while (*current_arg != NULL) {
-            free(*current_arg);
-            current_arg++;
-        }
-        free(*current_cmd);
-        current_cmd++;
-    }
-    free(all_cmd);
-    all_cmd = NULL;
-	}
 	command = *head;
 	while (command)
 	{
@@ -238,6 +211,7 @@ void	free_commands(t_command **head, char ***all_cmd)
 		free_linked(&(command->output_files));
 		free_linked(&(command->append_files));
 		free_linked(&(command->herdoc_files));
+		free(command->here_doc_data);
 		free(command->cmd);
 		free(command);
 		command = command_next;
@@ -311,11 +285,15 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 	if (valid_arguments(&head_args) == 1)
 		return (NULL);
 	head_command = ft_fill_commands(&head_args);
-	if (valid_commands(&head_command) == 1)
+	if (head_command)
 	{
-		free_commands(&head_command, NULL);
-		return (NULL);
+		if (valid_commands(&head_command) == 1)
+		{
+			free_commands(&head_command);
+			return (NULL);
+		}
+		ft_lexer(&head_command);
+		// ft_read_heredoc(&head_command);
 	}
-	ft_lexer(&head_command);
 	return (head_command);
 }

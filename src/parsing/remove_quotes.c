@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/29 04:14:30 by macbook          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:47:40 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,8 @@ char	*remove_quote(t_pre_tokens *node)
 	int		contain_quotes;
 
 	contain_quotes = contains_quotes(node->content);
+	node->contain_quotes = contain_quotes;
+	set_node_type(&node, contain_quotes);
 	i = set_up_remove_vars(&j, &in_single, &in_double);
 	copy = malloc(ft_strlen(node->content) + 1);
 	while (node->content[i])
@@ -185,7 +187,6 @@ char	*remove_quote(t_pre_tokens *node)
 		i++;
 	}
 	copy[j] = '\0';
-	set_node_type(&node, contain_quotes);
 	free(node->content);
 	return (copy);
 }
