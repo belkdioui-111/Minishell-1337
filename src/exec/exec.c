@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/01 17:43:32 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:17:20 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,18 +219,46 @@ char	***convert_linked_list_to_tr_p(t_command *head_command)
 
 
 
-
+char 	**convert_link_to_2p(t_env *env)
+{
+	t_env *tmp;
+	int size;
+	char **arr;
+	
+	tmp = env;
+	size = 0;
+	while (tmp)
+	{
+		size++;
+		tmp = tmp->next;
+	}
+	tmp = env;
+	arr = malloc(sizeof(char *) * (size +1));
+	arr[size] = NULL;
+	size = 0;
+	while (tmp)
+	{
+		arr[size] = ft_strjoin(tmp->index,"=");
+		arr[size] = ft_strjoin(arr[size],tmp->value);
+		size++;
+		tmp = tmp->next;
+	}
+	return (arr);
+}
 
 //execution
 
-void	exec(char ***all_cmd, t_command *head, char **envp)
+void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 {
 	int i;
 	int *all_pid;
-	// int pid;
 	int status;
 	int pipefd_next[2];
+	int is_built;
 	int prev_pipe;
+	t_command *head_command;
+
+	head_command = head;
 	all_pid=malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
 	all_pid[calculate_num_of_cmd(head)] = 0;
 	i = 0;
@@ -258,7 +286,15 @@ void	exec(char ***all_cmd, t_command *head, char **envp)
 			{
 				dup2(prev_pipe, 0);
 			}
-			execve(head->path, all_cmd[i],envp);
+			
+			is_built = check_if_buil(head->cmd, head_command);
+			if(is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17)
+			{
+				exec_built(is_built, head, env, exp);
+				exit(0);
+			}
+			else
+				execve(head->path, all_cmd[i],convert_link_to_2p(env));
 			perror(0);
 			exit(0) ;
 		}

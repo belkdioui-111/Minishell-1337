@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/01 18:14:10 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:42:38 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int main(int argc, char const *argv[], char **env)
 	t_command		*head_command;
 	char			***all_cmd;
 	t_env			*export_head;
+	int				is_built;
 	
 	env_head = ft_set_env(env);
 	export_head = ft_set_env(env);
@@ -27,15 +28,15 @@ int main(int argc, char const *argv[], char **env)
 	{
 		data.user_input = ft_read_input();
 		head_command = get_first_command(data.user_input, env_head);
+		head_command->exit_status = 0;
 		conver_l_args_to_p(head_command);
 		set_path(head_command, env);
 		all_cmd = convert_linked_list_to_tr_p(head_command);
-		if(head_command && check_if_buil(head_command->cmd, head_command) == 0)
-			exec(all_cmd, head_command, env);
+		is_built = check_if_buil(head_command->cmd, head_command);
+		if(head_command && (is_built == 0 || is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17))
+			exec(all_cmd, head_command, export_head, env_head);
 		else
-		{
 			exec_built(check_if_buil(head_command->cmd, head_command), head_command, env_head, export_head);
-		}
 		// printf_commands(head_command);
 		free_commands(&head_command, all_cmd);
 		free(data.user_input);

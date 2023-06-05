@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/01 17:14:14 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:48:03 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "libft/libft.h"
-#include <wait.h>
+#include <sys/wait.h>
 
 enum token_type
 {
@@ -87,6 +87,7 @@ typedef struct s_command
 	t_pre_tokens		*herdoc_files;
 	char				**db_args;
 	char				*path;
+	int					exit_status;
 	struct s_command	*next;
 }	t_command;
 
@@ -124,7 +125,7 @@ void			print_error(char *error_msg);
 void    conver_l_args_to_p(t_command *head_command);
 
 char    ***convert_linked_list_to_tr_p(t_command *all_cmd);
-void    exec(char ***all_cmd, t_command *head, char **envp);
+void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
 void 	set_path(t_command *head_command, char  **env);
 int    check_if_buil(char *s, t_command *cmds);
 int    exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
