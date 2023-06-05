@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/05 12:16:57 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 16:57:01 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int main(int argc, char const *argv[], char **env)
 	// signal(SIGQUIT, sigquit_handler);
 	env_head = ft_set_env(env);
 	export_head = ft_set_env(env);
+		globals.exit_status = 0;
 	while (1)
 	{
 		data.user_input = ft_read_input();

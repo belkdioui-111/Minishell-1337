@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:41:51 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/02 16:00:47 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/05 15:32:41 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 void	ft_error(char *message)
 {
 	if (message)
-	{
 		ft_putstr_fd(message, 2);
-		exit(1);
-	}
-	exit(0);
+	exit(globals.exit_status);
 }

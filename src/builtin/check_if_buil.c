@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 14:59:29 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/05 12:45:36 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 18:07:56 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void exec_cd(t_command *cmd, t_env *env, t_env *export)
     else
     {
         ft_putstr_fd("minishell: No such file or directory\n",2);
+        globals.exit_status = 1;
     }
 }
 
@@ -150,7 +151,6 @@ void exec_echo(t_command *cmds)
     args = cmds->args;
     while (args && args->content[0] == '-')
     {
-        // printf("%s", args->content);
         i = 0;
         while (args->content[++i])
         {
@@ -183,6 +183,7 @@ void exec_env(t_env *env)
 void exec_pwd(t_env *env)
 {
     printf("%s\n", search_in_env(env, "PWD"));
+    globals.exit_status=0;
 }
 
 
@@ -264,13 +265,15 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
     {
         while(exp)
         {
+            printf("declare -x ");
             printf("%s", exp->index);
             if(!exp->value)
                 printf("\n");
             if(exp->value)
             {
                 printf("=");
-                printf("%s\n", exp->value);
+                printf("\"");
+                printf("%s\"\n", exp->value);
             }
             exp = exp->next;
         }
@@ -290,13 +293,19 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
                     }
                     j++;
                 }
-                str = ft_substr(cmd->db_args[i],j+1,ft_strlen(cmd->db_args[i]));
-                new_node = ft_lstnew_env(ft_substr(cmd->db_args[i],0,j),str);
-                ft_lstadd_back_env(&env,new_node);
-                str = ft_strjoin(ft_strdup("\""),str);
-                str = ft_strjoin(str,"\"");
-                new_node = ft_lstnew_env(ft_substr(cmd->db_args[i],0,j),str);
-                ft_lstadd_back_env(&exp,new_node);
+                if(!search_in_env(exp, ft_substr(cmd->db_args[i], 0, j)))
+                {
+                    str = ft_substr(cmd->db_args[i],j+1,ft_strlen(cmd->db_args[i]));
+                    new_node = ft_lstnew_env(ft_substr(cmd->db_args[i],0,j),str);
+                    ft_lstadd_back_env(&env,new_node);
+                    new_node = ft_lstnew_env(ft_substr(cmd->db_args[i],0,j),str);
+                    ft_lstadd_back_env(&exp,new_node);
+                }
+                else
+                {
+                    search_in_env_and_replace(exp,ft_substr(cmd->db_args[i],0,j),ft_substr(cmd->db_args[i],j+1, ft_strlen(cmd->db_args[i])));
+                    search_in_env_and_replace(env,ft_substr(cmd->db_args[i],0,j),ft_substr(cmd->db_args[i],j+1, ft_strlen(cmd->db_args[i])));
+                }
             }
             else
             {

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/05 12:09:43 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 13:15:07 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 #include <sys/wait.h>
+
+struct GlobalVariables {
+    int exit_status;
+};
+
+struct GlobalVariables globals;
 
 enum token_type
 {

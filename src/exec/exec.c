@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/05 00:17:20 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/05 16:41:46 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 	t_command *head_command;
 
 	head_command = head;
+	globals.exit_status = 0;
 	all_pid=malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
 	all_pid[calculate_num_of_cmd(head)] = 0;
 	i = 0;
@@ -291,12 +292,15 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			if(is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17)
 			{
 				exec_built(is_built, head, env, exp);
-				exit(0);
+				exit(globals.exit_status);
 			}
 			else
+			{
 				execve(head->path, all_cmd[i],convert_link_to_2p(env));
-			perror(0);
-			exit(0) ;
+			}
+			printf("minishell: command not found\n");
+			globals.exit_status = 127;			
+			exit(globals.exit_status);
 		}
 		else
 		{
@@ -315,5 +319,6 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 		waitpid(all_pid[i], &status, 0);
 		i++;
 	}
+	globals.exit_status = status >> 8;
 	// exit(status);
 }
