@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 16:25:15 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/05 11:40:15 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:38:35 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ static char	**ft_filler(char *s, char c, char **strs)
 		while ((s[i] == c) && (s[i]))
 			i++;
 	}
-	free(s);
 	return (strs);
 }
 

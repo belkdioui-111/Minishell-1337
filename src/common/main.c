@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/06 11:36:38 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 22:29:25 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[], char **env)
 		if(head_command)
 		{
 			conver_l_args_to_p(head_command);
-			set_path(head_command, env);
+			set_path(head_command, env_head);
 			all_cmd = convert_linked_list_to_tr_p(head_command);
 			is_built = check_if_buil(head_command->cmd, head_command);
 			if(head_command && (is_built == 0 || is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17))

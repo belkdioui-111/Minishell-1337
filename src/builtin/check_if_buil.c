@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 14:59:29 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/06 11:35:30 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:16:40 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ void exec_echo(t_command *cmds)
         args = cmds->args;
     print_args(args);
     print_new_line(inv_flag, is_n);
+    globals.exit_status = 0;
 }
 
 void exec_env(t_env *env)

@@ -6,13 +6,13 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/05 16:41:46 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 22:58:04 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-char	**get_path(char **envp)
+char	**get_path(t_env *envp)
 {
 	int		i;
 	char	**path;
@@ -21,60 +21,65 @@ char	**get_path(char **envp)
 
 	i = 0;
 	check = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp("PATH", envp[i], 4) == 0)
-		{
-			check = 1;
-			break ;
-		}
-		i++;
-	}
-	trimmed = ft_strtrim(envp[i], "PATH=");
+	trimmed = search_in_env(envp, "PATH");
 	path = ft_split(trimmed, ':');
 	return (path);
 }
 
-void set_path(t_command *head_command, char **env)
+void set_path(t_command *head_command, t_env *env_head)
 {
 	t_command* tmp1;
 	char **path;
 	int i;
+	struct stat fileStat;
 	
 	tmp1 = head_command;
 	while(tmp1)
 	{
 		if(check_if_buil(tmp1->cmd, tmp1) == 0)
 		{
-			path = get_path(env);
+			path = get_path(env_head);
 			i = 0;
-			while (path[i])
+			if (access(tmp1->cmd, F_OK | X_OK) != -1)
 			{
-				path[i] = ft_strjoin(path[i], "/");
-				path[i] = ft_strjoin(path[i], tmp1->cmd);
-				if (access(path[i], F_OK | X_OK) != -1)
+				if (stat(tmp1->cmd, &fileStat) == 0) 
 				{
-					tmp1->path = path[i];
-					break;
+       				if (!(fileStat.st_mode & S_IFDIR)) 
+					{
+						tmp1->path = tmp1->cmd;
+       				} 
+					else 
+					{
+           				tmp1->path= ft_strdup("dir");
+        			}
+				}
+			}
+			else
+			{
+				if(ft_strchr(tmp1->cmd, '/'))
+				{
+					tmp1->path=ft_strdup("not");
 				}
 				else
-					tmp1->path = NULL;
-				i++;
+				{
+					while (path[i])
+					{
+						path[i] = ft_strjoin(path[i], "/");
+						path[i] = ft_strjoin(path[i], tmp1->cmd);
+						if (access(path[i], F_OK | X_OK) != -1)
+						{
+							tmp1->path = path[i];
+							break;
+						}
+						else
+							tmp1->path = NULL;
+						i++;
+					}
+				}
 			}
 		}
 		tmp1 = tmp1->next;
 	}
-	// if (path != NULL) 
-	// {
-   	// 	char **current_arg = path;
-    // 	while (*current_arg != NULL)
-	// 	{
-    //     	free(*current_arg);
-    //    		current_arg++;
-    // 	}
-    // free(path);
-    // path = NULL;
-	// }
 }
 
 int	calculate_num_of_cmd(t_command *all_cmd)
@@ -296,11 +301,33 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			}
 			else
 			{
+				if((head->path) && (ft_strncmp(head->path,"not", 4) == 0))
+				{
+					ft_putstr_fd("minishell: ", 2);
+					ft_putstr_fd(all_cmd[i][0], 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					globals.exit_status = 127;			
+					exit(globals.exit_status);
+				}
+				else if((head->path) && (ft_strncmp(head->path,"dir", 4) == 0))
+				{
+					ft_putstr_fd("minishell: ", 2);
+					ft_putstr_fd(all_cmd[i][0], 2);
+					ft_putstr_fd(": is a directory\n", 2);
+					globals.exit_status = 126;			
+					exit(globals.exit_status);
+				}
+				else if (!head->path)
+				{
+					ft_putstr_fd("minishell: ", 2);
+					ft_putstr_fd(all_cmd[i][0], 2);
+					ft_putstr_fd(": command not found\n", 2);
+					globals.exit_status = 127;			
+					exit(globals.exit_status);
+				}
 				execve(head->path, all_cmd[i],convert_link_to_2p(env));
+				exit(globals.exit_status);
 			}
-			printf("minishell: command not found\n");
-			globals.exit_status = 127;			
-			exit(globals.exit_status);
 		}
 		else
 		{

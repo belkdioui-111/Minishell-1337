@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/06 11:22:43 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:16:04 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 #include <sys/wait.h>
+
+#include <sys/stat.h>
+#include <dirent.h>
+
 
 struct GlobalVariables {
     int exit_status;
@@ -133,7 +137,7 @@ void			print_error(char *error_msg);
 void    conver_l_args_to_p(t_command *head_command);
 char    ***convert_linked_list_to_tr_p(t_command *all_cmd);
 void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
-void 	set_path(t_command *head_command, char **env);
+void 	set_path(t_command *head_command, t_env *env_head);
 int    check_if_buil(char *s, t_command *cmds);
 int    exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
 ///
@@ -146,6 +150,7 @@ void			fill_it(char **arr_of_ev_cmd, t_command *all_cmd);
 void			fill_arr_of_all(char ***arr_of_all_cmd, t_command *all_cmd);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
 void			ft_read_heredoc(t_command **command_ix);
+char			*search_in_env(t_env *env, char *s);
 
 ///
 

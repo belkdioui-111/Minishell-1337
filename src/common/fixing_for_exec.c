@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 19:20:01 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/05/31 19:27:31 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:58:20 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,4 @@ void    conver_l_args_to_p(t_command *head_command)
 			set_db_args(&command);
 			command = command->next;
 		}
-		char **path;
 }
