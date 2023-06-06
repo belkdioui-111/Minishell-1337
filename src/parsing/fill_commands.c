@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_commands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:13:40 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/04 19:03:36 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:27:12 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	set_null_memeber(t_command **command, int state)
 	new_command->in_type = 0;
 	new_command->out_type = 0;
 	new_command->here_doc_data = NULL;
+	new_command->has_error = 0;
 }
 
 t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)

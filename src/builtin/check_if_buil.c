@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 14:59:29 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/05 18:07:56 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:35:30 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,45 @@ char *search_in_env(t_env *env, char *s)
         tmp = tmp->next;
     }
     return (NULL);
+}
+
+int     check_numric(char *content)
+{
+    int i;
+
+    i = 0;
+    if (ft_strlen(content) == 0)
+        return (1);
+    while (content[i])
+    {
+        if (!(ft_isdigit(content[i])))
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+void    exec_exit(t_pre_tokens *args, int status)
+{
+    if (args)
+    {
+        if (args->next)
+        {
+            print_error("too many arguments");
+            return ;
+        }
+        else
+        {
+            if (check_numric(args->content) == 1)
+            {
+                print_error("numeric argument required");
+                status = 255;
+            }
+            else
+                status = ft_atoi(args->content);
+        }
+    }
+    exit(status);
 }
 
 void exec_cd(t_command *cmd, t_env *env, t_env *export)
@@ -316,11 +355,6 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
         }
     }
 }
-// void	exec_exit(int)
-// {
-// 	printf("exit\n");
-// 	exit(0);
-// }
 
 int exec_built(int n, t_command *cmds, t_env *env, t_env *export)
 {
@@ -341,7 +375,7 @@ int exec_built(int n, t_command *cmds, t_env *env, t_env *export)
     }
     else if (n == 5 || n == 15)
     {
-        // exec_exit();
+        exec_exit(cmds->args, 0);
         return(5);
     }
     else if (n == 4 || n == 14)

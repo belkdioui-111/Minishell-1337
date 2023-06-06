@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/05 13:15:07 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:22:43 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ typedef struct s_command
 		char				*path;
 		char				*here_doc_data;
 		struct s_command	*next;
+		int					has_error;
 }	t_command;
 
 // ls -la arg1 arg2 > out > in > here g > hey > heeey

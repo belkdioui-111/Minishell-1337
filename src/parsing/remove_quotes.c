@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/02 15:47:40 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:30:30 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,20 @@
 
 char *get_index(char *string)
 {
-	int	i;
+    int    i;
 
-	i = 0;
-	while (string[i] && (ft_isalnum(string[i]) || string[i] == '_'))
-		i++;
-	return (ft_substr(string, 0, i));
+    i = 0;
+    if ((string[i]) && (string[i] == '?'))
+        return (ft_substr(string, 0, i + 1));
+    if ((string[i + 1]) && (ft_isdigit(string[i + 1])))
+        return (ft_substr(string, 0, i + 1));
+    while (1)
+    {
+        if (!(string[i] && (ft_isalpha(string[i]) || string[i] == '_')))
+            break;
+        i++;
+    }
+    return (ft_substr(string, 0, i));
 }
 
 char	*get_value(char *index, t_env **head_env)
@@ -48,27 +56,30 @@ void	four_free(char **token, char **suffix, char **env_index, char **env_value)
 		free(*env_value);
 }
 
-char	*get_new_token(char **token, char *new, t_env *head_env, int i)
+char    *get_new_token(char **token, char *new, t_env *head_env, int i)
 {
-	char	*env_index;
-	char	*env_value;
-	int		len_to;
-	char	*suffix;
+    char    *env_index;
+    char    *env_value;
+    int        len_to;
+    char    *suffix;
 
-	env_index = get_index(&(*token)[i + 1]);
-	env_value = get_value(env_index, &head_env);
-	new = ft_substr((*token), 0, i);
-	new = ft_strjoin(new, env_value);
-	len_to = ft_strlen(&(*token)[i + 1]) - ft_strlen(env_index);
-	suffix = ft_substr(&(*token)[i + 1], ft_strlen(env_index), len_to);
-	new = ft_strjoin(new, suffix);
-	four_free(token, &suffix, &env_index, &env_value);
-	return (new);
+    env_index = get_index(&(*token)[i + 1]);
+    if (env_index[0] == '?')
+        env_value = ft_itoa(globals.exit_status);
+    else
+        env_value = get_value(env_index, &head_env);
+    new = ft_substr((*token), 0, i);
+    new = ft_strjoin(new, env_value);
+    len_to = ft_strlen(&(*token)[i + 1]) - ft_strlen(env_index);
+    suffix = ft_substr(&(*token)[i + 1], ft_strlen(env_index), len_to);
+    new = ft_strjoin(new, suffix);
+    four_free(token, &suffix, &env_index, &env_value);
+    return (new);
 }
 
-int	is_valid_variable(char after_dollar)
+int    is_valid_variable(char after_dollar)
 {
-	return ((ft_isalpha(after_dollar)) || (after_dollar == '_'));
+    return ((ft_isalnum(after_dollar)) || (after_dollar == '_') || (after_dollar == '?'));
 }
 
 void	expand_loop(char **token, int in_single_quote, int in_double_quote, int i, t_env *head_env)
@@ -162,44 +173,44 @@ void	set_node_type(t_pre_tokens **head, int contain_quotes)
 	}
 }
 
-char	*remove_quote(t_pre_tokens *node)
+char    *remove_quote(t_pre_tokens *node)
 {
-	char	*copy;
-	int		i;
-	int		j;
-	int		in_single;
-	int		in_double;
-	int		contain_quotes;
+    char    *copy;
+    int        i;
+    int        j;
+    int        in_single;
+    int        in_double;
+    int        contain_quotes;
 
-	contain_quotes = contains_quotes(node->content);
-	node->contain_quotes = contain_quotes;
-	set_node_type(&node, contain_quotes);
-	i = set_up_remove_vars(&j, &in_single, &in_double);
-	copy = malloc(ft_strlen(node->content) + 1);
-	while (node->content[i])
-	{
-		if (node->content[i] == '\'' && !(in_double))
-			in_single = !(in_single);
-		else if (node->content[i] == '\"' && !(in_single))
-			in_double = !(in_double);
-		else
-			copy[j++] = node->content[i];
-		i++;
-	}
-	copy[j] = '\0';
-	free(node->content);
-	return (copy);
+    i = set_up_remove_vars(&j, &in_single, &in_double);
+    copy = malloc(ft_strlen(node->content) + 1);
+    while (node->content[i])
+    {
+        if (node->content[i] == '\'' && !(in_double))
+            in_single = !(in_single);
+        else if (node->content[i] == '\"' && !(in_single))
+            in_double = !(in_double);
+        else
+            copy[j++] = node->content[i];
+        i++;
+    }
+    copy[j] = '\0';
+    free(node->content);
+    return (copy);
 }
 
 void ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
 {
-	t_pre_tokens *node;
+    t_pre_tokens *node;
 
-	node = *head;
-	while (node)
-	{
-		node->content = expand_variable(node->content, head_env);
-		node->content = remove_quote(node);
-		node = node->next;
-	}
+    node = *head;
+    while (node)
+    {
+        set_node_type(&node, contains_quotes(node->content));
+        node->contain_quotes = contains_quotes(node->content);
+        if ((node->prev) && (!(node->prev->type == TYPE_RED_HER)))
+            node->content = expand_variable(node->content, head_env);
+        node->content = remove_quote(node);
+        node = node->next;
+    }
 }
