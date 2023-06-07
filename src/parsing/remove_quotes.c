@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/06 11:30:30 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:29:47 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ char *get_index(char *string)
     int    i;
 
     i = 0;
-    if ((string[i]) && (string[i] == '?'))
+    if ((string[i]) && ((string[i] == '?') || (string[i] == '@')))
         return (ft_substr(string, 0, i + 1));
-    if ((string[i + 1]) && (ft_isdigit(string[i + 1])))
+    if ((string[i]) && (ft_isdigit(string[i])))
         return (ft_substr(string, 0, i + 1));
     while (1)
     {
-        if (!(string[i] && (ft_isalpha(string[i]) || string[i] == '_')))
+        if (!(string[i] && (ft_isalnum(string[i]) || string[i] == '_')))
             break;
         i++;
     }
@@ -56,18 +56,44 @@ void	four_free(char **token, char **suffix, char **env_index, char **env_value)
 		free(*env_value);
 }
 
+char	*trim_value(char *value)
+{
+	char	*trimed;
+	char	*ret;
+	int		i;
+	int		j;
+
+	trimed = ft_strtrim(value, " \t");
+	ret = malloc(sizeof(char) * ft_strlen(trimed) + 1);
+	i = 0;
+	j = 0;
+	while (trimed[i])
+	{
+		if (trimed[i] == ' ')
+		{
+			ret[j] = trimed[i];
+			i++;
+			j++;
+			while (trimed[i] == ' ')
+				i++;
+		}
+		ret[j++] = trimed[i++];
+	}
+	return (ret);
+}
+
 char    *get_new_token(char **token, char *new, t_env *head_env, int i)
 {
-    char    *env_index;
-    char    *env_value;
-    int        len_to;
-    char    *suffix;
+	char	*env_index;
+	int		len_to;
+	char	*env_value;
+	char	*suffix;
 
     env_index = get_index(&(*token)[i + 1]);
     if (env_index[0] == '?')
         env_value = ft_itoa(globals.exit_status);
     else
-        env_value = get_value(env_index, &head_env);
+		env_value = get_value(env_index, &head_env);
     new = ft_substr((*token), 0, i);
     new = ft_strjoin(new, env_value);
     len_to = ft_strlen(&(*token)[i + 1]) - ft_strlen(env_index);
@@ -97,12 +123,9 @@ void	expand_loop(char **token, int in_single_quote, int in_double_quote, int i, 
 		{
 			if (!((*token)[i + 1]))
 				return ;
-			else if (is_valid_variable((*token)[i + 1]))
-			{
-				new = get_new_token(token, new, head_env, i);
-				(*token) = ft_strdup(new);
-				free(new);
-			}
+			new = get_new_token(token, new, head_env, i);
+			(*token) = ft_strdup(new);
+			free(new);
 		}
 	}
 }
@@ -199,18 +222,50 @@ char    *remove_quote(t_pre_tokens *node)
     return (copy);
 }
 
-void ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
+t_pre_tokens	*ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
 {
-    t_pre_tokens *node;
+    t_pre_tokens	*node;
+    t_pre_tokens	*new_node;
+    t_pre_tokens	*new_head;
+    t_pre_tokens	**new_head_ix;
+    char			*all_data;
 
     node = *head;
     while (node)
     {
         set_node_type(&node, contains_quotes(node->content));
         node->contain_quotes = contains_quotes(node->content);
-        if ((node->prev) && (!(node->prev->type == TYPE_RED_HER)))
+		if (!(node->prev))
             node->content = expand_variable(node->content, head_env);
-        node->content = remove_quote(node);
+        else if (!(node->prev->type == TYPE_RED_HER))
+            node->content = expand_variable(node->content, head_env);
+        // node->content = remove_quote(node);
         node = node->next;
     }
+	all_data = malloc(sizeof(char));
+	all_data[0] = '\0';
+	node = *head;
+	while (node)
+	{
+		all_data = ft_strjoin(all_data, node->content);
+		all_data = ft_strjoin(all_data, " ");
+		node = node->next;
+	}
+	new_head = ft_tokenizer(all_data);
+	new_head_ix = &new_head;
+	new_node = *new_head_ix;
+	while (new_node)
+    {
+        set_node_type(&new_node, contains_quotes(new_node->content));
+        new_node->contain_quotes = contains_quotes(new_node->content);
+		if (!(new_node->prev))
+            new_node->content = expand_variable(new_node->content, head_env);
+        else if (!(new_node->prev->type == TYPE_RED_HER))
+            new_node->content = expand_variable(new_node->content, head_env);
+        new_node->content = remove_quote(new_node);
+        new_node = new_node->next;
+    }
+	return (*new_head_ix);
+	// printf_linked(*new_head_ix);exit(0);
+	// head = new_head_ix;
 }

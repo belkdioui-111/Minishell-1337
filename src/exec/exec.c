@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/06 22:58:04 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:34:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	**get_path(t_env *envp)
 	i = 0;
 	check = 0;
 	trimmed = search_in_env(envp, "PATH");
+	if(!trimmed)
+		return (NULL);
 	path = ft_split(trimmed, ':');
 	return (path);
 }
@@ -36,6 +38,12 @@ void set_path(t_command *head_command, t_env *env_head)
 	tmp1 = head_command;
 	while(tmp1)
 	{
+		if(!tmp1->cmd)
+		{
+			tmp1->path=ft_strdup("cmdnull");
+			tmp1 = tmp1->next;
+			continue;
+		}
 		if(check_if_buil(tmp1->cmd, tmp1) == 0)
 		{
 			path = get_path(env_head);
@@ -56,13 +64,13 @@ void set_path(t_command *head_command, t_env *env_head)
 			}
 			else
 			{
-				if(ft_strchr(tmp1->cmd, '/'))
+				if(tmp1->cmd && ft_strchr(tmp1->cmd, '/'))
 				{
 					tmp1->path=ft_strdup("not");
 				}
 				else
 				{
-					while (path[i])
+					while (path && path[i])
 					{
 						path[i] = ft_strjoin(path[i], "/");
 						path[i] = ft_strjoin(path[i], tmp1->cmd);
@@ -75,6 +83,8 @@ void set_path(t_command *head_command, t_env *env_head)
 							tmp1->path = NULL;
 						i++;
 					}
+					if(!path)
+						tmp1->path = NULL;
 				}
 			}
 		}
@@ -122,14 +132,14 @@ int	calculate_len_of_w(t_command *all_cmd, int i)
 	cmd = all_cmd->cmd;
 	if (i == 0)
 	{
-		while (cmd[len])
+		while (cmd && cmd[len])
 		{
 			len++;
 		}
 	}	
 	else if (i > 0)
 	{
-		while (args[i - 1][len])
+		while (args[i -1] && args[i - 1][len])
 		{
 			len++;
 		}
@@ -148,7 +158,7 @@ void	fill(t_command *all_cmd, int i, char *ev_word)
 	cmd = all_cmd->cmd;
 	if (i == 0)
 	{
-		while (cmd[j])
+		while (cmd && cmd[j])
 		{
 			ev_word[j] = cmd[j];
 			j++;
@@ -292,7 +302,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			{
 				dup2(prev_pipe, 0);
 			}
-			
+
 			is_built = check_if_buil(head->cmd, head_command);
 			if(is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17)
 			{
@@ -301,6 +311,11 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			}
 			else
 			{
+				if((head->path) && (ft_strncmp(head->path,"cmdnull", 8) == 0))
+				{
+					globals.exit_status = 0;			
+					exit(globals.exit_status);
+				}
 				if((head->path) && (ft_strncmp(head->path,"not", 4) == 0))
 				{
 					ft_putstr_fd("minishell: ", 2);

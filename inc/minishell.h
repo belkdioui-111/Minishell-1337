@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/06 17:16:04 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:43:56 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void			free_double(char **array);
 char			*ft_colorize(char *message, char *color);
 int				add_pre_t(t_pre_tokens **head, char *content, int state);
 void			free_linked(t_pre_tokens **head);
-void			ft_remove_quotes(t_pre_tokens **head, t_env *head_env);
+t_pre_tokens	*ft_remove_quotes(t_pre_tokens **head, t_env *head_env);
 t_env			*ft_set_env(char **env);
 t_command		*ft_fill_commands(t_pre_tokens **head);
 void			printf_linked(t_pre_tokens *head);

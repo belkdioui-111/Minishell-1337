@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 16:01:47 by ylabrahm          #+#    #+#             */
-/*   Updated: 2022/10/17 01:45:23 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:29:38 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	unsigned char	*uc1;
 	unsigned char	*uc2;
 
+	if(!s1 || !s2)
+		return (1);
 	uc1 = (unsigned char *) s1;
 	uc2 = (unsigned char *) s2;
 	i = 0;
