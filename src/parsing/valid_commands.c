@@ -40,36 +40,36 @@ void	add_returned_to_files(char *data, t_command **command_ix, int ret_type)
 	free(data);
 }
 
-int    check_redirections(t_command **command_ix)
+int	check_redirections(t_command **command_ix)
 {
-    t_pre_tokens    *args;
-    char            *returned;
-    int                ret_type;
+	t_pre_tokens	*args;
+	char			*returned;
+	int				ret_type;
 
-    args = (*command_ix)->args;
-    while (args)
-    {
-        if (args->type != TYPE_ARG)
-        {
-            /* ERROR */
-            if (!(args->next))
-            {
-                (*command_ix)->has_error = 1;
-                return (1);
-            }
-            else
-            {
-                /* ERROR */
-                if (args->next->type != TYPE_ARG)
-                {
-                    (*command_ix)->has_error = 1;
-                    return (1);
-                }
-            }
-        }
-        args = args->next;
-    }
-    return (0);
+	args = (*command_ix)->args;
+	while (args)
+	{
+		if (args->type != TYPE_ARG)
+		{
+			/* ERROR */
+			if (!(args->next))
+			{
+				(*command_ix)->has_error = 1;
+				return (1);
+			}
+			else
+			{
+				/* ERROR */
+				if (args->next->type != TYPE_ARG)
+				{
+					(*command_ix)->has_error = 1;
+					return (1);
+				}
+			}
+		}
+		args = args->next;
+	}
+	return (0);
 }
 
 t_pre_tokens	*ft_set_files(t_command **commands_ix)
@@ -86,9 +86,10 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 		{
 			if ((node->prev) && (node->prev->type != TYPE_ARG))
 			{
-				add_returned_to_files(ft_strdup(node->content), commands_ix, node->prev->type);
+				add_returned_to_files(ft_strdup(node->content), commands_ix,
+					node->prev->type);
 				node = node->next;
-				continue;
+				continue ;
 			}
 			add_pre_t_2(&new_arguments, node->content, node);
 		}
@@ -97,33 +98,34 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 	return (new_arguments);
 }
 
-int valid_commands(t_command **head_commands)
+int	valid_commands(t_command **head_commands)
 {
-    int                ret;
-    t_command        *command;
-    t_pre_tokens    *temp;
-    int                stpo = 0;
+	int				ret;
+	t_command		*command;
+	t_pre_tokens	*temp;
+	int				stpo;
 
-    ret = 0;
-    command = *head_commands;
-    while (command)
-    {
-        ret += check_redirections(&command);
-        temp = command->args;
-        command->args = ft_set_files(&command);
-        free_linked(&temp);
-        command = command->next;
-    }
-    if (ret != 0)
-        print_error("parsing error\n");
-    command = *head_commands;
-    while (command)
-    {
-        if (command->has_error)
-            stpo = 1;
-        if (!stpo)
-            ft_read_heredoc(&command);
-        command = command->next;
-    }
-    return (ret > 0);
+	stpo = 0;
+	ret = 0;
+	command = *head_commands;
+	while (command)
+	{
+		ret += check_redirections(&command);
+		temp = command->args;
+		command->args = ft_set_files(&command);
+		free_linked(&temp);
+		command = command->next;
+	}
+	if (ret != 0)
+		print_error("parsing error\n");
+	command = *head_commands;
+	while (command)
+	{
+		if (command->has_error)
+			stpo = 1;
+		if (!stpo)
+			ft_read_heredoc(&command);
+		command = command->next;
+	}
+	return (ret > 0);
 }

@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/08 21:36:52 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/08 22:33:04 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,11 @@ PARS_SRCS = ./src/parsing/get_first_command.c ./src/parsing/error.c \
 			./src/parsing/set_env.c ./src/parsing/fill_commands.c \
 			./src/parsing/lexer.c ./src/parsing/valid_arguments.c \
 			./src/parsing/print_error.c ./src/parsing/valid_commands.c\
+			./src/parsing/read_heredoc.c\
 			./src/exec/exec.c ./src/common/fixing_for_exec.c ./src/builtin/check_if_buil.c\
-			./src/parsing/read_heredoc.c
+			./src/builtin/exec_built.c ./src/builtin/exec_cd.c ./src/builtin/built_utils.c \
+			./src/builtin/exec_exit.c ./src/builtin/exec_echo.c ./src/builtin/exec_env.c\
+			./src/builtin/exec_pwd.c ./src/builtin/exec_unset.c ./src/builtin/exec_export.c
 
 PARS_OBJS = $(PARS_SRCS:.c=.o)
 

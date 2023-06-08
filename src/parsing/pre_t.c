@@ -12,10 +12,10 @@
 
 #include "../../inc/minishell.h"
 
-void add_to_last(t_pre_tokens **head, t_pre_tokens *next_node)
+void	add_to_last(t_pre_tokens **head, t_pre_tokens *next_node)
 {
-	t_pre_tokens *node;
-	t_pre_tokens *prev;
+	t_pre_tokens	*node;
+	t_pre_tokens	*prev;
 
 	if (*head)
 	{
@@ -61,9 +61,9 @@ void	check_loop(t_check_arg *arg)
 	}
 }
 
-int check_pre_t(char *content)
+int	check_pre_t(char *content)
 {
-	t_check_arg args;
+	t_check_arg	args;
 
 	args.top = -1;
 	args.s_quote = 0;
@@ -77,9 +77,9 @@ int check_pre_t(char *content)
 	return (args.top < 0);
 }
 
-int add_pre_t(t_pre_tokens **head, char *content, int state)
+int	add_pre_t(t_pre_tokens **head, char *content, int state)
 {
-	t_pre_tokens *created_node;
+	t_pre_tokens	*created_node;
 
 	if (!(content))
 		return (1);
@@ -105,9 +105,9 @@ int add_pre_t(t_pre_tokens **head, char *content, int state)
 	return (0);
 }
 
-int add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node)
+int	add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node)
 {
-	t_pre_tokens *created_node;
+	t_pre_tokens	*created_node;
 
 	if (!(content))
 		return (1);

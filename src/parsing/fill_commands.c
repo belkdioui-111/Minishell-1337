@@ -53,7 +53,7 @@ t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
 
 	new_command = malloc(sizeof(t_command));
 	if (!new_command)
-		return 0;
+		return (0);
 	temp_node = node;
 	new_command->args = node;
 	set_null_memeber(&new_command, 1);

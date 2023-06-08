@@ -27,7 +27,7 @@
 // 	signal(SIGQUIT, sigquit_handler);
 // }
 
-int main(int argc, char const *argv[], char **env)
+int	main(int argc, char const *argv[], char **env)
 {
 	t_pre_tokens	*head;
 	t_user_data		data;
@@ -36,33 +36,36 @@ int main(int argc, char const *argv[], char **env)
 	char			***all_cmd;
 	t_env			*export_head;
 	int				is_built;
-	
+
 	// signal(SIGINT, sigint_handler);
 	// signal(SIGQUIT, sigquit_handler);
 	env_head = ft_set_env(env);
 	export_head = ft_set_env(env);
-		globals.exit_status = 0;
+	globals.exit_status = 0;
 	while (1)
 	{
 		data.user_input = ft_read_input();
 		head_command = get_first_command(data.user_input, env_head);
-		if(head_command)
+		if (head_command)
 		{
 			conver_l_args_to_p(head_command);
 			set_path(head_command, env_head);
 			all_cmd = convert_linked_list_to_tr_p(head_command);
 			is_built = check_if_buil(head_command->cmd, head_command);
-			if(head_command && (is_built == 0 || is_built == 11 || is_built == 12 || is_built == 13 || is_built == 14 || is_built == 15 || is_built == 16 || is_built == 17))
+			if (head_command && (is_built == 0 || is_built == 11
+					|| is_built == 12 || is_built == 13 || is_built == 14
+					|| is_built == 15 || is_built == 16 || is_built == 17))
 				exec(all_cmd, head_command, export_head, env_head);
 			else
-				exec_built(check_if_buil(head_command->cmd, head_command), head_command, env_head, export_head);
+				exec_built(check_if_buil(head_command->cmd, head_command),
+					head_command, env_head, export_head);
 			// printf_commands(head_command);
 			free_commands(&head_command);
 		}
 		free(data.user_input);
 		// usleep(50000);print_leaks();
 	}
-	return 0;
+	return (0);
 }
 
 // int main(int argc, char const *argv[])
@@ -71,5 +74,5 @@ int main(int argc, char const *argv[], char **env)
 // 	dup2(fd, STDOUT_FILENO);
 // 	printf("Hello World 1\n");
 // 	close(fd);
-// 	return 0;
+// 	return (0);
 // }
