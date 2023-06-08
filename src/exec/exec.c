@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/07 17:34:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/08 21:53:56 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void set_path(t_command *head_command, t_env *env_head)
 						i++;
 					}
 					if(!path)
-						tmp1->path = NULL;
+						tmp1->path = ft_strdup("not");
 				}
 			}
 		}
@@ -321,7 +321,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 					ft_putstr_fd("minishell: ", 2);
 					ft_putstr_fd(all_cmd[i][0], 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
-					globals.exit_status = 127;			
+					globals.exit_status = 127;
 					exit(globals.exit_status);
 				}
 				else if((head->path) && (ft_strncmp(head->path,"dir", 4) == 0))

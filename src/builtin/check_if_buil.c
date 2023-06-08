@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 14:59:29 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/06 13:16:40 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/08 21:36:22 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void search_in_env_and_replace(t_env *env, char *index, char *str)
         if (ft_strncmp(index, tmp->index, ft_strlen(index)) == 0)
         {
             newValue = ft_strdup(str);
-            free(tmp->value);
+            // free(tmp->value);
             tmp->value = newValue;
             return;
         }
@@ -88,13 +88,32 @@ char *search_in_env(t_env *env, char *s)
 int     check_numric(char *content)
 {
     int i;
-
+    int num;
+    int len;
+    
     i = 0;
-    if (ft_strlen(content) == 0)
+    len = ft_strlen(content);
+    if (len == 0)
         return (1);
+    else
+    {
+        if (content[i] && content[i] == '-')
+        {
+            i++;
+            while (content[i])
+            {
+            if (ft_isdigit(content[i]) == 0)
+                return (1);
+            i++;
+            }
+            if(len == i)
+                return (2);
+        }
+    }
+    i = 0;
     while (content[i])
     {
-        if (!(ft_isdigit(content[i])))
+        if (ft_isdigit(content[i]) == 0)
             return (1);
         i++;
     }
@@ -107,21 +126,40 @@ void    exec_exit(t_pre_tokens *args, int status)
     {
         if (args->next)
         {
-            print_error("too many arguments");
-            return ;
+            if (check_numric(args->content) == 1)
+            {
+                ft_putstr_fd("minishell: exit: ", 2);
+                ft_putstr_fd(args->content,2);
+                ft_putstr_fd(": numeric argument required\n",2);
+                status = 255;
+            }
+            else if (check_numric(args->content) == 2)
+            {
+                exit((unsigned char) status);
+            }
+            else
+            {
+            ft_putstr_fd("minishell: exit: ", 2);
+            ft_putstr_fd("too many arguments\n", 2);
+            status = 1;
+            }
         }
         else
         {
             if (check_numric(args->content) == 1)
             {
-                print_error("numeric argument required");
+                ft_putstr_fd("minishell: exit: ", 2);
+                ft_putstr_fd(args->content,2);
+                ft_putstr_fd(": numeric argument required\n",2);
                 status = 255;
             }
             else
                 status = ft_atoi(args->content);
         }
+        exit((unsigned char) status);
     }
-    exit(status);
+    else
+        exit(globals.exit_status);
 }
 
 void exec_cd(t_command *cmd, t_env *env, t_env *export)
@@ -306,15 +344,39 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
         while(exp)
         {
             printf("declare -x ");
-            printf("%s", exp->index);
+            // printf("%s", exp->index);
+            while(exp->index[i])
+            {
+                printf("%c",exp->index[i]);
+                if(exp->index[i+1]== '"' || exp->index[i+1]=='$')
+                {
+                    printf("\\");
+                }
+                i++;
+            }
             if(!exp->value)
                 printf("\n");
             if(exp->value)
             {
                 printf("=");
                 printf("\"");
-                printf("%s\"\n", exp->value);
+                i=0;
+                while(exp->value[i])
+                {
+                    if(i==0 && (exp->value[i] == '"' || exp->value[i]=='$'))
+                    {
+                        printf("\\");
+                    }
+                  printf("%c",exp->value[i]);
+                  if(exp->value[i+1]== '"' || exp->value[i+1]=='$')
+                  {
+                      printf("\\");
+                   }
+                i++;
+                }
+                printf("\"\n");
             }
+            i=0;
             exp = exp->next;
         }
     }
@@ -322,6 +384,13 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
     {
         while(cmd->db_args[i])
         {
+            if(!ft_isalpha(cmd->db_args[i][0]))
+            {
+                    ft_putstr_fd("minishell: export: ",2);
+                    ft_putstr_fd(cmd->db_args[i],2);
+                    ft_putstr_fd(": not a valid identifier\n",2);
+                    globals.exit_status = 1;
+            }
             j = 0;
             if(ft_strchr(cmd->db_args[i], '='))
             {
@@ -344,13 +413,16 @@ void exec_export(t_env *export, t_command *cmds, t_env *env)
                 else
                 {
                     search_in_env_and_replace(exp,ft_substr(cmd->db_args[i],0,j),ft_substr(cmd->db_args[i],j+1, ft_strlen(cmd->db_args[i])));
-                    search_in_env_and_replace(env,ft_substr(cmd->db_args[i],0,j),ft_substr(cmd->db_args[i],j+1, ft_strlen(cmd->db_args[i])));
+                    search_in_env_and_replace(env,ft_substr(cmd->db_args[i],0,j),ft_substr(cmd->db_args[i],j+1, ft_strlen(cmd->db_args[i]) ));
                 }
             }
             else
             {
+                if(ft_isalpha(cmd->db_args[i][0]))
+                {
                 new_node = ft_lstnew_env(ft_substr(cmd->db_args[i],0,ft_strlen(cmd->db_args[i])),NULL);
                 ft_lstadd_back_env(&exp,new_node);
+                }
             }
             i++;
         }
