@@ -6,17 +6,16 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:23:14 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/08 23:20:43 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 12:18:15 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	check_numric(char *content)
+int	check_neg(char *content)
 {
-	int	i;
-	int	num;
 	int	len;
+	int	i;
 
 	i = 0;
 	len = ft_strlen(content);
@@ -37,7 +36,19 @@ int	check_numric(char *content)
 				return (2);
 		}
 	}
+	return (0);
+}
+
+int	check_numric(char *content)
+{
+	int	i;
+	int	num;
+	int	ret_check_neg;
+
 	i = 0;
+	ret_check_neg = check_neg(content);
+	if (ret_check_neg)
+		return (ret_check_neg);
 	while (content[i])
 	{
 		if (ft_isdigit(content[i]) == 0)
@@ -47,39 +58,41 @@ int	check_numric(char *content)
 	return (0);
 }
 
+int	pr_err(char *str1, char *str2, char *str3, int status)
+{
+	if (str1)
+		ft_putstr_fd(str1, 2);
+	if (str2)
+		ft_putstr_fd(str2, 2);
+	if (str3)
+		ft_putstr_fd(str3, 2);
+	return (status);
+}
+
+int	if_args_exist(char *args_content, int status)
+{
+	if (check_numric(args_content) == 1)
+		status = pr_err("minishell: exit: ", args_content,
+				": numeric argument required\n", 255);
+	else if (check_numric(args_content) == 2)
+		exit((unsigned char)status);
+	else
+		status = pr_err("minishell: exit: ",
+				"too many arguments\n", NULL, 1);
+	return (status);
+}
+
 int	exec_exit(t_pre_tokens *args, int status)
 {
 	if (args)
 	{
 		if (args->next)
-		{
-			if (check_numric(args->content) == 1)
-			{
-				ft_putstr_fd("minishell: exit: ", 2);
-				ft_putstr_fd(args->content, 2);
-				ft_putstr_fd(": numeric argument required\n", 2);
-				status = 255;
-			}
-			else if (check_numric(args->content) == 2)
-			{
-				exit((unsigned char)status);
-			}
-			else
-			{
-				ft_putstr_fd("minishell: exit: ", 2);
-				ft_putstr_fd("too many arguments\n", 2);
-				status = 1;
-			}
-		}
+			status = if_args_exist(args->content, status);
 		else
 		{
 			if (check_numric(args->content) == 1)
-			{
-				ft_putstr_fd("minishell: exit: ", 2);
-				ft_putstr_fd(args->content, 2);
-				ft_putstr_fd(": numeric argument required\n", 2);
-				status = 255;
-			}
+				status = pr_err("minishell: exit: ", args->content,
+						": numeric argument required\n", 255);
 			else
 				status = ft_atoi(args->content);
 		}
