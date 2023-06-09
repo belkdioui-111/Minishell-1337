@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:19:47 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/08 23:18:05 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 16:11:32 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	exec_cd(t_command *cmd, t_env *env, t_env *export)
 	else
 	{
 		ft_putstr_fd("minishell: No such file or directory\n", 2);
-		globals.exit_status = 1;
+		glob.exit_status = 1;
 	}
 	return (1);
 }

@@ -6,11 +6,51 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 13:07:44 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 20:29:51 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+void free_all_cmd(char ***all_cmd) {
+    int i = 0;
+    while (all_cmd[i] != NULL) {
+        int j = 0;
+        while (all_cmd[i][j] != NULL) {
+            free(all_cmd[i][j]);
+            j++;
+        }
+
+        free(all_cmd[i]);
+        i++;
+    }
+    free(all_cmd);
+}
+
+void	check_paths(char *path, char *cmd)
+{
+	if ((path) && (ft_strncmp(path, "cmdnull", 8) == 0))
+	{
+		glob.exit_status = 0;
+		exit(glob.exit_status);
+	}
+	if ((path) && (ft_strncmp(path, "not", 4) == 0))
+	{
+		glob.exit_status = pr_err("minishell: ", cmd, ": No such file or directory\n", 127);
+		exit(glob.exit_status);
+	}
+	else if ((path) && (ft_strncmp(path, "dir",
+				4) == 0))
+	{
+		glob.exit_status = pr_err("minishell: ", cmd, ": is a directory\n", 126);
+		exit(glob.exit_status);
+	}
+	else if (!path)
+	{
+		glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n", 127);;
+		exit(glob.exit_status);
+	}
+}
 
 void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 {
@@ -23,7 +63,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 	t_command	*head_command;
 
 	head_command = head;
-	globals.exit_status = 0;
+	glob.exit_status = 0;
 	all_pid = malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
 	all_pid[calculate_num_of_cmd(head)] = 0;
 	i = 0;
@@ -36,6 +76,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			return ;
 		else if (all_pid[i] == 0)
 		{
+			head->path = set_path(head, env);
 			if (i == 0)
 			{
 				dup2(pipefd_next[1], 1);
@@ -57,42 +98,13 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 				|| is_built == 17)
 			{
 				exec_built(is_built, head, env, exp);
-				exit(globals.exit_status);
+				exit(glob.exit_status);
 			}
 			else
 			{
-				if ((head->path) && (ft_strncmp(head->path, "cmdnull", 8) == 0))
-				{
-					globals.exit_status = 0;
-					exit(globals.exit_status);
-				}
-				if ((head->path) && (ft_strncmp(head->path, "not", 4) == 0))
-				{
-					ft_putstr_fd("minishell: ", 2);
-					ft_putstr_fd(all_cmd[i][0], 2);
-					ft_putstr_fd(": No such file or directory\n", 2);
-					globals.exit_status = 127;
-					exit(globals.exit_status);
-				}
-				else if ((head->path) && (ft_strncmp(head->path, "dir",
-							4) == 0))
-				{
-					ft_putstr_fd("minishell: ", 2);
-					ft_putstr_fd(all_cmd[i][0], 2);
-					ft_putstr_fd(": is a directory\n", 2);
-					globals.exit_status = 126;
-					exit(globals.exit_status);
-				}
-				else if (!head->path)
-				{
-					ft_putstr_fd("minishell: ", 2);
-					ft_putstr_fd(all_cmd[i][0], 2);
-					ft_putstr_fd(": command not found\n", 2);
-					globals.exit_status = 127;
-					exit(globals.exit_status);
-				}
+				check_paths(head->path, all_cmd[i][0]);
 				execve(head->path, all_cmd[i], convert_link_to_2p(env));
-				exit(globals.exit_status);
+				exit(glob.exit_status);
 			}
 		}
 		else
@@ -106,12 +118,14 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 		head = head->next;
 		i++;
 	}
+	free_all_cmd(all_cmd);
 	i = 0;
 	while (all_pid[i])
 	{
 		waitpid(all_pid[i], &status, 0);
 		i++;
 	}
-	globals.exit_status = status >> 8;
+	free(all_pid);
+	glob.exit_status = status >> 8;
 	// exit(status);
 }

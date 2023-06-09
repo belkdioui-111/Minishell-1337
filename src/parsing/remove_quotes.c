@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/07 18:29:47 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/09 17:56:04 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*get_new_token(char **token, char *new, t_env *head_env, int i)
 
 	env_index = get_index(&(*token)[i + 1]);
 	if (env_index[0] == '?')
-		env_value = ft_itoa(globals.exit_status);
+		env_value = ft_itoa(glob.exit_status);
 	else
 		env_value = get_value(env_index, &head_env);
 	new = ft_substr((*token), 0, i);
@@ -207,7 +207,6 @@ char	*remove_quote(t_pre_tokens *node)
 	int		j;
 	int		in_single;
 	int		in_double;
-	int		contain_quotes;
 
 	i = set_up_remove_vars(&j, &in_single, &in_double);
 	copy = malloc(ft_strlen(node->content) + 1);

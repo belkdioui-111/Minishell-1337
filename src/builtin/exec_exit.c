@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:23:14 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 12:18:15 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:50:31 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,6 @@ int	check_numric(char *content)
 	return (0);
 }
 
-int	pr_err(char *str1, char *str2, char *str3, int status)
-{
-	if (str1)
-		ft_putstr_fd(str1, 2);
-	if (str2)
-		ft_putstr_fd(str2, 2);
-	if (str3)
-		ft_putstr_fd(str3, 2);
-	return (status);
-}
-
 int	if_args_exist(char *args_content, int status)
 {
 	if (check_numric(args_content) == 1)
@@ -99,6 +88,6 @@ int	exec_exit(t_pre_tokens *args, int status)
 		exit((unsigned char)status);
 	}
 	else
-		exit(globals.exit_status);
+		exit(glob.exit_status);
 	return (5);
 }

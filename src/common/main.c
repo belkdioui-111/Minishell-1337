@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/08 13:07:33 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 17:56:54 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 
 int	main(int argc, char const *argv[], char **env)
 {
-	t_pre_tokens	*head;
 	t_user_data		data;
 	t_env			*env_head;
 	t_command		*head_command;
@@ -39,9 +38,11 @@ int	main(int argc, char const *argv[], char **env)
 
 	// signal(SIGINT, sigint_handler);
 	// signal(SIGQUIT, sigquit_handler);
+	(void)argc;
+	(void)argv;
 	env_head = ft_set_env(env);
 	export_head = ft_set_env(env);
-	globals.exit_status = 0;
+	glob.exit_status = 0;
 	while (1)
 	{
 		data.user_input = ft_read_input();
@@ -49,7 +50,6 @@ int	main(int argc, char const *argv[], char **env)
 		if (head_command)
 		{
 			conver_l_args_to_p(head_command);
-			set_path(head_command, env_head);
 			all_cmd = convert_linked_list_to_tr_p(head_command);
 			is_built = check_if_buil(head_command->cmd, head_command);
 			if (head_command && (is_built == 0 || is_built == 11

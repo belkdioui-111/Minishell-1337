@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:31:54 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/08 23:21:06 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 16:11:51 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	exec_export(t_env *export, t_command *cmds, t_env *env)
 				ft_putstr_fd("minishell: export: ", 2);
 				ft_putstr_fd(cmd->db_args[i], 2);
 				ft_putstr_fd(": not a valid identifier\n", 2);
-				globals.exit_status = 1;
+				glob.exit_status = 1;
 			}
 			j = 0;
 			if (ft_strchr(cmd->db_args[i], '='))

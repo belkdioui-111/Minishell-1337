@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/08 18:34:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:45:41 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ void	free_commands(t_command **head)
 	t_command	*command_next;
 
 	command = *head;
+	int		i=0;
 	while (command)
 	{
 		command_next = command->next;
@@ -214,6 +215,13 @@ void	free_commands(t_command **head)
 		free(command->here_doc_data);
 		free(command->cmd);
 		free(command);
+		// if(command->path)
+		// 	free(command->path);
+		while (command->db_args && command->db_args[i] != NULL) {
+    	free(command->db_args[i]);
+    	i++;
+		}
+		free(command->db_args);
 		command = command_next;
 	}
 }
@@ -261,7 +269,6 @@ int	ft_tokenizer_loop(tokenizer_t *tok)
 t_pre_tokens	*ft_tokenizer(char *user_input)
 {
 	tokenizer_t	tok;
-	char		*error;
 
 	tok.head = ft_init_zeros(&tok);
 	tok.user_input = ft_strdup(user_input);
@@ -280,7 +287,6 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 {
 	t_pre_tokens	*head_args;
 	t_command		*head_command;
-	char			*error;
 
 	head_args = ft_tokenizer(user_input);
 	head_args = ft_remove_quotes(&head_args, env_head);

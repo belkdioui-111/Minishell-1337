@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/09 13:17:18 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:51:03 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 # include <sys/stat.h>
 # include <dirent.h>
 
-struct GlobalVariables {
+typedef struct s_globals	 {
 	int	exit_status;
-};
+}t_globals;
 
-struct GlobalVariables	globals;
+t_globals	glob;
 
 enum token_type
 {
@@ -127,14 +127,18 @@ void			print_error(char *error_msg);
 int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node);
 void			ft_read_heredoc(t_command **command_ix);
 
+
+
+
 //execution part start
 char			**convert_link_to_2p(t_env *env);
 int				calculate_num_of_cmd(t_command *all_cmd);
 void			conver_l_args_to_p(t_command *head_command);
 void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
+int				pr_err(char *str1, char *str2, char *str3, int status);
 //set paths start
-void			set_path(t_command *head_command, t_env *env_head);
+char			*set_path(t_command *head_command, t_env *env_head);
 
 //set paths end
 

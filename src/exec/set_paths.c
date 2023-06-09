@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 13:23:34 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 14:13:12 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**get_path(t_env *envp)
 	return (path);
 }
 
-void	set_path(t_command *head_command, t_env *env_head)
+char	*set_path(t_command *head_command, t_env *env_head)
 {
 	t_command	*tmp1;
 	char		**path;
@@ -36,13 +36,10 @@ void	set_path(t_command *head_command, t_env *env_head)
 	struct stat	filestat;
 
 	tmp1 = head_command;
-	while (tmp1)
-	{
 		if (!tmp1->cmd)
 		{
 			tmp1->path = ft_strdup("cmdnull");
-			tmp1 = tmp1->next;
-			continue ;
+			return tmp1->path;
 		}
 		if (check_if_buil(tmp1->cmd, tmp1) == 0)
 		{
@@ -87,7 +84,6 @@ void	set_path(t_command *head_command, t_env *env_head)
 						tmp1->path = ft_strdup("not");
 				}
 			}
-		}
-		tmp1 = tmp1->next;
 	}
+	return (tmp1->path);
 }

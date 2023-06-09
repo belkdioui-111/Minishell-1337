@@ -6,11 +6,22 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:21:19 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/08 22:40:58 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:50:41 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+int	pr_err(char *str1, char *str2, char *str3, int status)
+{
+	if (str1)
+		ft_putstr_fd(str1, 2);
+	if (str2)
+		ft_putstr_fd(str2, 2);
+	if (str3)
+		ft_putstr_fd(str3, 2);
+	return (status);
+}
 
 void	search_in_env_and_replace(t_env *env, char *index, char *str)
 {
