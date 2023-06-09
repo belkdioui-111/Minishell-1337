@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/08 23:23:24 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 13:17:18 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,17 +128,15 @@ int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node);
 void			ft_read_heredoc(t_command **command_ix);
 
 //execution part start
-void			conver_l_args_to_p(t_command *head_command);
-char			***convert_linked_list_to_tr_p(t_command *all_cmd);
-void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
-void			set_path(t_command *head_command, t_env *env_head);
+char			**convert_link_to_2p(t_env *env);
 int				calculate_num_of_cmd(t_command *all_cmd);
-int				calculate_number_of_args_in_node(t_command *all_cmd);
-int				calculate_len_of_w(t_command *all_cmd, int i);
-void			fill(t_command *all_cmd, int i, char *ev_word);
-void			fill_it(char **arr_of_ev_cmd, t_command *all_cmd);
-void			fill_arr_of_all(char ***arr_of_all_cmd, t_command *all_cmd);
+void			conver_l_args_to_p(t_command *head_command);
+void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
+//set paths start
+void			set_path(t_command *head_command, t_env *env_head);
+
+//set paths end
 
 //built part start
 int				exec_export(t_env *export, t_command *cmds, t_env *env);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fixing_for_exec.c                                  :+:      :+:    :+:   */
+/*   conv_linked_list.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/31 19:20:01 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/06 11:58:20 by bel-kdio         ###   ########.fr       */
+/*   Created: 2023/06/09 13:10:33 by bel-kdio          #+#    #+#             */
+/*   Updated: 2023/06/09 13:11:16 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,31 @@ void	conver_l_args_to_p(t_command *head_command)
 		set_db_args(&command);
 		command = command->next;
 	}
+}
+
+char	**convert_link_to_2p(t_env *env)
+{
+	t_env	*tmp;
+	int		size;
+	char	**arr;
+
+	tmp = env;
+	size = 0;
+	while (tmp)
+	{
+		size++;
+		tmp = tmp->next;
+	}
+	tmp = env;
+	arr = malloc(sizeof(char *) * (size + 1));
+	arr[size] = NULL;
+	size = 0;
+	while (tmp)
+	{
+		arr[size] = ft_strjoin(tmp->index, "=");
+		arr[size] = ft_strjoin(arr[size], tmp->value);
+		size++;
+		tmp = tmp->next;
+	}
+	return (arr);
 }
