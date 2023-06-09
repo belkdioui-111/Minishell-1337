@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/09 13:16:40 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/09 13:28:37 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ all:	$(NAME)
 
 $(NAME):	$(COMM_OBJS) $(PARS_OBJS)
 	@make -C ./inc/libft/
-	$(CC) $(CFLAGS) ./inc/libft/libft.a -fsanitize=address $(COMM_OBJS) $(PARS_OBJS) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) ./inc/libft/libft.a $(COMM_OBJS) $(PARS_OBJS) -lreadline -o $(NAME)
 
 pars:		$(PARS_OBJS)
 	@make -C ./inc/libft/

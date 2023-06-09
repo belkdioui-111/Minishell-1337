@@ -6,13 +6,11 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 13:03:24 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 13:15:39 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 13:22:26 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-
 
 int	calculate_number_of_args_in_node(t_command *all_cmd)
 {
@@ -138,4 +136,3 @@ char	***convert_linked_list_to_tr_p(t_command *head_command)
 	fill_arr_of_all(arr_of_all, all_cmd);
 	return (arr_of_all);
 }
-

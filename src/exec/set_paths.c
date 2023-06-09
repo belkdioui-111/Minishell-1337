@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 12:59:33 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 13:23:34 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	set_path(t_command *head_command, t_env *env_head)
 	t_command	*tmp1;
 	char		**path;
 	int			i;
-	struct stat	fileStat;
+	struct stat	filestat;
 
 	tmp1 = head_command;
 	while (tmp1)
@@ -50,9 +50,9 @@ void	set_path(t_command *head_command, t_env *env_head)
 			i = 0;
 			if (access(tmp1->cmd, F_OK | X_OK) != -1)
 			{
-				if (stat(tmp1->cmd, &fileStat) == 0)
+				if (stat(tmp1->cmd, &filestat) == 0)
 				{
-					if (!(fileStat.st_mode & S_IFDIR))
+					if (!(filestat.st_mode & S_IFDIR))
 					{
 						tmp1->path = tmp1->cmd;
 					}
