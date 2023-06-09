@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 20:29:51 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/09 22:24:27 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 	t_command	*head_command;
 
 	head_command = head;
+	prev_pipe = -1;
 	glob.exit_status = 0;
 	all_pid = malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
 	all_pid[calculate_num_of_cmd(head)] = 0;
@@ -92,10 +93,9 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			{
 				dup2(prev_pipe, 0);
 			}
+			//redirection
 			is_built = check_if_buil(head->cmd, head_command);
-			if (is_built == 11 || is_built == 12 || is_built == 13
-				|| is_built == 14 || is_built == 15 || is_built == 16
-				|| is_built == 17)
+			if (is_built >= 11 && is_built <= 17)
 			{
 				exec_built(is_built, head, env, exp);
 				exit(glob.exit_status);
@@ -103,12 +103,14 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			else
 			{
 				check_paths(head->path, all_cmd[i][0]);
+				
 				execve(head->path, all_cmd[i], convert_link_to_2p(env));
 				exit(glob.exit_status);
 			}
 		}
 		else
 		{
+			close(prev_pipe);
 			if (all_cmd[i + 1] != NULL)
 			{
 				prev_pipe = pipefd_next[0];
