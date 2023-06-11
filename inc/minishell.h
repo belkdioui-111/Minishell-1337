@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/09 19:51:03 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/11 10:08:02 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_globals	 {
 	int	exit_status;
 }t_globals;
 
-t_globals	glob;
+extern t_globals	glob;
 
 enum token_type
 {
@@ -131,18 +131,23 @@ void			ft_read_heredoc(t_command **command_ix);
 
 
 //execution part start
+void			redirection(t_command *head);
 char			**convert_link_to_2p(t_env *env);
+int				calculate_len_of_w(t_command *all_cmd, int i);
+int				calculate_number_of_args_in_node(t_command *all_cmd);
 int				calculate_num_of_cmd(t_command *all_cmd);
 void			conver_l_args_to_p(t_command *head_command);
 void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
 int				pr_err(char *str1, char *str2, char *str3, int status);
+void			redirection(t_command *head);
 //set paths start
 char			*set_path(t_command *head_command, t_env *env_head);
 
 //set paths end
 
 //built part start
+void			mod_env_exp(t_env *env, t_env *exp, t_command *cmd);
 int				exec_export(t_env *export, t_command *cmds, t_env *env);
 int				exec_unset(t_env *env, char **args, t_env *export);
 int				exec_pwd(t_env *env);

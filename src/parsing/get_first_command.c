@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/09 19:45:41 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/10 15:17:42 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,11 +217,11 @@ void	free_commands(t_command **head)
 		free(command);
 		// if(command->path)
 		// 	free(command->path);
-		while (command->db_args && command->db_args[i] != NULL) {
-    	free(command->db_args[i]);
-    	i++;
-		}
-		free(command->db_args);
+		// while (command->db_args && command->db_args[i] != NULL) {
+    	// free(command->db_args[i]);
+    	// i++;
+		// }
+		// free(command->db_args);
 		command = command_next;
 	}
 }

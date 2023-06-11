@@ -6,25 +6,30 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 22:24:27 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/11 10:08:15 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void free_all_cmd(char ***all_cmd) {
-    int i = 0;
-    while (all_cmd[i] != NULL) {
-        int j = 0;
-        while (all_cmd[i][j] != NULL) {
-            free(all_cmd[i][j]);
-            j++;
-        }
+void	free_all_cmd(char ***all_cmd)
+{
+	int	i;
+	int	j;
 
-        free(all_cmd[i]);
-        i++;
-    }
-    free(all_cmd);
+	i = 0;
+	while (all_cmd[i] != NULL)
+	{
+		j = 0;
+		while (all_cmd[i][j] != NULL)
+		{
+			free(all_cmd[i][j]);
+			j++;
+		}
+		free(all_cmd[i]);
+		i++;
+	}
+	free(all_cmd);
 }
 
 void	check_paths(char *path, char *cmd)
@@ -36,7 +41,8 @@ void	check_paths(char *path, char *cmd)
 	}
 	if ((path) && (ft_strncmp(path, "not", 4) == 0))
 	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": No such file or directory\n", 127);
+		glob.exit_status = pr_err("minishell: ", cmd,
+				": No such file or directory\n", 127);
 		exit(glob.exit_status);
 	}
 	else if ((path) && (ft_strncmp(path, "dir",
@@ -47,7 +53,8 @@ void	check_paths(char *path, char *cmd)
 	}
 	else if (!path)
 	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n", 127);;
+		glob.exit_status = pr_err("minishell: ", cmd,
+				": command not found\n", 127);
 		exit(glob.exit_status);
 	}
 }
@@ -93,7 +100,7 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			{
 				dup2(prev_pipe, 0);
 			}
-			//redirection
+			redirection(head);
 			is_built = check_if_buil(head->cmd, head_command);
 			if (is_built >= 11 && is_built <= 17)
 			{
@@ -103,7 +110,6 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			else
 			{
 				check_paths(head->path, all_cmd[i][0]);
-				
 				execve(head->path, all_cmd[i], convert_link_to_2p(env));
 				exit(glob.exit_status);
 			}
@@ -129,5 +135,4 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 	}
 	free(all_pid);
 	glob.exit_status = status >> 8;
-	// exit(status);
 }

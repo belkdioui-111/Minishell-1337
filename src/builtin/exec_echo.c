@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:25:52 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 16:13:37 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/11 08:53:58 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,25 @@ void	print_args(t_pre_tokens *args)
 	}
 }
 
+void	there_is_option(int *is_n, int *inv_flag, t_pre_tokens **args)
+{
+	int	i;
+
+	i = 0;
+	while (*args && (*args)->content[0] == '-')
+	{
+		i = 0;
+		while ((*args)->content[++i])
+		{
+			if ((*args)->content[i] == 'n')
+				*is_n = 1;
+			else
+				*inv_flag = 1;
+		}
+		*args = (*args)->next;
+	}
+}
+
 int	exec_echo(t_command *cmds)
 {
 	int				ret;
@@ -51,18 +70,7 @@ int	exec_echo(t_command *cmds)
 
 	set_zeros(&ret, &is_n, &inv_flag);
 	args = cmds->args;
-	while (args && args->content[0] == '-')
-	{
-		i = 0;
-		while (args->content[++i])
-		{
-			if (args->content[i] == 'n')
-				is_n = 1;
-			else
-				inv_flag = 1;
-		}
-		args = args->next;
-	}
+	there_is_option(&is_n, &inv_flag, &args);
 	if (inv_flag)
 		args = cmds->args;
 	print_args(args);

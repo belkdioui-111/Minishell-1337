@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/09 19:39:00 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/11 10:08:44 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC =./src/common/main.c ./src/parsing/get_first_command.c ./src/parsing/error.c
 	./src/builtin/exec_exit.c ./src/builtin/exec_echo.c ./src/builtin/exec_env.c \
 	./src/builtin/exec_pwd.c ./src/builtin/exec_unset.c ./src/builtin/exec_export.c \
 	./src/exec/set_paths.c ./src/exec/conv_linked_to_tr_p.c ./src/exec/utils_exec.c \
+	./src/builtin/exec_export_mod.c ./src/exec/calculating.c ./src/exec/redirections.c \
 
 OBJ = $(SRC:.c=.o)
 
@@ -33,14 +34,13 @@ CC = cc
 
 RM = rm -f
 
-#CFLAGS = -Wall -Wextra -Werror
-# -fsanitize=address
+CFLAGS =  #-fsanitize=address #-Wall -Wextra -Werror
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C ./inc/libft/
-	$(CC) $(OBJ) $(LIBFT) -fsanitize=address -lreadline -o $(NAME)
+	$(CC) $(OBJ) $(LIBFT) $(CFLAGS) -lreadline -o $(NAME)
 
 clean:
 	@make clean -C ./inc/libft/

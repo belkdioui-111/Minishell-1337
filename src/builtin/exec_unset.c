@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:29:39 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 12:51:51 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/11 08:47:57 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,6 @@ void	mod_env_and_exp(t_env *env_tmp, char *args,
 				prev_env->next = env_tmp->next;
 			else
 				*env = env_tmp->next;
-			// free(env_tmp->index);
-			// free(env_tmp->value);
-			// free(env_tmp);
 			if (prev_env != NULL)
 				env_tmp = prev_env->next;
 			else
