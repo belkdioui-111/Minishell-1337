@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 11:34:08 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 12:48:02 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
 	int		is_built;
 	char	**e;
 
-	e = convert_link_to_2p(env);
 	if (fd > -1)
 		close(fd);
 	if (pipes)
@@ -89,6 +88,7 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
 	{
 		redirection(node);
 		check_paths(node->path, cmd[0]);
+		e = convert_link_to_2p(env);
 		execve(node->path, cmd, e);
 		exit(glob.exit_status);
 	}

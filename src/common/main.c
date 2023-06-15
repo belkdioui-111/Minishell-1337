@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/15 10:27:18 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 12:29:28 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	main(int argc, char const *argv[], char **env)
 		{
 			conver_l_args_to_p(head_command);
 			all_cmd = convert_linked_list_to_tr_p(head_command);
-			is_built = check_if_buil(head_command->cmd, head_command);
 			exec(all_cmd, head_command, export_head, env_head);
 			// printf_commands(head_command);
 			free_commands(&head_command);
