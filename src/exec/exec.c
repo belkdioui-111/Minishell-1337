@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/11 10:08:15 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 11:34:08 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	check_paths(char *path, char *cmd)
 {
 	if ((path) && (ft_strncmp(path, "cmdnull", 8) == 0))
 	{
-		glob.exit_status = 0;
+		glob.exit_status = pr_err("minishell: ", cmd,
+				": command not found\n", 127);
 		exit(glob.exit_status);
 	}
 	if ((path) && (ft_strncmp(path, "not", 4) == 0))
@@ -59,80 +60,127 @@ void	check_paths(char *path, char *cmd)
 	}
 }
 
+void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
+	t_command *head, t_env *env, t_env *exp)
+{
+	int		is_built;
+	char	**e;
+
+	e = convert_link_to_2p(env);
+	if (fd > -1)
+		close(fd);
+	if (pipes)
+	{
+		if (pipes[0] >= 0)
+			dup2(pipes[0], 0);
+		if (pipes[1] >= 0)
+			dup2(pipes[1], 1);
+		close(pipes[0]);
+		close(pipes[1]);
+	}
+	is_built = check_if_buil(node->cmd, head);
+	if (is_built >= 11 && is_built <= 17)
+	{
+		redirection(node);
+		exec_built(is_built, node, env, exp);
+		exit(glob.exit_status);
+	}
+	else
+	{
+		redirection(node);
+		check_paths(node->path, cmd[0]);
+		execve(node->path, cmd, e);
+		exit(glob.exit_status);
+	}
+}
+
 void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 {
-	int			i;
-	int			*all_pid;
-	int			status;
-	int			pipefd_next[2];
+	int			count_cmds;
 	int			is_built;
-	int			prev_pipe;
+	int			pid;
+	int			i;
+	int			pipes[2];
+	int			status;
+	int			fd;
+	int			tmp;
 	t_command	*head_command;
 
-	head_command = head;
-	prev_pipe = -1;
-	glob.exit_status = 0;
-	all_pid = malloc(sizeof(int) * (calculate_num_of_cmd(head) + 1));
-	all_pid[calculate_num_of_cmd(head)] = 0;
 	i = 0;
-	while (all_cmd[i] != NULL)
+	head_command = head;
+	count_cmds = calculate_num_of_cmd(head);
+	if (count_cmds == 1)
 	{
-		if (all_cmd[i + 1] != NULL)
-			pipe(pipefd_next);
-		all_pid[i] = fork();
-		if (all_pid[i] == -1)
-			return ;
-		else if (all_pid[i] == 0)
+		head->path = set_path(head, env);
+		is_built = check_if_buil(head->cmd, head);
+		if (head && (is_built == 0 || (is_built >= 11 && is_built <= 17)))
 		{
-			head->path = set_path(head, env);
-			if (i == 0)
+			pid = fork();
+			if (pid == 0)
 			{
-				dup2(pipefd_next[1], 1);
-				close(pipefd_next[0]);
-			}
-			if (i != 0 && all_cmd[i + 1] != NULL)
-			{
-				dup2(prev_pipe, 0);
-				dup2(pipefd_next[1], 1);
-				close(pipefd_next[0]);
-			}
-			if (all_cmd[i + 1] == NULL)
-			{
-				dup2(prev_pipe, 0);
-			}
-			redirection(head);
-			is_built = check_if_buil(head->cmd, head_command);
-			if (is_built >= 11 && is_built <= 17)
-			{
-				exec_built(is_built, head, env, exp);
-				exit(glob.exit_status);
+				simple_execute(all_cmd[0], NULL, -1, head,
+					head_command, env, exp);
 			}
 			else
 			{
-				check_paths(head->path, all_cmd[i][0]);
-				execve(head->path, all_cmd[i], convert_link_to_2p(env));
-				exit(glob.exit_status);
+				waitpid(pid, &status, 0);
+				glob.exit_status = status >> 8;
 			}
 		}
 		else
 		{
-			close(prev_pipe);
-			if (all_cmd[i + 1] != NULL)
-			{
-				prev_pipe = pipefd_next[0];
-				close(pipefd_next[1]);
-			}
+			int fdin;
+			int fdout;
+			fdin = dup(0);
+			fdout = dup(1);
+			redirection(head);
+			exec_built(is_built, head, env, exp);
+			dup2(fdin, 0);
+			close(fdin);
+			dup2(fdout, 1);
+			close(fdout);
 		}
-		head = head->next;
-		i++;
 	}
-	free_all_cmd(all_cmd);
-	i = 0;
-	while (all_pid[i])
+	else
 	{
-		waitpid(all_pid[i], &status, 0);
-		i++;
+		fd = -1;
+		while (all_cmd[i])
+		{
+			head->path = set_path(head, env);
+			if (i != count_cmds - 1)
+				pipe(pipes);
+			if (i == 0)
+			{
+				fd = pipes[0];
+				pipes[0] = -1;
+			}
+			else if (i < count_cmds - 1)
+			{
+				tmp = pipes[0];
+				pipes[0] = fd;
+				fd = tmp;
+			}
+			else
+			{
+				pipes[0] = fd;
+				pipes[1] = -1;
+				fd = -1;
+			}
+			pid = fork();
+			if (pid == 0)
+				simple_execute(all_cmd[i], pipes, fd, head,
+					head_command, env, exp);
+			close(pipes[1]);
+			close(pipes[0]);
+			head = head->next;
+			i++;
+		}
+		close(fd);
+		free_all_cmd(all_cmd);
+		waitpid(pid, &status, 0);
+		glob.exit_status = status >> 8;
+		while (waitpid(-1, &status, 0) != -1)
+		{
+		}
 	}
-	free(all_pid);
-	glob.exit_status = status >> 8;
 }

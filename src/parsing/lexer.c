@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 23:50:51 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/03 20:22:44 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:55:12 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ void	ft_lexer(t_command **head)
 		if (f_cmd->args)
 		{
 			temp_next = f_cmd->args->next;
-			f_cmd->cmd = ft_strdup(f_cmd->args->content);
+			f_cmd->cmd = NULL;
+			if (ft_strlen(f_cmd->args->content) != 0)
+				f_cmd->cmd = ft_strdup(f_cmd->args->content);
 			f_cmd->cmd_type = ft_set_cmd_type(f_cmd->cmd);
 			free(f_cmd->args->content);
 			free(f_cmd->args);

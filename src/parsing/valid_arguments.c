@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 18:41:41 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/05/28 19:43:16 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/12 19:59:23 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ int	valid_arguments(t_pre_tokens **head_args)
 	ret = check_double_pips(head_args);
 	if (ret == 1)
 	{
-		print_error("parsing error\n");
+		print_error("syntax error\n");
 		free_linked(head_args);
 	}
 	return (ret);
 }
+

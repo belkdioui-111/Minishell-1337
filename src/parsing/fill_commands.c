@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_commands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:13:40 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/10 14:44:42 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/10 18:48:18 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
 
 	new_command = malloc(sizeof(t_command));
 	if (!new_command)
-		return (0);
+		return 0;
 	temp_node = node;
 	new_command->args = node;
 	set_null_memeber(&new_command, 1);

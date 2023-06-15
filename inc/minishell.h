@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/11 10:08:02 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 10:10:26 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ extern t_globals	glob;
 
 enum token_type
 {
-	TYPE_ARG,
-	TYPE_RED_IN,
-	TYPE_RED_OUT,
-	TYPE_RED_APP,
-	TYPE_RED_HER,
-	TYPE_RED_PIP,
+	TYPE_ARG = 1,
+	TYPE_RED_IN = 2,
+	TYPE_RED_OUT = 3,
+	TYPE_RED_APP = 4,
+	TYPE_RED_HER = 5,
+	TYPE_RED_PIP = 6,
 };
 
 typedef struct s_env
@@ -55,11 +55,18 @@ typedef struct s_check_arg
 	char	*content;
 }	t_check_arg;
 
+typedef struct s_sub
+{
+	char				**sub;
+	enum token_type		type;
+}	t_sub;
+
 typedef struct s_pre_tokens
 {
 	char				*content;
 	enum token_type		type;
 	int					contain_quotes;
+	t_sub				sub;
 	struct s_pre_tokens	*next;
 	struct s_pre_tokens	*prev;
 }	t_pre_tokens;
@@ -94,6 +101,7 @@ typedef struct s_command
 	char				**db_args;
 	char				*path;
 	char				*here_doc_data;
+	int					pipe_hd;
 	struct s_command	*next;
 	int					has_error;
 }	t_command;
@@ -103,7 +111,7 @@ void			free_double(char **array);
 char			*ft_colorize(char *message, char *color);
 int				add_pre_t(t_pre_tokens **head, char *content, int state);
 void			free_linked(t_pre_tokens **head);
-t_pre_tokens	*ft_remove_quotes(t_pre_tokens **head, t_env *head_env);
+void			ft_remove_quotes(t_pre_tokens **head, t_env *head_env);
 t_env			*ft_set_env(char **env);
 t_command		*ft_fill_commands(t_pre_tokens **head);
 void			printf_linked(t_pre_tokens *head);
@@ -124,8 +132,11 @@ t_command		*get_first_command(char *user_input, t_env *env_head);
 int				valid_arguments(t_pre_tokens **head_args);
 int				valid_commands(t_command **head_commands);
 void			print_error(char *error_msg);
-int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node);
-void			ft_read_heredoc(t_command **command_ix);
+int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node, enum token_type type);
+int				ft_read_heredoc(t_command **command_ix);
+int				contains_quotes(char *content);
+char			*expand_variable(char *token, t_env *head_env, int state);
+t_sub			expand_variable_2(t_pre_tokens **node_ix, t_env *head_env);
 
 
 
@@ -143,6 +154,7 @@ int				pr_err(char *str1, char *str2, char *str3, int status);
 void			redirection(t_command *head);
 //set paths start
 char			*set_path(t_command *head_command, t_env *env_head);
+char			*remove_quote(char *content);
 
 //set paths end
 

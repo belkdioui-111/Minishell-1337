@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   get_first_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/10 15:17:42 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/13 23:51:18 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	print_leaks(void)
+void	print_leaks()
 {
 	printf("\n\n");
 	printf("-----------[Leaks]-----------\n");
 	system("leaks minishell | grep -A20 'leaks Report Version: 4.0'");
 }
 
-int	ft_cnt(char *string)
+int ft_cnt(char *string)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (!(string))
@@ -35,13 +35,13 @@ int	ft_cnt(char *string)
 	return (0);
 }
 
-char	*ft_read_input(void)
+char *ft_read_input()
 {
-	char	*prompt;
-	char	*user_input;
-	char	*trimed_value;
+	char *prompt;
+	char *user_input;
+	char *trimed_value;
 
-	prompt = ft_colorize(ft_strdup("monoshell-1.0> "), "green");
+	prompt = ft_colorize(ft_strdup("minishell-1.0> "), "green");
 	user_input = readline(prompt);
 	free(prompt);
 	if (!(user_input))
@@ -56,28 +56,29 @@ char	*say_type(enum token_type type)
 {
 	switch (type)
 	{
-	case TYPE_ARG:
-		return ("_____Argument_____");
-		break ;
-	case TYPE_RED_IN:
-		return ("_Input-Redirection");
-		break ;
-	case TYPE_RED_OUT:
-		return ("Output-Redirection");
-		break ;
-	case TYPE_RED_APP:
-		return ("___Append-Output__");
-		break ;
-	case TYPE_RED_HER:
-		return ("___Here-Document__");
-		break ;
-	case TYPE_RED_PIP:
-		return ("________Pip_______");
-		break ;
+		case TYPE_ARG:
+			return ("_____Argument_____");
+		break;
+		case TYPE_RED_IN:
+			return ("_Input-Redirection");
+		break;
+		case TYPE_RED_OUT:
+			return ("Output-Redirection");
+		break;
+		case TYPE_RED_APP:
+			return ("___Append-Output__");
+		break;
+		case TYPE_RED_HER:
+			return ("___Here-Document__");
+		break;
+		case TYPE_RED_PIP:
+			return ("________Pip_______");
+		break;
 	}
+	return ("_____Argument_____");
 }
 
-void	printf_linked(t_pre_tokens *head)
+void printf_linked(t_pre_tokens *head)
 {
 	t_pre_tokens	*node;
 	int				i;
@@ -86,7 +87,7 @@ void	printf_linked(t_pre_tokens *head)
 	i = 0;
 	while (node)
 	{
-		printf("[%s]", node->content);
+		printf("[[%s]:(%s)]\n", node->content, say_type(node->type));
 		node = node->next;
 	}
 	printf("\n");
@@ -101,9 +102,9 @@ void	printf_commands(t_command *head)
 	while (temp_comm)
 	{
 		printf("command : [%s]\n", temp_comm->cmd);
-		printf("Args : ");
+		printf("Args :\n");
 		printf_linked(temp_comm->args);
-		printf("Out-Files : ");
+		printf("Out-Files : \n");
 		printf_linked(temp_comm->output_files);
 		printf("In-Files : ");
 		printf_linked(temp_comm->input_files);
@@ -122,7 +123,7 @@ void	printf_commands(t_command *head)
 	}
 }
 
-void	printf_env(t_env *head)
+void printf_env(t_env *head)
 {
 	t_env	*node;
 
@@ -203,7 +204,6 @@ void	free_commands(t_command **head)
 	t_command	*command_next;
 
 	command = *head;
-	int		i=0;
 	while (command)
 	{
 		command_next = command->next;
@@ -215,18 +215,11 @@ void	free_commands(t_command **head)
 		free(command->here_doc_data);
 		free(command->cmd);
 		free(command);
-		// if(command->path)
-		// 	free(command->path);
-		// while (command->db_args && command->db_args[i] != NULL) {
-    	// free(command->db_args[i]);
-    	// i++;
-		// }
-		// free(command->db_args);
 		command = command_next;
 	}
 }
 
-void	*ft_init_zeros(tokenizer_t *tok)
+void *ft_init_zeros(tokenizer_t *tok)
 {
 	tok->end = -1;
 	tok->start = 0;
@@ -250,14 +243,12 @@ int	ft_tokenizer_loop(tokenizer_t *tok)
 		{
 			if (tok->user_input[tok->end] == ' ')
 			{
-				ret += sub_and_add(tok->user_input, tok->start, tok->end,
-					&tok->head);
+				ret += sub_and_add(tok->user_input, tok->start, tok->end, &tok->head);
 				tok->start = tok->end + 1;
 			}
 			if (is_symbol(tok->user_input[tok->end]))
 			{
-				ret += add_symbol(&tok->head, tok->user_input, tok->start,
-					&tok->end);
+				ret += add_symbol(&tok->head, tok->user_input, tok->start, &tok->end);
 				tok->start = tok->end + 1;
 			}
 		}
@@ -266,16 +257,17 @@ int	ft_tokenizer_loop(tokenizer_t *tok)
 	return (ret);
 }
 
-t_pre_tokens	*ft_tokenizer(char *user_input)
+t_pre_tokens *ft_tokenizer(char *user_input)
 {
 	tokenizer_t	tok;
+	char		*error;
 
 	tok.head = ft_init_zeros(&tok);
 	tok.user_input = ft_strdup(user_input);
 	if (ft_tokenizer_loop(&tok) != 0)
 	{
 		free_linked(&(tok.head));
-		print_error("parsing error\n");
+		print_error("unexpected EOF while looking for matching\n");
 		free(tok.user_input);
 		return (0);
 	}
@@ -283,13 +275,91 @@ t_pre_tokens	*ft_tokenizer(char *user_input)
 	return (tok.head);
 }
 
+t_pre_tokens	*ft_set_subs(t_pre_tokens **args)
+{
+	t_pre_tokens	*node;
+	t_pre_tokens	*returned;
+	int 			i;
+
+	returned = NULL;
+	node = *args;
+	while (node)
+	{
+		i = 0;
+		while ((node->sub.sub)[i])
+		{
+			add_pre_t_2(&returned, (node->sub.sub)[i], 0, node->sub.type);
+			i++;
+		}
+		node = node->next;
+	}
+	return (returned);
+}
+
+int		num_of_strs(char **strings)
+{
+	int	i;
+
+	i = 0;
+	if (!strings)
+		return (0);
+	while (strings[i])
+		i++;
+	return (i);
+}
+
+char	*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head)
+{
+	t_sub	strings;
+	int		total;
+
+	strings = expand_variable_2(&node, env_head);
+	total = num_of_strs(strings.sub);
+	if (total > 1)
+		*ambiguous = 1;
+	return (strings.sub[0]);
+}
+
+int	ft_set_containq(t_pre_tokens **args, t_env *env_head)
+{
+	t_pre_tokens	*node;
+	int				ambiguous;
+
+	node = *args;
+	ambiguous = 0;
+	while (node)
+	{
+		node->contain_quotes = contains_quotes(node->content);
+		/**/
+		if (node->prev)
+		{
+			if ((node->prev->type != TYPE_ARG) && (node->prev->type != TYPE_RED_PIP))
+				node->content = expand_red(node, &ambiguous, env_head);
+			if (ambiguous == 1)
+				return (1);
+		}
+		/**/
+		node->content = remove_quote(node->content);
+		node = node->next;
+	}
+	return (0);
+}
+
 t_command	*get_first_command(char *user_input, t_env *env_head)
 {
 	t_pre_tokens	*head_args;
 	t_command		*head_command;
+	char			*error;
 
 	head_args = ft_tokenizer(user_input);
-	head_args = ft_remove_quotes(&head_args, env_head);
+	ft_remove_quotes(&head_args, env_head);
+	head_args = ft_set_subs(&head_args);
+	if (ft_set_containq(&head_args, env_head))
+	{
+		print_error("ambiguous redirect\n");
+		glob.exit_status = 1;
+		return (NULL);
+	}
 	if (valid_arguments(&head_args) == 1)
 		return (NULL);
 	head_command = ft_fill_commands(&head_args);

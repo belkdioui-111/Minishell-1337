@@ -14,11 +14,10 @@
 
 char	*ft_get_color(char *message, char *color_tag)
 {
-	char	*prefix;
-	char	*colored_message;
+	char *prefix;
 
 	prefix = ft_strdup(color_tag);
-	colored_message = ft_strjoin(prefix, message);
+	char *colored_message = ft_strjoin(prefix, message);
 	prefix = colored_message;
 	prefix = ft_strjoin(prefix, "\033[0m");
 	free(message);
@@ -34,3 +33,4 @@ char	*ft_colorize(char *message, char *color)
 	else
 		return (ft_strdup(message));
 }
+
