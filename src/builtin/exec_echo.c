@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:25:52 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/14 19:40:07 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:09:43 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@ void	print_new_line(int inv_flag, int is_n)
 {
 	if (inv_flag)
 	{
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 		return ;
 	}
 	if (!is_n)
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 }
 
 void	print_args(t_pre_tokens *args)
 {
 	while (args)
 	{
-		printf("%s", args->content);
+		ft_putstr_fd(args->content, 1);
 		args = args->next;
 		if (args)
-			printf(" ");
+			ft_putstr_fd(" ", 1);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:26:59 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 12:49:44 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:13:02 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ int	exec_env(t_env *env)
 	tmp = env;
 	while (tmp)
 	{
-		printf("%s=", tmp->index);
-		printf("%s\n", tmp->value);
+		ft_putstr_fd(tmp->index, 1);
+		ft_putstr_fd("=", 1);
+		ft_putstr_fd(tmp->value, 1);
+		ft_putstr_fd("\n", 1);
 		tmp = tmp->next;
 	}
 	return (6);

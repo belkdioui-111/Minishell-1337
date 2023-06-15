@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:31:54 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/11 09:53:48 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:18:37 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	print_index(char *index)
 	i = 0;
 	while (index[i])
 	{
-		printf("%c", index[i]);
+		ft_putchar_fd(index[i], 1);
 		if (index[i + 1] == '"' || index[i + 1] == '$')
-			printf("\\");
+			ft_putstr_fd("\\",1);
 		i++;
 	}
 }
@@ -34,10 +34,10 @@ void	print_value(char *value)
 	while (value[i])
 	{
 		if (i == 0 && (value[i] == '"' || value[i] == '$'))
-			printf("\\");
-		printf("%c", value[i]);
+			ft_putstr_fd("\\",1);
+		ft_putchar_fd(value[i], 1);
 		if (value[i + 1] == '"' || value[i + 1] == '$')
-			printf("\\");
+			ft_putstr_fd("\\",1);
 		i++;
 	}
 }
@@ -46,16 +46,16 @@ void	print_export(t_env *exp)
 {
 	while (exp)
 	{
-		printf("declare -x ");
+		ft_putstr_fd("declare -x ", 1);
 		print_index(exp->index);
 		if (!exp->value)
-			printf("\n");
+			ft_putstr_fd("\n", 1);
 		if (exp->value)
 		{
-			printf("=");
-			printf("\"");
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd("\"", 1);
 			print_value(exp->value);
-			printf("\"\n");
+			ft_putstr_fd("\"\n", 1);
 		}
 		exp = exp->next;
 	}

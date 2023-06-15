@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 10:07:17 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 11:27:47 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 14:36:16 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	input(t_pre_tokens *in)
 		else
 		{
 			glob.exit_status = pr_err("minishell: ", in->content,
-					": No such file or directory\n", 127);
+					": No such file or directory\n", 1);
 			exit(glob.exit_status);
 		}
 		in = in->next;
