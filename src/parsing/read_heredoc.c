@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/15 11:05:03 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/15 12:53:28 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ int    ft_read_heredoc(t_command **command_ix)
         command->here_doc_data = ft_calloc(1, 1);
     while (herdoc)
     {
-        ft_putstr_fd("> ",1);
+        if(isatty(0))
+            ft_putstr_fd("> ",1);
         string = get_next_line(0);
+        if(!string)
+            break;
         ft_strtrim(string, "\n");
         if (is_delimiter(string, herdoc->content))
         {
