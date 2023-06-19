@@ -6,7 +6,7 @@
 #    By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/03 21:30:11 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/12 16:24:14 by ylabrahm         ###   ########.fr        #
+#    Updated: 2023/06/18 20:15:26 by ylabrahm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRCS = 	ft_atoi.c \
 		ft_strmapi.c \
 		ft_strncmp.c \
 		ft_strncpy.c \
+		ft_strcpy.c \
 		ft_strnstr.c \
 		ft_strrchr.c \
 		ft_strtrim.c \

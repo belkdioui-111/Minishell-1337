@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/15 10:10:26 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/19 18:50:56 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <dirent.h>
+# include <errno.h>
+# include <string.h>
 
 typedef struct s_globals	 {
 	int	exit_status;
@@ -104,6 +106,7 @@ typedef struct s_command
 	int					pipe_hd;
 	struct s_command	*next;
 	int					has_error;
+	int					in_error;
 }	t_command;
 
 void			ft_error(char *message);
@@ -130,19 +133,23 @@ int				ft_cnt(char *string);
 void			print_leaks();
 t_command		*get_first_command(char *user_input, t_env *env_head);
 int				valid_arguments(t_pre_tokens **head_args);
-int				valid_commands(t_command **head_commands);
-void			print_error(char *error_msg);
+int				valid_commands(t_command **head_commands, t_env *env_head);
+void			print_error(char *error_msg, int error_num);
 int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node, enum token_type type);
-int				ft_read_heredoc(t_command **command_ix);
+int				ft_read_heredoc(t_command **command_ix, t_env *env_head);
 int				contains_quotes(char *content);
 char			*expand_variable(char *token, t_env *head_env, int state);
 t_sub			expand_variable_2(t_pre_tokens **node_ix, t_env *head_env);
+void			set_node_type(t_pre_tokens **head, int contain_quotes);
+
 
 
 
 
 //execution part start
-void			redirection(t_command *head);
+char	*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head);
+
+int				redirection(t_command *head, t_env *env);
 char			**convert_link_to_2p(t_env *env);
 int				calculate_len_of_w(t_command *all_cmd, int i);
 int				calculate_number_of_args_in_node(t_command *all_cmd);
@@ -151,7 +158,6 @@ void			conver_l_args_to_p(t_command *head_command);
 void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
 int				pr_err(char *str1, char *str2, char *str3, int status);
-void			redirection(t_command *head);
 //set paths start
 char			*set_path(t_command *head_command, t_env *env_head);
 char			*remove_quote(char *content);
@@ -174,5 +180,12 @@ int				exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
 //built part end
 
 //execution part end
+
+
+
+int	get_len(char *var, t_env *env);
+char	*expnd(char *var, t_env *env, int *amb);
+char	*get_index(char *idx);
+char	*get_value(char *idx, t_env **env);
 
 #endif

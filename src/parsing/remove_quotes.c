@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/13 20:09:01 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:20:18 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int is_valid_variable(char after_dollar)
 
 void expand_loop_1(char **token, int in_single_quote, int in_double_quote, int i, t_env *head_env)
 {
-	t_pre_tokens *head;
-	char *new;
+	t_pre_tokens	*head;
+	char			*new;
 
 	new = NULL;
 	while ((*token)[++i])
@@ -95,16 +95,18 @@ void expand_loop_1(char **token, int in_single_quote, int in_double_quote, int i
 			in_single_quote = (!in_single_quote);
 		if (((*token)[i] == '\"') && (!in_single_quote))
 			in_double_quote = (!in_double_quote);
-		if ((*token)[i] == '$' && (!in_single_quote))
+		if (((*token)[i] == '$') && (in_double_quote) && (!in_single_quote))
 		{
-			if (in_double_quote || ((!in_double_quote) && (*token)[i - 1] && (*token)[i - 1] == '='))
+			if (!((*token)[i + 1]))
+				return;
+			new = get_new_token(token, new, head_env, i);
+			if ((ft_strlen(new) == 0))
 			{
-				if (!((*token)[i + 1]))
-					return;
-				new = get_new_token(token, new, head_env, i);
-				(*token) = ft_strdup(new);
-				free(new);
+				*token = ft_strdup("");
+				return ;
 			}
+			(*token) = ft_strdup(new);
+			free(new);
 		}
 	}
 }
@@ -126,6 +128,11 @@ void expand_loop_2(char **token, int in_single_quote, int in_double_quote, int i
 			if (!((*token)[i + 1]))
 				return;
 			new = get_new_token(token, new, head_env, i);
+			if ((ft_strlen(new) == 0))
+			{
+				*token = ft_strdup("");
+				return ;
+			}
 			(*token) = ft_strdup(new);
 			free(new);
 		}
@@ -196,133 +203,165 @@ void non_printable(char **token, int special)
 	}
 }
 
-t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
+typedef struct s_expand_variable
 {
-	t_token_list token_list;
-	char *str;
-	int start;
-	int i;
-	int len;
-	char *token;
-	int inQuotes;
-	int singleq;
-	int doubleq;
+	t_token_list	token_list;
+	char			*str;
+	char			*token;
+	char			*newToken;
+	int				i;
+	int				len;
+	int				singleq;
+	int				doubleq;
+}	t_expand_variable;
 
-	// ***********************************************************************************
-	token_list.count = 0;
-	token_list.tokens = NULL;
-	str = ft_strdup((*node_ix)->content);
-	len = ft_strlen(str);
-	token = NULL;
-	inQuotes = 0;
-	singleq = 0;
-	doubleq = 0;
+void	free_exp(t_expand_variable *var)
+{
+	int	i;
+
+	free(var->str);
+	free(var->token);
 	i = 0;
-	while (i < len)
+	while (i < var->token_list.count)
 	{
-		if (str[i] == ' ' && !singleq && !doubleq)
-		{
-			if (token != NULL)
-			{
-				add_token(&token_list, token);
-				token = NULL;
-			}
-			i++;
-			continue;
-		}
-		if (str[i] == '\'' && !singleq)
-			singleq = !singleq;
-
-		if (str[i] == '\"' && !doubleq)
-			doubleq = !doubleq;
-		/*
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			if (inQuotes && str[i] == inQuotes)
-			{
-				inQuotes = 0;
-			}
-			else if (!inQuotes)
-			{
-				inQuotes = str[i];
-			}
-			i++;
-			continue;
-		}
-		*/
-		if (str[i] == '$' && !singleq)
-		{
-			if (token != NULL)
-			{
-				add_token(&token_list, token);
-				token = NULL;
-			}
-			int j = i + 1;
-			while (j < len && (ft_isalnum(str[j]) || str[j] == '_'))
-			{
-				j++;
-			}
-			if (j > i + 1)
-			{
-				int varLen = j - i - 1;
-				token = malloc((varLen + 2) * sizeof(char));
-				token[0] = '$';
-				ft_strncpy(token + 1, str + i + 1, varLen);
-				token[varLen + 1] = '\0';
-				add_token(&token_list, token);
-				token = NULL;
-				i = j;
-				continue;
-			}
-		}
-		if (token == NULL)
-		{
-			token = malloc((len - i + 1) * sizeof(char));
-			token[0] = '\0';
-		}
-		int tokenLen = ft_strlen(token);
-		char *newToken = malloc((tokenLen + 2) * sizeof(char));
-		strcpy(newToken, token);
-		newToken[tokenLen] = str[i];
-		newToken[tokenLen + 1] = '\0';
-		free(token);
-		token = newToken;
+		free(var->token_list.tokens[i]);
 		i++;
 	}
-	if (token != NULL)
-		add_token(&token_list, token);
-	// i = 0;
-	// while (i < token_list.count)
-	// {
-	// 	printf("%s\n", token_list.tokens[i]);
-	// 	i++;
-	// }
-	// ***********************************************************************************
+	free(var->token_list.tokens);
+}
+
+t_sub	expand_variable_2_tool(t_expand_variable *var, t_env *head_env)
+{
+	int		i;
+	char	*new_all;
+	char	**new_splited;
+	t_sub	returned;
+
 	i = 0;
-	while (i < token_list.count)
+	while (i < var->token_list.count)
 	{
-		if (token_list.tokens[i][0] == '$')
+		if (var->token_list.tokens[i][0] == '$')
 		{
-			token_list.tokens[i] = expand_variable(token_list.tokens[i], head_env, 2);
-			non_printable(&(token_list.tokens[i]), 127);
+			var->token_list.tokens[i] = expand_variable(var->token_list.tokens[i], head_env, 2);
+			non_printable(&(var->token_list.tokens[i]), 127);
 		}
 		i++;
 	}
 	i = 0;
-	char *new_all;
 	new_all = ft_calloc(1, 1);
-	while (i < token_list.count)
-	{
-		new_all = ft_strjoin(new_all, token_list.tokens[i]);
-		i++;
-	}
-	// printf("%s\n", new_all);exit(0);
-	char **new_splited;
+	while (i < var->token_list.count)
+		new_all = ft_strjoin(new_all, var->token_list.tokens[i++]);
 	new_splited = ft_split(new_all, 127);
-	t_sub returned;
+	free(new_all);
 	returned.type = TYPE_ARG;
 	returned.sub = new_splited;
+	free_exp(var);
 	return (returned);
+}
+
+
+char	*ft_getoken(t_expand_variable *var)
+{
+	char	*new_token;
+
+	new_token = malloc((ft_strlen(var->token) + 2) * sizeof(char));
+	ft_strcpy(new_token, var->token);
+	new_token[ft_strlen(var->token)] = var->str[var->i];
+	new_token[ft_strlen(var->token) + 1] = '\0';
+	free(var->token);
+	(var->i)++;
+	return (new_token);
+}
+
+void	ft_check_if_null(t_expand_variable *var)
+{
+	if (var->token == NULL)
+	{
+		var->token = malloc((var->len - var->i + 1) * sizeof(char));
+		(var->token)[0] = '\0';
+	}
+}
+
+void	check_if_space(char **token, t_token_list *token_list, int *i)
+{
+	if (*token != NULL)
+	{
+		add_token(token_list, *token);
+		*token = NULL;
+	}
+	(*i)++;
+}
+
+
+int	is_a_dollar(t_expand_variable *var)
+{
+	int	varLen;
+	int	j;
+
+	if (var->token != NULL)
+	{
+		add_token(&(var->token_list), var->token);
+		var->token = NULL;
+	}
+	j = var->i + 1;
+	while (j < var->len && (ft_isalnum(var->str[j]) || var->str[j] == '_'))
+		j++;
+	if (j > var->i + 1)
+	{
+		varLen = j - var->i - 1;
+		var->token = malloc((varLen + 2) * sizeof(char));
+		var->token[0] = '$';
+		ft_strncpy(var->token + 1, var->str + var->i + 1, varLen);
+		var->token[varLen + 1] = '\0';
+		add_token(&(var->token_list), var->token);
+		var->token = NULL;
+		var->i = j;
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_init_ex_2_vars(t_expand_variable *var, char *content)
+{
+	var->token_list.count = 0;
+	var->token_list.tokens = NULL;
+	var->str = ft_strdup(content);
+	var->len = ft_strlen(var->str);
+	var->token = NULL;
+	var->singleq = 0;
+	var->doubleq = 0;
+	var->i = 0;
+}
+
+t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
+{
+	t_expand_variable	var;
+	t_sub				ret;
+
+	ft_init_ex_2_vars(&var, (*node_ix)->content);
+	while (var.i < var.len)
+	{
+		if ((var.str[var.i] == ' ') && (!(var.singleq)) && (!(var.doubleq)))
+		{
+			check_if_space(&(var.token), &(var.token_list), &(var.i));
+			continue;
+		}
+		if ((var.str[var.i]) == '\'' && (!(var.doubleq)))
+			(var.singleq) = !(var.singleq);
+		if (var.str[var.i] == '\"' && !(var.singleq))
+			var.doubleq = !(var.doubleq);
+		if (var.str[var.i] == '$' && !(var.singleq))
+		{
+			if (is_a_dollar(&var))
+				continue;
+		}
+		ft_check_if_null(&var);
+		var.token = ft_getoken(&var);
+	}
+	if (var.token != NULL)
+		add_token(&(var.token_list), var.token);
+	ret = (expand_variable_2_tool(&var, head_env));
+	return (ret);
 }
 
 int set_up_remove_vars(int *j, int *in_single, int *in_double)
@@ -404,22 +443,6 @@ char *remove_quote(char *content)
 	return (copy);
 }
 
-t_pre_tokens *put_middle(t_pre_tokens **middle_ix, t_pre_tokens **node_ix)
-{
-	t_pre_tokens *node;
-	t_pre_tokens *middle;
-	t_pre_tokens *temp_last;
-
-	node = *node_ix;
-	middle = *middle_ix;
-	temp_last = node->next;
-	(*node_ix) = middle;
-	while (node->next)
-		node = node->next;
-	node->next = temp_last;
-	return (*node_ix);
-}
-
 t_sub get_sub_from_node(t_pre_tokens **node_ix)
 {
 	char **sub;
@@ -430,11 +453,36 @@ t_sub get_sub_from_node(t_pre_tokens **node_ix)
 	return (returned);
 }
 
+void	ft_remove_quotes_2(t_pre_tokens **head, t_env *head_env)
+{
+	t_pre_tokens	*node;
+
+	node = *head;
+	while (node)
+	{
+		node->contain_quotes = contains_quotes(node->content);
+		if (node->type == TYPE_ARG)
+		{
+			if ((!(node->prev)) || (node->prev->type == TYPE_ARG || node->prev->type == TYPE_RED_PIP))
+			{
+				node->sub = expand_variable_2(&node, head_env);
+			}
+			else
+			{
+				node->sub = get_sub_from_node(&node);
+			}
+		}
+		else
+		{
+			node->sub = get_sub_from_node(&node);
+		}
+		node = node->next;
+	}
+}
+
 void ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
 {
 	t_pre_tokens	*node;
-	char			**splited;
-	int 			i;
 
 	node = *head;
 	while (node)
@@ -447,20 +495,5 @@ void ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
 			node->content = expand_variable(node->content, head_env, 1);
 		node = node->next;
 	}
-	// --------------------------------------------------------
-	node = *head;
-	while (node)
-	{
-		node->contain_quotes = contains_quotes(node->content);
-		if (node->type == TYPE_ARG)
-		{
-			if ((!(node->prev)) || (node->prev->type == TYPE_ARG || node->prev->type == TYPE_RED_PIP))
-				node->sub = expand_variable_2(&node, head_env);
-			else
-				node->sub = get_sub_from_node(&node);
-		}
-		else
-			node->sub = get_sub_from_node(&node);
-		node = node->next;
-	}
+	ft_remove_quotes_2(head, head_env);
 }

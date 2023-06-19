@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:25:07 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/12 16:24:44 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/18 20:15:10 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t		ft_strlen(const char *s);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		*ft_strncpy(char *dest, char *src, unsigned int n);
+char		*ft_strcpy(char *dest, char *src);
 char		*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char		*ft_strrchr(const char *s, int c);
 int			ft_tolower(int c);

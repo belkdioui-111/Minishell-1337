@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.c                                      :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/28 19:08:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/17 16:09:56 by ylabrahm         ###   ########.fr       */
+/*   Created: 2023/06/18 20:14:12 by ylabrahm          #+#    #+#             */
+/*   Updated: 2023/06/18 20:15:47 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "libft.h"
 
-void	print_error(char *error_msg, int error_num)
+char	*ft_strcpy(char *dest, char *src)
 {
-	if (!error_msg)
-		return ;
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(error_msg, 2);
-	glob.exit_status = error_num;
+	int i;
+
+	i = -1;
+	while (src[++i])
+		dest[i] = src[i];
+	dest[i + 1] = '\0';
+	return (dest);
 }
