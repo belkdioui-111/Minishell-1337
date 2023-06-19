@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/19 17:34:21 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/19 21:21:32 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,15 +90,14 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
 	}
 	else
 	{
-		if (node->in_error == 0 || 1)
-		{
+				
 			if (redirection(node, env) == 0 && redirection(node, env) != 2)
 			{
+	
 				check_paths(node->path, cmd[0]);
 				e = convert_link_to_2p(env);
 				execve(node->path, cmd, e);
 			}
-		}
 		exit(glob.exit_status);
 	}
 }

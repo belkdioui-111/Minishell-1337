@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 10:07:17 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/19 20:09:24 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/19 21:24:08 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,6 +315,7 @@ int	redirection(t_command *head, t_env *env)
 	
 	ret = 0;
 	cmdn = 0;
+	
 	if (head->herdoc_files && head->cmd)
 	{
 		dup2(head->pipe_hd, 0);
