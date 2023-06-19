@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 10:07:17 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/19 21:24:08 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/19 21:34:54 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,12 +324,20 @@ int	redirection(t_command *head, t_env *env)
 	out = head->output_files;
 	in = head->input_files;
 	if (head->output_files)
+	{
 		if (output(out, env))
 			return (1);
+		if(head->cmd == NULL)
+			cmdn =2;
+	}
 	if (head->input_files)
+	{
 		if (input(in, env))
 			return (1);
-	if(head->cmd == NULL)
+		if(head->cmd == NULL)
+			cmdn =2;
+	}
+	if(cmdn)
 		return (2);
 	return (0);
 }
