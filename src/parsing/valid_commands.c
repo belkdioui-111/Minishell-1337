@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   valid_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 04:26:41 by macbook           #+#    #+#             */
-/*   Updated: 2023/06/19 20:12:08 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:31:37 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ void	add_returned_to_files(char *data, t_command **command_ix, int ret_type)
 		add_pre_t_2(&(command->output_files), data, NULL, ret_type);
 		command->out_type = 1;
 	}
-	if (ret_type == TYPE_RED_IN)
+	if (ret_type == TYPE_RED_IN/* || ret_type == TYPE_RED_HER*/)
 	{
 		add_pre_t_2(&(command->input_files), data, NULL, 0);
-		command->in_type = 1;
+		command->in_type = TYPE_RED_IN;
 	}
 	if (ret_type == TYPE_RED_HER)
 	{
 		add_pre_t_2(&(command->herdoc_files), data, NULL, 0);
-		command->in_type = 2;
+		command->in_type = TYPE_RED_HER;
 	}
 	free(data);
 }

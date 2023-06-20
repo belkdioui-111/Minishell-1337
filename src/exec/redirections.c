@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 10:07:17 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 11:04:26 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:41:05 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ int	input(t_pre_tokens *in, t_env *env)
 		if (fd == -1)
 			return (glob.exit_status = perr(exp, strerror(errno), 1), free(exp), 1);
 		dup2(fd, 0);
+		printf("dup input\n");
 		close(fd);
 		in = in->next;
 	}
@@ -207,14 +208,14 @@ int	redirection(t_command *head, t_env *env)
 	
 	ret = 0;
 	cmdn = 0;
-	
-	if (head->herdoc_files)
-	{
-		if(head->cmd == NULL)
-			return 2;
-		dup2(head->pipe_hd, 0);
-		close(head->pipe_hd);
-	}
+
+	// if (head->herdoc_files)
+	// {
+	// 	if(head->cmd == NULL)
+	// 		return 2;
+	// 	dup2(head->pipe_hd, 0);
+	// 	close(head->pipe_hd);
+	// }
 	out = head->output_files;
 	in = head->input_files;
 	if (head->output_files)
@@ -228,8 +229,29 @@ int	redirection(t_command *head, t_env *env)
 	{
 		if (input(in, env))
 			return (1);
+		if (head->in_type == TYPE_RED_HER)
+		{
+			if (head->herdoc_files)
+			{
+				if(head->cmd == NULL)
+					return 2;
+				dup2(head->pipe_hd, 0);
+				printf("dup heredoc\n");
+				close(head->pipe_hd);
+			}
+		}
 		if(head->cmd == NULL)
 			cmdn =2;
+	}
+	else if (head->herdoc_files)
+	{
+		if (head->herdoc_files)
+		{
+			if(head->cmd == NULL)
+				return 2;
+			dup2(head->pipe_hd, 0);
+			close(head->pipe_hd);
+		}
 	}
 	if(cmdn)
 		return (2);

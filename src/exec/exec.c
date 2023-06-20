@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/19 21:21:32 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:45:05 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
 {
 	int		is_built;
 	char	**e;
+	int		ret_red;
 
 	if (fd > -1)
 		close(fd);
@@ -83,15 +84,16 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
 	{
 		if (node->in_error == 0 || 1)
 		{
-			if (redirection(node, env) == 0 && redirection(node, env) != 2)
+			ret_red = redirection(node, env);
+			if (ret_red == 0 && ret_red != 2)
 				exec_built(is_built, node, env, exp);
 		}
 		exit(glob.exit_status);
 	}
 	else
 	{
-				
-			if (redirection(node, env) == 0 && redirection(node, env) != 2)
+			ret_red = redirection(node, env);
+			if (ret_red == 0 && ret_red != 2)
 			{
 	
 				check_paths(node->path, cmd[0]);
@@ -141,9 +143,11 @@ void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 			{
 				int fdin;
 				int fdout;
+				int	ret_red;
 				fdin = dup(0);
 				fdout = dup(1);
-				if (redirection(head, env) == 0 && redirection(head, env) != 2)
+				ret_red = redirection(head, env);
+				if (ret_red == 0 && ret_red != 2)
 					exec_built(is_built, head, env, exp);
 				dup2(fdin, 0);
 				close(fdin);

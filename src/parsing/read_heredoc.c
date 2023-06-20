@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 09:32:28 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:30:43 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,17 @@ int ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	char			*string;
 	char			*all;
 	int				pipe_hd[2];
+	// t_pre_tokens	*temp;
 
 	command = *command_ix;
 	string = 0;
+	// herdoc = NULL;
+	// temp = command->herdoc_files;
+	// while (temp)
+	// {
+	// 	if (temp->type == TYPE_RED_HER)
+	// 		add_pre_t_2()
+	// }
 	herdoc = command->herdoc_files;
 	if (herdoc)
 		command->here_doc_data = ft_calloc(1, 1);
