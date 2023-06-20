@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 16:44:46 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 19:10:35 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,28 @@ void	if_onecmd_not_built(char **all_cmd, t_command *head)
 	}
 }
 
-void	handling_pipes(int *i, int *fd, int count_cmds, int *pipes)
+int	handling_pipes(int i, int fd, int count_cmds, int *pipes)
 {
 	int			tmp;
 
-	if (*i == 0)
+	if (i == 0)
 	{
-		*fd = pipes[0];
+		fd = pipes[0];
 		pipes[0] = -1;
 	}
-	else if (*i < count_cmds - 1)
+	else if (i < count_cmds - 1)
 	{
 		tmp = pipes[0];
-		pipes[0] = *fd;
-		*fd = tmp;
+		pipes[0] = fd;
+		fd = tmp;
 	}
 	else
 	{
-		pipes[0] = *fd;
+		pipes[0] = fd;
 		pipes[1] = -1;
-		*fd = -1;
+		fd = -1;
 	}
+	return (fd);
 }
 
 int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
@@ -82,7 +83,7 @@ int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 		head->path = set_path(head, glob.env);
 		if (i != count_cmds - 1)
 			pipe(pipes);
-		handling_pipes(&i, &fd, count_cmds, pipes);
+		fd = handling_pipes(i, fd, count_cmds, pipes);
 		pid = fork();
 		if (pid == 0)
 			simple_execute(all_cmd[i], pipes, fd, head);

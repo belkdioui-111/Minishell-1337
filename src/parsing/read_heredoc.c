@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 11:30:43 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/20 19:05:17 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	// 		add_pre_t_2()
 	// }
 	herdoc = command->herdoc_files;
+	if (herdoc == NULL)
+		return (-1);
 	if (herdoc)
 		command->here_doc_data = ft_calloc(1, 1);
 	while (herdoc)

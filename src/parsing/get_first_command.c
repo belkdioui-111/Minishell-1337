@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 15:47:02 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 19:18:41 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ void	free_commands(t_command **head)
 	command = *head;
 	while (command)
 	{
+		close(command->pipe_hd);
 		command_next = command->next;
 		free_linked(&(command->args));
 		free_linked(&(command->input_files));
