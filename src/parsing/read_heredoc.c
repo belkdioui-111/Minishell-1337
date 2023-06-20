@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/19 16:48:17 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 09:32:28 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,14 @@ void join_herdoc(char **herdoc, char *string, int contains_quotes, t_env *env_he
 
 int is_delimiter(char *del, char *content)
 {
+	int check;
+	char *deli;
 
-	if (ft_strncmp(content, del, (ft_strlen(content))) == 0)
+	int i;
+	deli = ft_strtrim(del, "\n");
+
+	check = ft_strncmp(content, deli, ft_strlen(content)+1);
+	if (check == 0)
 		return (1);
 	return (0);
 }
@@ -53,7 +59,6 @@ int	ft_read_heredoc_while(char **string_ix, t_pre_tokens **herdoc, t_command *co
 	else
 	{
 		int	cq;
-
 		cq = contains_quotes(ft_strdup((*herdoc)->content));
 		join_herdoc(&command->here_doc_data, string, cq, env_head);
 	}
