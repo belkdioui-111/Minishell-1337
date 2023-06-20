@@ -3,196 +3,120 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 11:45:05 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/20 16:44:46 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	free_all_cmd(char ***all_cmd)
+void	if_onecmd_built(t_command *head, int is_built)
 {
-	int	i;
-	int	j;
+	int	fdin;
+	int	fdout;
+	int	ret_red;
 
-	i = 0;
-	while (all_cmd[i] != NULL)
-	{
-		j = 0;
-		while (all_cmd[i][j] != NULL)
-		{
-			free(all_cmd[i][j]);
-			j++;
-		}
-		free(all_cmd[i]);
-		i++;
-	}
-	free(all_cmd);
+	fdin = dup(0);
+	fdout = dup(1);
+	ret_red = redirection(head, glob.env);
+	if (ret_red == 0 && ret_red != 2)
+		exec_built(is_built, head, glob.env, glob.export);
+	dup2(fdin, 0);
+	close(fdin);
+	dup2(fdout, 1);
+	close(fdout);
 }
 
-void	check_paths(char *path, char *cmd)
+void	if_onecmd_not_built(char **all_cmd, t_command *head)
 {
-	if ((path) && (ft_strncmp(path, "cmdnull", 8) == 0))
+	int	pid;
+	int	status;
+
+	pid = fork();
+	if (pid == 0)
+		simple_execute(all_cmd, NULL, -1, head);
+	else
 	{
-		glob.exit_status = pr_err("minishell: ", cmd,
-				": command not found\n", 127);
-		exit(glob.exit_status);
-	}
-	if ((path) && (ft_strncmp(path, "not", 4) == 0))
-	{
-		glob.exit_status = pr_err("minishell: ", cmd,
-				": No such file or directory\n", 127);
-		exit(glob.exit_status);
-	}
-	else if ((path) && (ft_strncmp(path, "dir",
-				4) == 0))
-	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": is a directory\n", 126);
-		exit(glob.exit_status);
-	}
-	else if (!path)
-	{
-		glob.exit_status = pr_err("minishell: ", cmd,
-				": command not found\n", 127);
-		exit(glob.exit_status);
+		waitpid(pid, &status, 0);
+		glob.exit_status = status >> 8;
 	}
 }
 
-void	simple_execute(char **cmd, int *pipes, int fd, t_command *node,
-	t_command *head, t_env *env, t_env *exp)
+void	handling_pipes(int *i, int *fd, int count_cmds, int *pipes)
 {
-	int		is_built;
-	char	**e;
-	int		ret_red;
+	int			tmp;
 
-	if (fd > -1)
-		close(fd);
-	if (pipes)
+	if (*i == 0)
 	{
-		if (pipes[0] >= 0)
-			dup2(pipes[0], 0);
-		if (pipes[1] >= 0)
-			dup2(pipes[1], 1);
-		close(pipes[0]);
-		close(pipes[1]);
+		*fd = pipes[0];
+		pipes[0] = -1;
 	}
-	is_built = check_if_buil(node->cmd, head);
-	
-	if (is_built >= 11 && is_built <= 17)
+	else if (*i < count_cmds - 1)
 	{
-		if (node->in_error == 0 || 1)
-		{
-			ret_red = redirection(node, env);
-			if (ret_red == 0 && ret_red != 2)
-				exec_built(is_built, node, env, exp);
-		}
-		exit(glob.exit_status);
+		tmp = pipes[0];
+		pipes[0] = *fd;
+		*fd = tmp;
 	}
 	else
 	{
-			ret_red = redirection(node, env);
-			if (ret_red == 0 && ret_red != 2)
-			{
-	
-				check_paths(node->path, cmd[0]);
-				e = convert_link_to_2p(env);
-				execve(node->path, cmd, e);
-			}
-		exit(glob.exit_status);
+		pipes[0] = *fd;
+		pipes[1] = -1;
+		*fd = -1;
 	}
+}
+
+int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
+{
+	int			pid;
+	int			i;
+	int			pipes[2];
+	int			status;
+	int			fd;
+
+	fd = -1;
+	i = -1;
+	while (all_cmd[++i])
+	{
+		head->path = set_path(head, glob.env);
+		if (i != count_cmds - 1)
+			pipe(pipes);
+		handling_pipes(&i, &fd, count_cmds, pipes);
+		pid = fork();
+		if (pid == 0)
+			simple_execute(all_cmd[i], pipes, fd, head);
+		close(pipes[1]);
+		close(pipes[0]);
+		head = head->next;
+	}
+	close(fd);
+	free_all_cmd(all_cmd);
+	waitpid(pid, &status, 0);
+	return (status);
 }
 
 void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
 {
 	int			count_cmds;
 	int			is_built;
-	int			pid;
-	int			i;
-	int			pipes[2];
 	int			status;
-	int			fd;
-	int			tmp;
-	t_command	*head_command;
 
-	i = 0;
-	head_command = head;
+	glob.env = env;
+	glob.export = exp;
 	count_cmds = calculate_num_of_cmd(head);
 	if (count_cmds == 1)
 	{
 		head->path = set_path(head, env);
-		is_built = check_if_buil(head->cmd, head);
-		if (head && (is_built == 0 || (is_built >= 11 && is_built <= 17)))
-		{
-			pid = fork();
-			if (pid == 0)
-			{
-				simple_execute(all_cmd[0], NULL, -1, head,
-					head_command, env, exp);
-			}
-			else
-			{
-				waitpid(pid, &status, 0);
-				glob.exit_status = status >> 8;
-			}
-		}
+		is_built = check_if_buil(head->cmd);
+		if (head && is_built == 0)
+			if_onecmd_not_built(all_cmd[0], head);
 		else
-		{
-			if (head->in_error == 0 || 1)
-			{
-				int fdin;
-				int fdout;
-				int	ret_red;
-				fdin = dup(0);
-				fdout = dup(1);
-				ret_red = redirection(head, env);
-				if (ret_red == 0 && ret_red != 2)
-					exec_built(is_built, head, env, exp);
-				dup2(fdin, 0);
-				close(fdin);
-				dup2(fdout, 1);
-				close(fdout);
-			}
-		}
+			if_onecmd_built(head, is_built);
 	}
 	else
 	{
-		fd = -1;
-		while (all_cmd[i])
-		{
-			head->path = set_path(head, env);
-			if (i != count_cmds - 1)
-				pipe(pipes);
-			if (i == 0)
-			{
-				fd = pipes[0];
-				pipes[0] = -1;
-			}
-			else if (i < count_cmds - 1)
-			{
-				tmp = pipes[0];
-				pipes[0] = fd;
-				fd = tmp;
-			}
-			else
-			{
-				pipes[0] = fd;
-				pipes[1] = -1;
-				fd = -1;
-			}
-			pid = fork();
-			if (pid == 0)
-				simple_execute(all_cmd[i], pipes, fd, head,
-					head_command, env, exp);
-			close(pipes[1]);
-			close(pipes[0]);
-			head = head->next;
-			i++;
-		}
-		close(fd);
-		free_all_cmd(all_cmd);
-		waitpid(pid, &status, 0);
+		status = if_mult_cmds(head, count_cmds, all_cmd);
 		glob.exit_status = status >> 8;
 		while (waitpid(-1, &status, 0) != -1)
 		{

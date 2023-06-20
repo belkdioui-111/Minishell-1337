@@ -47,4 +47,3 @@ int	valid_arguments(t_pre_tokens **head_args)
 	}
 	return (ret);
 }
-

@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/19 11:20:18 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/20 15:47:48 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include <string.h>
 
-char *get_index(char *string)
+char	*get_index(char *string)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if ((string[i]) && ((string[i] == '?') || (string[i] == '@')))
@@ -25,27 +25,29 @@ char *get_index(char *string)
 	while (1)
 	{
 		if (!(string[i] && (ft_isalnum(string[i]) || string[i] == '_')))
-			break;
+			break ;
 		i++;
 	}
 	return (ft_substr(string, 0, i));
 }
 
-char *get_value(char *index, t_env **head_env)
+char	*get_value(char *index, t_env **head_env)
 {
-	t_env *node;
+	t_env	*node;
 
 	node = *head_env;
 	while (node)
 	{
-		if (ft_strncmp(index, node->index, ft_strlen(node->index)) == 0 && (ft_strlen(index) == ft_strlen(node->index)))
+		if (ft_strncmp(index, node->index, ft_strlen(node->index)) == 0
+			&& (ft_strlen(index) == ft_strlen(node->index)))
 			return (ft_strdup(node->value));
 		node = node->next;
 	}
 	return (ft_strdup(""));
 }
 
-void four_free(char **token, char **suffix, char **env_index, char **env_value)
+void	four_free(char **token, char **suffix, char **env_index,
+		char **env_value)
 {
 	if (*token)
 		free(*token);
@@ -57,12 +59,12 @@ void four_free(char **token, char **suffix, char **env_index, char **env_value)
 		free(*env_value);
 }
 
-char *get_new_token(char **token, char *new, t_env *head_env, int i)
+char	*get_new_token(char **token, char *new, t_env *head_env, int i)
 {
-	char *env_index;
-	int len_to;
-	char *env_value;
-	char *suffix;
+	char	*env_index;
+	int		len_to;
+	char	*env_value;
+	char	*suffix;
 
 	env_index = get_index(&(*token)[i + 1]);
 	if (env_index[0] == '?')
@@ -78,14 +80,15 @@ char *get_new_token(char **token, char *new, t_env *head_env, int i)
 	return (new);
 }
 
-int is_valid_variable(char after_dollar)
+int	is_valid_variable(char after_dollar)
 {
-	return ((ft_isalnum(after_dollar)) || (after_dollar == '_') || (after_dollar == '?'));
+	return ((ft_isalnum(after_dollar)) || (after_dollar == '_')
+		|| (after_dollar == '?'));
 }
 
-void expand_loop_1(char **token, int in_single_quote, int in_double_quote, int i, t_env *head_env)
+void	expand_loop_1(char **token, int in_single_quote, int in_double_quote,
+		int i, t_env *head_env)
 {
-	t_pre_tokens	*head;
 	char			*new;
 
 	new = NULL;
@@ -98,7 +101,7 @@ void expand_loop_1(char **token, int in_single_quote, int in_double_quote, int i
 		if (((*token)[i] == '$') && (in_double_quote) && (!in_single_quote))
 		{
 			if (!((*token)[i + 1]))
-				return;
+				return ;
 			new = get_new_token(token, new, head_env, i);
 			if ((ft_strlen(new) == 0))
 			{
@@ -111,10 +114,10 @@ void expand_loop_1(char **token, int in_single_quote, int in_double_quote, int i
 	}
 }
 
-void expand_loop_2(char **token, int in_single_quote, int in_double_quote, int i, t_env *head_env)
+void	expand_loop_2(char **token, int in_single_quote, int in_double_quote,
+		int i, t_env *head_env)
 {
-	t_pre_tokens *head;
-	char *new;
+	char			*new;
 
 	new = NULL;
 	while ((*token)[++i])
@@ -126,7 +129,7 @@ void expand_loop_2(char **token, int in_single_quote, int in_double_quote, int i
 		if ((*token)[i] == '$' && (!in_single_quote))
 		{
 			if (!((*token)[i + 1]))
-				return;
+				return ;
 			new = get_new_token(token, new, head_env, i);
 			if ((ft_strlen(new) == 0))
 			{
@@ -139,11 +142,11 @@ void expand_loop_2(char **token, int in_single_quote, int in_double_quote, int i
 	}
 }
 
-char *expand_variable(char *token, t_env *head_env, int state)
+char	*expand_variable(char *token, t_env *head_env, int state)
 {
-	int in_single_quote;
-	int in_double_quote;
-	int i;
+	int	in_single_quote;
+	int	in_double_quote;
+	int	i;
 
 	i = -1;
 	in_single_quote = 0;
@@ -157,14 +160,14 @@ char *expand_variable(char *token, t_env *head_env, int state)
 
 typedef struct
 {
-	char **tokens;
-	int count;
-} t_token_list;
+	char			**tokens;
+	int				count;
+}					t_token_list;
 
-void add_token(t_token_list *list, char *token)
+void	add_token(t_token_list *list, char *token)
 {
-	char **new_tokens;
-	int i;
+	char	**new_tokens;
+	int		i;
 
 	i = 0;
 	new_tokens = malloc((list->count + 1) * sizeof(char *));
@@ -179,9 +182,9 @@ void add_token(t_token_list *list, char *token)
 	list->count++;
 }
 
-void free_tokens(t_token_list *list)
+void	free_tokens(t_token_list *list)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < list->count)
@@ -190,9 +193,9 @@ void free_tokens(t_token_list *list)
 	list->count = 0;
 }
 
-void non_printable(char **token, int special)
+void	non_printable(char **token, int special)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while ((*token)[i])
@@ -213,7 +216,7 @@ typedef struct s_expand_variable
 	int				len;
 	int				singleq;
 	int				doubleq;
-}	t_expand_variable;
+}					t_expand_variable;
 
 void	free_exp(t_expand_variable *var)
 {
@@ -242,7 +245,8 @@ t_sub	expand_variable_2_tool(t_expand_variable *var, t_env *head_env)
 	{
 		if (var->token_list.tokens[i][0] == '$')
 		{
-			var->token_list.tokens[i] = expand_variable(var->token_list.tokens[i], head_env, 2);
+			var->token_list.tokens[i] = expand_variable(var->token_list.tokens[i],
+				head_env, 2);
 			non_printable(&(var->token_list.tokens[i]), 127);
 		}
 		i++;
@@ -258,7 +262,6 @@ t_sub	expand_variable_2_tool(t_expand_variable *var, t_env *head_env)
 	free_exp(var);
 	return (returned);
 }
-
 
 char	*ft_getoken(t_expand_variable *var)
 {
@@ -291,7 +294,6 @@ void	check_if_space(char **token, t_token_list *token_list, int *i)
 	}
 	(*i)++;
 }
-
 
 int	is_a_dollar(t_expand_variable *var)
 {
@@ -333,7 +335,7 @@ void	ft_init_ex_2_vars(t_expand_variable *var, char *content)
 	var->i = 0;
 }
 
-t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
+t_sub	expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
 {
 	t_expand_variable	var;
 	t_sub				ret;
@@ -344,7 +346,7 @@ t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
 		if ((var.str[var.i] == ' ') && (!(var.singleq)) && (!(var.doubleq)))
 		{
 			check_if_space(&(var.token), &(var.token_list), &(var.i));
-			continue;
+			continue ;
 		}
 		if ((var.str[var.i]) == '\'' && (!(var.doubleq)))
 			(var.singleq) = !(var.singleq);
@@ -353,7 +355,7 @@ t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
 		if (var.str[var.i] == '$' && !(var.singleq))
 		{
 			if (is_a_dollar(&var))
-				continue;
+				continue ;
 		}
 		ft_check_if_null(&var);
 		var.token = ft_getoken(&var);
@@ -364,7 +366,7 @@ t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
 	return (ret);
 }
 
-int set_up_remove_vars(int *j, int *in_single, int *in_double)
+int	set_up_remove_vars(int *j, int *in_single, int *in_double)
 {
 	(*j) = 0;
 	(*in_single) = 0;
@@ -372,9 +374,9 @@ int set_up_remove_vars(int *j, int *in_single, int *in_double)
 	return (0);
 }
 
-int contains_quotes(char *content)
+int	contains_quotes(char *content)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!content)
@@ -388,10 +390,10 @@ int contains_quotes(char *content)
 	return (0);
 }
 
-void set_node_type(t_pre_tokens **head, int contain_quotes)
+void	set_node_type(t_pre_tokens **head, int contain_quotes)
 {
-	int i;
-	t_pre_tokens *node;
+	int				i;
+	t_pre_tokens	*node;
 
 	i = 0;
 	node = *head;
@@ -417,14 +419,13 @@ void set_node_type(t_pre_tokens **head, int contain_quotes)
 	}
 }
 
-char *remove_quote(char *content)
+char	*remove_quote(char *content)
 {
-	char *copy;
-	int i;
-	int j;
-	int in_single;
-	int in_double;
-	int contain_quotes;
+	char	*copy;
+	int		i;
+	int		j;
+	int		in_single;
+	int		in_double;
 
 	i = set_up_remove_vars(&j, &in_single, &in_double);
 	copy = malloc(ft_strlen(content) + 1);
@@ -443,10 +444,9 @@ char *remove_quote(char *content)
 	return (copy);
 }
 
-t_sub get_sub_from_node(t_pre_tokens **node_ix)
+t_sub	get_sub_from_node(t_pre_tokens **node_ix)
 {
-	char **sub;
-	t_sub returned;
+	t_sub	returned;
 
 	returned.type = (*node_ix)->type;
 	returned.sub = ft_split((*node_ix)->content, 30);
@@ -463,7 +463,8 @@ void	ft_remove_quotes_2(t_pre_tokens **head, t_env *head_env)
 		node->contain_quotes = contains_quotes(node->content);
 		if (node->type == TYPE_ARG)
 		{
-			if ((!(node->prev)) || (node->prev->type == TYPE_ARG || node->prev->type == TYPE_RED_PIP))
+			if ((!(node->prev)) || (node->prev->type == TYPE_ARG
+					|| node->prev->type == TYPE_RED_PIP))
 			{
 				node->sub = expand_variable_2(&node, head_env);
 			}
@@ -480,7 +481,7 @@ void	ft_remove_quotes_2(t_pre_tokens **head, t_env *head_env)
 	}
 }
 
-void ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
+void	ft_remove_quotes(t_pre_tokens **head, t_env *head_env)
 {
 	t_pre_tokens	*node;
 

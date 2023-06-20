@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:23:14 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/09 19:50:31 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 15:22:34 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ int	if_args_exist(char *args_content, int status)
 	else if (check_numric(args_content) == 2)
 		exit((unsigned char)status);
 	else
-		status = pr_err("minishell: exit: ",
-				"too many arguments\n", NULL, 1);
+		status = pr_err("minishell: exit: ", "too many arguments\n", NULL, 1);
 	return (status);
 }
 

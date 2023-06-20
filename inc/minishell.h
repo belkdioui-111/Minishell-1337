@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/19 18:50:56 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 16:45:57 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,17 @@
 # include <errno.h>
 # include <string.h>
 
+typedef struct s_env
+{
+	char			*index;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_globals	 {
-	int	exit_status;
+	int		exit_status;
+	t_env	*env;
+	t_env	*export;
 }t_globals;
 
 extern t_globals	glob;
@@ -40,12 +49,6 @@ enum token_type
 	TYPE_RED_PIP = 6,
 };
 
-typedef struct s_env
-{
-	char			*index;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
 
 typedef struct s_check_arg
 {
@@ -147,21 +150,39 @@ void			set_node_type(t_pre_tokens **head, int contain_quotes);
 
 
 //execution part start
-char	*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head);
 
+//expanding
+char			*expand_redirs(char *var, t_env *env);
+char			*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head);
+int				get_len(char *var, t_env *env);
+char			*expnd(char *var, t_env *env, int *amb);
+char			*get_index(char *idx);
+char			*get_value(char *idx, t_env **env);
+//end expanding
+
+//redirections start
 int				redirection(t_command *head, t_env *env);
+int				perr(char *arg, char *msg, int ret);
+int				check_if_output(int *cmdn, char *cmd, t_pre_tokens *out, t_env *env);
+int				check_if_input(int *cmdn, t_env *env, t_command *head, t_pre_tokens *in);
+int				check_if_heredocs(t_command *head);
+// redirections end
+
 char			**convert_link_to_2p(t_env *env);
 int				calculate_len_of_w(t_command *all_cmd, int i);
 int				calculate_number_of_args_in_node(t_command *all_cmd);
 int				calculate_num_of_cmd(t_command *all_cmd);
 void			conver_l_args_to_p(t_command *head_command);
 void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
+void			simple_execute(char **cmd, int *pipes, int fd, t_command *node);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
 int				pr_err(char *str1, char *str2, char *str3, int status);
+void			free_all_cmd(char ***all_cmd);
+void			check_paths(char *path, char *cmd);
+
 //set paths start
 char			*set_path(t_command *head_command, t_env *env_head);
 char			*remove_quote(char *content);
-
 //set paths end
 
 //built part start
@@ -175,7 +196,7 @@ int				exec_cd(t_command *cmd, t_env *env, t_env *export);
 int				exec_exit(t_pre_tokens *args, int status);
 void			search_in_env_and_replace(t_env *env, char *index, char *str);
 char			*search_in_env(t_env *env, char *s);
-int				check_if_buil(char *s, t_command *cmds);
+int				check_if_buil(char *s);
 int				exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
 //built part end
 
@@ -183,9 +204,5 @@ int				exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
 
 
 
-int	get_len(char *var, t_env *env);
-char	*expnd(char *var, t_env *env, int *amb);
-char	*get_index(char *idx);
-char	*get_value(char *idx, t_env **env);
 
 #endif

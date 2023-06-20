@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 09:46:02 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/11 09:48:50 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 15:22:54 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,19 @@ void	if_there_is_index_and_value(t_env *env, t_env *exp, char *args, int j)
 	}
 	else
 	{
-		search_in_env_and_replace(exp, ft_substr(args, 0, j),
-			ft_substr(args, j + 1, ft_strlen(args)));
-		search_in_env_and_replace(env, ft_substr(args, 0, j),
-			ft_substr(args, j + 1, ft_strlen(args)));
+		search_in_env_and_replace(exp, ft_substr(args, 0, j), ft_substr(args, j
+				+ 1, ft_strlen(args)));
+		search_in_env_and_replace(env, ft_substr(args, 0, j), ft_substr(args, j
+				+ 1, ft_strlen(args)));
 	}
 }
 
 void	mod_env_exp(t_env *env, t_env *exp, t_command *cmd)
 {
-	int			i;
-	int			j;
-	t_env		*new_node;
-	char		*str;
+	int		i;
+	int		j;
+	t_env	*new_node;
+	char	*str;
 
 	i = 0;
 	while (cmd->db_args[i])

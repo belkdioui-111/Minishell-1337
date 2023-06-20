@@ -12,9 +12,9 @@
 
 #include "../../inc/minishell.h"
 
-void    free_double(char **array)
+void	free_double(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (array[i])

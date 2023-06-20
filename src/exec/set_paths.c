@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 11:26:36 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/20 15:19:24 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ char	**get_path(t_env *envp)
 
 char	*if_is_file(char *cmd)
 {
-	char			*path;
-	struct stat		filestat;
+	char		*path;
+	struct stat	filestat;
 
 	if (stat(cmd, &filestat) == 0)
 	{
@@ -79,7 +79,7 @@ char	*set_path(t_command *head_command, t_env *env_head)
 		tmp1->path = ft_strdup("cmdnull");
 		return (tmp1->path);
 	}
-	if (check_if_buil(tmp1->cmd, tmp1) == 0)
+	if (check_if_buil(tmp1->cmd) == 0)
 	{
 		if (access(tmp1->cmd, F_OK | X_OK) != -1)
 			tmp1->path = if_is_file(tmp1->cmd);

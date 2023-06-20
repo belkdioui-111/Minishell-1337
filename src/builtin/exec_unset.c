@@ -12,8 +12,8 @@
 
 #include "../../inc/minishell.h"
 
-void	mod_env_and_exp(t_env *env_tmp, char *args,
-	t_env *prev_env, t_env **env)
+void	mod_env_and_exp(t_env *env_tmp, char *args, t_env *prev_env,
+		t_env **env)
 {
 	while (env_tmp)
 	{

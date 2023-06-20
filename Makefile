@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/19 18:40:06 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/20 16:44:34 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ SRC =src/common/main.c src/parsing/get_first_command.c src/parsing/error.c \
 	src/builtin/exec_pwd.c src/builtin/exec_unset.c src/builtin/exec_export.c \
 	src/exec/set_paths.c src/exec/conv_linked_to_tr_p.c src/exec/utils_exec.c \
 	src/builtin/exec_export_mod.c src/exec/calculating.c src/exec/redirections.c \
+	src/exec/expanding.c src/exec/redirections_1.c src/exec/expanding_1.c\
+	src/exec/exec_1.c \
 
 OBJ := $(SRC:.c=.o)
 OBJ := $(addprefix obj/, $(OBJ))
@@ -35,7 +37,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = #-fsanitize=address -g #-Wall -Wextra -Werror
+CFLAGS = #-Wall -Wextra -Werror #-fsanitize=address -g 
 
 all: $(NAME)
 
