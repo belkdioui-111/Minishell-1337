@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 20:29:50 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 22:50:37 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,16 +201,21 @@ void	free_commands(t_command **head)
 	while (command)
 	{
 		command_next = command->next;
+		// printf("adresse path = %p\n",command->path);
+		free(command->path);
+		free_double(command->db_args);
 		free_linked(&(command->args));
 		free_linked(&(command->input_files));
 		free_linked(&(command->output_files));
 		free_linked(&(command->append_files));
 		free_linked(&(command->herdoc_files));
-		free_double(command->db_args);
-		// if (command->path || !command->path)
-		// 	free(command->path);
 		free(command->here_doc_data);
-		free(command->cmd);
+		if (command->cmd)
+			{
+				// printf("adresse cmd = %p\n",command->cmd);
+				free(command->cmd);
+				command->cmd = NULL;
+			}
 		free(command);
 		
 		command = command_next;
@@ -336,7 +341,7 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 	{
 		if (valid_commands(&head_command, env_head) == 1)
 		{
-			// free_commands(&head_command);
+			free_commands(&head_command);
 			return (NULL);
 		}
 		ft_lexer(&head_command);

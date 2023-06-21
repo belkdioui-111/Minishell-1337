@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 20:28:47 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 22:37:20 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ int	main(int ac, char *av[], char **env)
 			all_cmd = convert_linked_list_to_tr_p(head_command);
 			exec(all_cmd, head_command);
 			// printf_commands(head_command);
+			// if (head_command->path)
+			
+			free_all_cmd(all_cmd);
 			free_commands(&head_command);
 		}
 		free(data.user_input);

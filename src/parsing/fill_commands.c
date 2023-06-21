@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_commands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:13:40 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/15 16:24:46 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/21 22:39:04 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	set_null_memeber(t_command **command, int state)
 	new_command->in_type = 0;
 	new_command->out_type = 0;
 	new_command->here_doc_data = NULL;
+	new_command->path = NULL;
+	new_command->db_args = NULL;
 	new_command->has_error = 0;
 	new_command->in_error = 0;
 }

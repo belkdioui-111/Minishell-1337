@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 19:20:50 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 22:50:22 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*if_is_file(char *cmd)
 	if (stat(cmd, &filestat) == 0)
 	{
 		if (!(filestat.st_mode & S_IFDIR))
-			path = cmd;
+			path = ft_strdup(cmd);
 		else
 			path = ft_strdup("dir");
 	}
@@ -75,16 +75,20 @@ char	*set_path(t_command *head_command)
 	t_command	*tmp1;
 
 	tmp1 = head_command;
-	tmp1->path= ft_strdup("\0");
+	tmp1->path =ft_strdup("\0");
 	if (!tmp1->cmd)
 	{
+		free(tmp1->path);
 		tmp1->path = ft_strdup("cmdnull");
 		return (tmp1->path);
 	}
 	if (check_if_buil(tmp1->cmd) == 0)
 	{
+		free(tmp1->path);
 		if (access(tmp1->cmd, F_OK | X_OK) != -1)
-			tmp1->path = if_is_file(tmp1->cmd);
+			{
+				tmp1->path = if_is_file(tmp1->cmd);
+			}
 		else
 		{
 			if (tmp1->cmd && ft_strchr(tmp1->cmd, '/'))
