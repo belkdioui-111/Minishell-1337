@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 04:26:41 by macbook           #+#    #+#             */
-/*   Updated: 2023/06/20 11:31:37 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/21 10:37:01 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	add_returned_to_files(char *data, t_command **command_ix, int ret_type)
 		add_pre_t_2(&(command->output_files), data, NULL, ret_type);
 		command->out_type = 1;
 	}
-	if (ret_type == TYPE_RED_IN /* || ret_type == TYPE_RED_HER*/)
+	if (ret_type == TYPE_RED_IN)
 	{
 		add_pre_t_2(&(command->input_files), data, NULL, 0);
 		command->in_type = TYPE_RED_IN;
@@ -89,64 +89,6 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 	return (new_arguments);
 }
 
-int	num_of_strs(char **strings)
-{
-	int	i;
-
-	i = 0;
-	if (!strings)
-		return (0);
-	while (strings[i])
-		i++;
-	return (i);
-}
-
-char	*expand_red(t_pre_tokens *node, int *ambiguous)
-{
-	t_sub	strings;
-	int		total;
-	int		i;
-
-	strings = expand_variable_2(&node, glob.env);
-	total = num_of_strs(strings.sub);
-	if ((total == 0 || total > 1))
-	{
-		*ambiguous = 1;
-		free(node->content);
-		return (ft_strdup(""));
-	}
-	// free(node->content);
-	return (strings.sub[0]);
-}
-
-int	check_in_err_help(t_pre_tokens *node, int *ambiguous, t_env *env_head)
-{
-	int	in_file_fd;
-
-	if (node->prev->type == TYPE_RED_IN)
-	{
-		node->content = expand_red(node, ambiguous);
-		if (*ambiguous == 1)
-			return (1);
-		in_file_fd = open(node->content, O_RDONLY);
-		if (in_file_fd == -1)
-		{
-			close(in_file_fd);
-			return (2);
-		}
-		close(in_file_fd);
-	}
-	if (node->prev->type != TYPE_RED_HER)
-	{
-		if ((node->prev->type != TYPE_ARG)
-			&& (node->prev->type != TYPE_RED_PIP))
-			node->content = expand_red(node, ambiguous);
-		if (*ambiguous == 1)
-			return (1);
-	}
-	return (0);
-}
-
 int	check_in_error(t_command **commands_ix, t_env *env_head)
 {
 	t_command		*command;
@@ -159,13 +101,6 @@ int	check_in_error(t_command **commands_ix, t_env *env_head)
 	ambiguous = 0;
 	while (node)
 	{
-		// node->contain_quotes = contains_quotes(node->content);
-		// if (node->prev)
-		// {
-		// 	ret = check_in_err_help(node, &ambiguous, env_head);
-		// 	if (ret == 1 || ret == 2)
-		// 		return (ret);
-		// }
 		if ((!node->prev) || ((node->prev) && (node->prev->type == TYPE_ARG
 					|| node->prev->type == TYPE_RED_PIP)))
 			node->content = remove_quote(node->content);
@@ -174,7 +109,7 @@ int	check_in_error(t_command **commands_ix, t_env *env_head)
 	return (0);
 }
 
-void	valid_commands_2(t_command **head_commands, int ret, t_env *env_head)
+int	valid_commands_2(t_command **head_commands, int ret, t_env *env_head)
 {
 	t_command	*command;
 	int			stpo;
@@ -186,21 +121,14 @@ void	valid_commands_2(t_command **head_commands, int ret, t_env *env_head)
 		if (command->has_error)
 			stpo = 1;
 		if (!stpo)
+		{
 			command->pipe_hd = ft_read_heredoc(&command, env_head);
+			if (command->pipe_hd == -2)
+				return (1);
+		}
 		command = command->next;
 	}
-	// if (ret == 0)
-	// {
-	//     command = *head_commands;
-	//     while (command)
-	//     {
-	//         if (command->in_error == 1)
-	// 			print_error("ambiguous redirect\n", 1);
-	//         if (command->in_error == 2)
-	//             print_error("No such file or directory\n", 1);
-	//         command = command->next;
-	//     }
-	// }
+	return (0);
 }
 
 int	valid_commands(t_command **head_commands, t_env *env_head)
@@ -217,13 +145,14 @@ int	valid_commands(t_command **head_commands, t_env *env_head)
 	{
 		ret += check_redirections(&command);
 		temp = command->args;
-		command->in_error = check_in_error(&command, env_head);
+		// command->in_error = check_in_error(&command, env_head);
 		command->args = ft_set_files(&command);
 		free_linked(&temp);
 		command = command->next;
 	}
 	if (ret != 0)
 		print_error("syntax error\n", 258);
-	valid_commands_2(head_commands, ret, env_head);
+	if (valid_commands_2(head_commands, ret, env_head))
+		return (1);
 	return (ret > 0);
 }

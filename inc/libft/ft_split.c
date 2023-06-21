@@ -51,7 +51,7 @@ static char	**ft_allocater(char *s, char c, char **strs)
 				j++;
 				i++;
 			}
-			strs[k] = (char *) ft_calloc(j + 1, sizeof(char));
+			strs[k] = (char *)ft_calloc(j + 1, sizeof(char));
 			if (!strs[k])
 				return (NULL);
 			k++;
@@ -97,7 +97,7 @@ char	**ft_split(char *s, char c)
 	if (!s)
 		return (NULL);
 	count = ft_counter(s, c);
-	arrays = (char **) ft_calloc(count + 1, sizeof(char *));
+	arrays = (char **)ft_calloc(count + 1, sizeof(char *));
 	if (!arrays)
 		return (NULL);
 	if (!count)

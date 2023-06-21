@@ -78,7 +78,7 @@ int	check_syntax_export(char *args)
 		if (syntax_with_equal(args))
 		{
 			glob.exit_status = pr_err("minishell: export: `", args,
-					"': not a valid identifier\n", 1);
+				"': not a valid identifier\n", 1);
 			return (1);
 		}
 	}
@@ -87,7 +87,7 @@ int	check_syntax_export(char *args)
 		if (syntax_without_equal(args))
 		{
 			glob.exit_status = pr_err("minishell: export: `", args,
-					"': not a valid identifier\n", 1);
+				"': not a valid identifier\n", 1);
 			return (1);
 		}
 	}

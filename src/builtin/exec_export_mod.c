@@ -97,7 +97,7 @@ void	mod_env_exp(t_command *cmd)
 				continue ;
 			}
 			new_node = ft_lstnew_env(ft_substr(cmd->db_args[i], 0,
-						ft_strlen(cmd->db_args[i])), NULL);
+					ft_strlen(cmd->db_args[i])), NULL);
 			ft_lstadd_back_env(&glob.export, new_node);
 		}
 		i++;

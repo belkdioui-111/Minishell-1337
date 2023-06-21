@@ -39,7 +39,7 @@ char	*ft_zero(void)
 {
 	char	*zero;
 
-	zero = (char *) ft_calloc(2, sizeof(char));
+	zero = (char *)ft_calloc(2, sizeof(char));
 	zero[0] = '0';
 	return (zero);
 }

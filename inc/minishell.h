@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 14:50:55 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 16:35:00 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <dirent.h>
 # include <errno.h>
 # include <string.h>
+# include <signal.h>
 
 typedef struct s_env
 {
@@ -33,8 +34,10 @@ typedef struct s_env
 
 typedef struct s_globals	 {
 	int		exit_status;
-	t_env	*env;
+	int		in_herdoc;
 	t_env	*export;
+	t_env	*env;
+	int		dup;
 }t_globals;
 
 extern t_globals	glob;
@@ -142,16 +145,18 @@ int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node, enum 
 int				ft_read_heredoc(t_command **command_ix, t_env *_head);
 int				contains_quotes(char *content);
 char			*expand_variable(char *token, t_env *head_env, int state);
-t_sub			expand_variable_2(t_pre_tokens **node_ix, t_env *head_env);
+t_sub			expand_variable_2(t_pre_tokens *node_ix, t_env *head_env);
 void			set_node_type(t_pre_tokens **head, int contain_quotes);
 
-
+char			**expand_redirs_2(char *var, t_env *env);
+int				is_valid_variable(char after_dollar);
 
 
 
 //execution part start
 
 //expanding
+char			*exit_st(char *key);
 char			*expand_redirs(char *var);
 char			*expand_red(t_pre_tokens *node, int *ambiguous);
 int				get_len(char *var);

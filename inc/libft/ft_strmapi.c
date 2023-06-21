@@ -20,7 +20,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	if (!s)
 		return (NULL);
 	i = 0;
-	string = (char *) ft_calloc(ft_strlen(s) + 1, sizeof(char));
+	string = (char *)ft_calloc(ft_strlen(s) + 1, sizeof(char));
 	if (!string)
 		return (NULL);
 	while (s[i] != '\0')

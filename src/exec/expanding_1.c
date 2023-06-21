@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 15:03:00 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 15:03:33 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 16:52:14 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ void	get_len_if_sin_quo(int *i, int *len, char *var)
 	(*i)++;
 }
 
+void	if_not_valid(char *key, char **value, int *i, int *len)
+{
+	*value = exit_st(key);
+	*i += ft_strlen(key);
+	*len += ft_strlen(*value);
+}
+
 void	get_len_if_db_quo(int *i, int *len, char *var, t_env *env)
 {
 	char	*key;
@@ -31,12 +38,15 @@ void	get_len_if_db_quo(int *i, int *len, char *var, t_env *env)
 	{
 		if (var[*i] == '$' && ++(*i))
 		{
-			key = get_index(var + *i);
-			value = get_value(key, &env);
-			*i += ft_strlen(key);
-			*len += ft_strlen(value);
-			free(key);
-			free(value);
+			if (is_valid_variable(var[*i]) == 0)
+				(*len)++;
+			else
+			{
+				key = get_index(var + *i);
+				if_not_valid(key, &value, i, len);
+				free(key);
+				free(value);
+			}
 		}
 		else
 		{
@@ -52,12 +62,20 @@ void	get_len_if_db_dollar(int *i, int *len, char *var, t_env *env)
 	char	*key;
 	char	*value;
 
-	key = get_index(var + *i);
-	value = get_value(key, &env);
-	*i += ft_strlen(key);
-	*len += ft_strlen(value);
-	free(key);
-	free(value);
+	if (is_valid_variable(var[*i]) == 0)
+		(*len)++;
+	else
+	{
+		key = get_index(var + *i);
+		if (ft_strncmp(key, "?", 2) == 0)
+			value = ft_itoa(glob.exit_status);
+		else
+			value = get_value(key, &env);
+		*i += ft_strlen(key);
+		*len += ft_strlen(value);
+		free(key);
+		free(value);
+	}
 }
 
 int	get_len(char *var)

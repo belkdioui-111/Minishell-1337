@@ -22,7 +22,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	if (start >= ft_strlen(s))
 		return (ft_calloc(1, sizeof(char)));
 	i = 0;
-	str_rete = (char *) ft_calloc((len + 1), sizeof(char));
+	str_rete = (char *)ft_calloc((len + 1), sizeof(char));
 	if (!str_rete)
 		return (NULL);
 	while (i < len)

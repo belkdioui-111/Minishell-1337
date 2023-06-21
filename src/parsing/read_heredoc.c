@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 19:05:17 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 19:26:40 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ int	is_delimiter(char *del, char *content)
 {
 	int		check;
 	char	*deli;
-	int		i;
 
 	deli = ft_strtrim(del, "\n");
 	check = ft_strncmp(content, deli, ft_strlen(content) + 1);
+	free(content);
+	free(deli);
 	if (check == 0)
 		return (1);
 	return (0);
@@ -43,7 +44,7 @@ int	ft_read_heredoc_while(char **string_ix, t_pre_tokens **herdoc,
 		t_command *command, t_env *env_head)
 {
 	char	*string;
-		int cq;
+	int		cq;
 
 	string = *string_ix;
 	if (isatty(0))
@@ -75,16 +76,8 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	char			*all;
 	int				pipe_hd[2];
 
-	// t_pre_tokens	*temp;
 	command = *command_ix;
 	string = 0;
-	// herdoc = NULL;
-	// temp = command->herdoc_files;
-	// while (temp)
-	// {
-	// 	if (temp->type == TYPE_RED_HER)
-	// 		add_pre_t_2()
-	// }
 	herdoc = command->herdoc_files;
 	if (herdoc == NULL)
 		return (-1);
@@ -93,6 +86,11 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	while (herdoc)
 		if (ft_read_heredoc_while(&string, &herdoc, command, env_head))
 			break ;
+	if (glob.in_herdoc == 3)
+	{
+		glob.in_herdoc = 0;
+		return (-2);
+	}
 	if (pipe(pipe_hd) == -1)
 		return (0);
 	if (pipe_hd[1] != -1 && command->here_doc_data)

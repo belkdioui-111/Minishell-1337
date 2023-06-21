@@ -14,7 +14,7 @@
 
 char	*ft_strcpy(char *dest, char *src)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (src[++i])

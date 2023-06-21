@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:22:46 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 15:47:48 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 15:37:41 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,13 @@ char	*get_new_token(char **token, char *new, t_env *head_env, int i)
 int	is_valid_variable(char after_dollar)
 {
 	return ((ft_isalnum(after_dollar)) || (after_dollar == '_')
-		|| (after_dollar == '?'));
+		|| (after_dollar == '?') || (after_dollar == '@'));
 }
 
 void	expand_loop_1(char **token, int in_single_quote, int in_double_quote,
 		int i, t_env *head_env)
 {
+	t_pre_tokens	*head;
 	char			*new;
 
 	new = NULL;
@@ -117,6 +118,7 @@ void	expand_loop_1(char **token, int in_single_quote, int in_double_quote,
 void	expand_loop_2(char **token, int in_single_quote, int in_double_quote,
 		int i, t_env *head_env)
 {
+	t_pre_tokens	*head;
 	char			*new;
 
 	new = NULL;
@@ -241,6 +243,7 @@ t_sub	expand_variable_2_tool(t_expand_variable *var, t_env *head_env)
 	t_sub	returned;
 
 	i = 0;
+	// print_leaks();
 	while (i < var->token_list.count)
 	{
 		if (var->token_list.tokens[i][0] == '$')
@@ -259,7 +262,6 @@ t_sub	expand_variable_2_tool(t_expand_variable *var, t_env *head_env)
 	free(new_all);
 	returned.type = TYPE_ARG;
 	returned.sub = new_splited;
-	free_exp(var);
 	return (returned);
 }
 
@@ -335,34 +337,143 @@ void	ft_init_ex_2_vars(t_expand_variable *var, char *content)
 	var->i = 0;
 }
 
-t_sub	expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
-{
-	t_expand_variable	var;
-	t_sub				ret;
+// t_sub expand_variable_2(t_pre_tokens **node_ix, t_env *head_env)
+// {
+// 	t_expand_variable	var;
+// 	t_sub				ret;
 
-	ft_init_ex_2_vars(&var, (*node_ix)->content);
-	while (var.i < var.len)
+// 	ft_init_ex_2_vars(&var, (*node_ix)->content);
+// 	while (var.i < var.len)
+// 	{
+// 		if ((var.str[var.i] == ' ') && (!(var.singleq)) && (!(var.doubleq)))
+// 		{
+// 			check_if_space(&(var.token), &(var.token_list), &(var.i));
+// 			continue ;
+// 		}
+// 		if ((var.str[var.i]) == '\'' && (!(var.doubleq)))
+// 			(var.singleq) = !(var.singleq);
+// 		if (var.str[var.i] == '\"' && !(var.singleq))
+// 			var.doubleq = !(var.doubleq);
+// 		if (var.str[var.i] == '$' && !(var.singleq))
+// 		{
+// 			if (is_a_dollar(&var))
+// 				continue ;
+// 		}
+// 		ft_check_if_null(&var);
+// 		var.token = ft_getoken(&var);
+// 	}
+// 	if (var.token != NULL)
+// 		add_token(&(var.token_list), var.token);
+// 	ret = (expand_variable_2_tool(&var, head_env));
+// 	free_exp(&var);
+// 	return (ret);
+// }
+
+// char	*expnd(char *var, t_env *env, int *amb)
+// {
+// 	char	*exp;
+// 	char	*value;
+// 	int		i;
+// 	int		j;
+
+// 	exp = ft_calloc(get_len(var, env) + 1, 1);
+// 	i = 0;
+// 	j = 0;
+// 	while (var[i])
+// 	{
+// 		if (var[i] == '\'' && ++i)
+// 		{
+// 			while (var[i] && var[i] != '\'')
+// 				{exp[j++] = var[i++];}
+// 			i++;
+// 		}
+// 		else if (var[i] == '"' && ++i)
+// 		{
+// 			while (var[i] != '"')
+// 			{
+// 				if (var[i] == '$' && ++i)
+// 				{
+// 					if (is_valid_variable(var[i]) == 0)
+// 					{
+// 						i--;
+// 						exp[j++] = var[i++];
+// 					}
+// 					else
+// 					{
+// 						char *key = get_index(var + i);
+// 						if (ft_strncmp(key, "?", 2) == 0)
+// 							value = ft_itoa(glob.exit_status);
+// 						else
+// 							value = get_value(key, &env);
+// 						i += ft_strlen(key);
+// 						ft_memcpy(&exp[j], value, ft_strlen(value));
+// 						j += ft_strlen(value);
+// 						free(key);
+// 						free(value);
+// 					}
+// 				}
+// 				else
+// 					{exp[j++] = var[i++];}
+// 			}
+// 			i++;
+// 		}
+// 		else if (var[i] == '$' && ++i)
+// 		{
+// 			if (is_valid_variable(var[i]) == 0)
+// 			{
+// 				i--;
+// 				exp[j++] = var[i++];
+// 			}
+// 			else
+// 			{
+// 				char *key = get_index(var + i);
+// 				if (ft_strncmp(key, "?", 2) == 0)
+// 					value = ft_itoa(glob.exit_status);
+// 				else
+// 					value = get_value(key, &env);
+// 				i += ft_strlen(key);
+// 				for (int k = 0; value[k]; k++)
+// 					if (value[k] == ' ' || value[k] == '\t')
+// 						value[k] = 2;
+// 				ft_memcpy(&exp[j], value, ft_strlen(value));
+// 				j += ft_strlen(value);
+// 				free(key);
+// 				free(value);
+// 			}
+// 		}
+// 		else
+// 			{exp[j++] = var[i++];}
+// 	}
+// 	return (exp);
+// }
+
+char	**expand_redirs_2(char *var, t_env *env)
+{
+	char	*exp;
+	char	**arr;
+	int		n;
+
+	exp = expnd(var, &n);
+	arr = ft_split(exp, 2);
+	free(exp);
+	if (!arr[0] && (ft_strchr(var, '\"') || ft_strchr(var, '\'')))
 	{
-		if ((var.str[var.i] == ' ') && (!(var.singleq)) && (!(var.doubleq)))
-		{
-			check_if_space(&(var.token), &(var.token_list), &(var.i));
-			continue ;
-		}
-		if ((var.str[var.i]) == '\'' && (!(var.doubleq)))
-			(var.singleq) = !(var.singleq);
-		if (var.str[var.i] == '\"' && !(var.singleq))
-			var.doubleq = !(var.doubleq);
-		if (var.str[var.i] == '$' && !(var.singleq))
-		{
-			if (is_a_dollar(&var))
-				continue ;
-		}
-		ft_check_if_null(&var);
-		var.token = ft_getoken(&var);
+		free(arr);
+		arr = ft_calloc(2, sizeof(char *));
+		arr[0] = (char *)-1;
+		arr[1] = 0;
 	}
-	if (var.token != NULL)
-		add_token(&(var.token_list), var.token);
-	ret = (expand_variable_2_tool(&var, head_env));
+	return (arr);
+}
+
+t_sub	expand_variable_2(t_pre_tokens *node, t_env *head_env)
+{
+	t_sub	ret;
+	int		i;
+
+	ret.sub = expand_redirs_2(node->content, head_env);
+	ret.type = TYPE_ARG;
+	i = -1;
 	return (ret);
 }
 
@@ -426,6 +537,7 @@ char	*remove_quote(char *content)
 	int		j;
 	int		in_single;
 	int		in_double;
+	int		contain_quotes;
 
 	i = set_up_remove_vars(&j, &in_single, &in_double);
 	copy = malloc(ft_strlen(content) + 1);
@@ -446,6 +558,7 @@ char	*remove_quote(char *content)
 
 t_sub	get_sub_from_node(t_pre_tokens **node_ix)
 {
+	char	**sub;
 	t_sub	returned;
 
 	returned.type = (*node_ix)->type;
@@ -466,7 +579,7 @@ void	ft_remove_quotes_2(t_pre_tokens **head, t_env *head_env)
 			if ((!(node->prev)) || (node->prev->type == TYPE_ARG
 					|| node->prev->type == TYPE_RED_PIP))
 			{
-				node->sub = expand_variable_2(&node, head_env);
+				node->sub = expand_variable_2(node, head_env);
 			}
 			else
 			{
@@ -474,9 +587,7 @@ void	ft_remove_quotes_2(t_pre_tokens **head, t_env *head_env)
 			}
 		}
 		else
-		{
 			node->sub = get_sub_from_node(&node);
-		}
 		node = node->next;
 	}
 }

@@ -29,7 +29,7 @@ int	check_syntax(char *args)
 		else
 		{
 			glob.exit_status = pr_err("minishell: unset: `", args,
-					"': not a valid identifier\n", 1);
+				"': not a valid identifier\n", 1);
 			return (1);
 		}
 		i++;

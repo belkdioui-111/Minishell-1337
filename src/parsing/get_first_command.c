@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 19:18:41 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 20:29:50 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,10 @@ int	ft_cnt(char *string)
 
 char	*ft_read_input(void)
 {
-	char	*prompt;
 	char	*user_input;
 	char	*trimed_value;
 
-	prompt = ft_colorize(ft_strdup("minishell-1.0> "), "green");
-	user_input = readline(prompt);
-	free(prompt);
+	user_input = readline("minishell > ");
 	if (!(user_input))
 		ft_error(0);
 	add_history(user_input);
@@ -188,30 +185,34 @@ void	free_linked(t_pre_tokens **head)
 	while (node)
 	{
 		next = node->next;
-		// free(node->content);
+		free(node->content);
 		free(node);
 		node = next;
 	}
 }
 
+
 void	free_commands(t_command **head)
 {
 	t_command	*command;
 	t_command	*command_next;
-
+	
 	command = *head;
 	while (command)
 	{
-		close(command->pipe_hd);
 		command_next = command->next;
 		free_linked(&(command->args));
 		free_linked(&(command->input_files));
 		free_linked(&(command->output_files));
 		free_linked(&(command->append_files));
 		free_linked(&(command->herdoc_files));
+		free_double(command->db_args);
+		// if (command->path || !command->path)
+		// 	free(command->path);
 		free(command->here_doc_data);
 		free(command->cmd);
 		free(command);
+		
 		command = command_next;
 	}
 }
@@ -259,6 +260,7 @@ int	ft_tokenizer_loop(tokenizer_t *tok)
 t_pre_tokens	*ft_tokenizer(char *user_input)
 {
 	tokenizer_t	tok;
+	char		*error;
 
 	tok.head = ft_init_zeros(&tok);
 	tok.user_input = ft_strdup(user_input);
@@ -273,17 +275,18 @@ t_pre_tokens	*ft_tokenizer(char *user_input)
 	return (tok.head);
 }
 
-void	free_sub(t_pre_tokens **args)
+void	free_sub(t_pre_tokens *args)
 {
 	int	i;
 
 	i = 0;
-	while (((*args)->sub.sub)[i])
+	while ((args->sub.sub)[i])
 	{
-		free(((*args)->sub.sub)[i]);
+		if ((args->sub.sub)[i] != ((char *)-1))
+			free((args->sub.sub)[i]);
 		i++;
 	}
-	free(((*args)->sub.sub));
+	free((args->sub.sub));
 }
 
 t_pre_tokens	*ft_set_subs(t_pre_tokens **args)
@@ -299,10 +302,18 @@ t_pre_tokens	*ft_set_subs(t_pre_tokens **args)
 		i = 0;
 		while ((node->sub.sub)[i])
 		{
-			add_pre_t_2(&returned, (node->sub.sub)[i], 0, node->sub.type);
+			// char	*ptr;
+			// ptr = remove_quote(ft_strdup((node->sub.sub)[i]));
+			// printf("ptr: (%s)\n", ptr);
+			if ((node->sub.sub)[i] == ((char *)-1))
+			{
+				add_pre_t_2(&returned, "", 0, node->sub.type);
+			}
+			else
+				add_pre_t_2(&returned, (node->sub.sub)[i], 0, node->sub.type);
 			i++;
 		}
-		free_sub(&node);
+		free_sub(node);
 		node = node->next;
 	}
 	free_linked(args);
@@ -313,6 +324,7 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 {
 	t_pre_tokens	*head_args;
 	t_command		*head_command;
+	char			*error;
 
 	head_args = ft_tokenizer(user_input);
 	ft_remove_quotes(&head_args, env_head);
@@ -324,7 +336,7 @@ t_command	*get_first_command(char *user_input, t_env *env_head)
 	{
 		if (valid_commands(&head_command, env_head) == 1)
 		{
-			free_commands(&head_command);
+			// free_commands(&head_command);
 			return (NULL);
 		}
 		ft_lexer(&head_command);

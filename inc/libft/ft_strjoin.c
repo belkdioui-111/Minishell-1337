@@ -46,7 +46,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (0);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	ret_str = (char *) ft_calloc((s1_len + s2_len + 1), sizeof(char));
+	ret_str = (char *)ft_calloc((s1_len + s2_len + 1), sizeof(char));
 	if (!ret_str)
 		return (0);
 	ft_cat(ret_str, s1, s2);

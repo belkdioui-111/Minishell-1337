@@ -38,8 +38,8 @@ long long	ft_atoi(const char *str)
 	i = 0;
 	sign = 1;
 	some = 0;
-	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n'
-		|| str[i] == '\r' || str[i] == '\t' || str[i] == '\v')
+	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n' || str[i] == '\r'
+		|| str[i] == '\t' || str[i] == '\v')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{

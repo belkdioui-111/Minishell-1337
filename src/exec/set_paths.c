@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 15:19:24 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 19:20:50 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*if_not_file(char *cmd, t_env *env_head)
 		paths[i] = ft_strjoin(paths[i], cmd);
 		if (access(paths[i], F_OK | X_OK) != -1)
 		{
-			path = paths[i];
+			path = ft_strdup(paths[i]);
 			break ;
 		}
 		else
@@ -66,6 +66,7 @@ char	*if_not_file(char *cmd, t_env *env_head)
 	}
 	if (!paths)
 		path = ft_strdup("not");
+	free_double(paths);
 	return (path);
 }
 
@@ -74,6 +75,7 @@ char	*set_path(t_command *head_command)
 	t_command	*tmp1;
 
 	tmp1 = head_command;
+	tmp1->path= ft_strdup("\0");
 	if (!tmp1->cmd)
 	{
 		tmp1->path = ft_strdup("cmdnull");

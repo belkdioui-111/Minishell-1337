@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 13:10:33 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 13:17:31 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 19:34:17 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	set_db_args(t_command **command_ix)
 	command = *command_ix;
 	num_of_args = ft_get_num_of_args(&(command->args));
 	command->db_args = (char **)ft_calloc(num_of_args + 1, sizeof(char *));
+	command->db_args[num_of_args] = 0;
 	node = command->args;
 	while (node)
 	{
