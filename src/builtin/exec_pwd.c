@@ -12,9 +12,9 @@
 
 #include "../../inc/minishell.h"
 
-int	exec_pwd(t_env *env)
+int	exec_pwd()
 {
-	ft_putstr_fd(search_in_env(env, "PWD"), 1);
+	ft_putstr_fd(search_in_env(glob.env, "PWD"), 1);
 	ft_putstr_fd("\n", 1);
 	glob.exit_status = 0;
 	return (3);

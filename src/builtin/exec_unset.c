@@ -51,14 +51,14 @@ void	check_and_free_unset(t_env **env, char *args, t_env **export)
 	mod_env_and_exp(export_tmp, args, prev_export, export);
 }
 
-int	exec_unset(t_env *env, char **args, t_env *export)
+int	exec_unset(char **args)
 {
 	int	i;
 
 	i = 0;
 	while (args[i])
 	{
-		check_and_free_unset(&env, args[i], &export);
+		check_and_free_unset(&glob.env, args[i], &glob.export);
 		i++;
 	}
 	return (7);

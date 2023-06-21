@@ -20,9 +20,9 @@ void	if_onecmd_built(t_command *head, int is_built)
 
 	fdin = dup(0);
 	fdout = dup(1);
-	ret_red = redirection(head, glob.env);
+	ret_red = redirection(head);
 	if (ret_red == 0 && ret_red != 2)
-		exec_built(is_built, head, glob.env, glob.export);
+		exec_built(is_built, head);
 	dup2(fdin, 0);
 	close(fdin);
 	dup2(fdout, 1);
@@ -80,7 +80,7 @@ int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 	i = -1;
 	while (all_cmd[++i])
 	{
-		head->path = set_path(head, glob.env);
+		head->path = set_path(head);
 		if (i != count_cmds - 1)
 			pipe(pipes);
 		fd = handling_pipes(i, fd, count_cmds, pipes);
@@ -97,18 +97,16 @@ int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 	return (status);
 }
 
-void	exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env)
+void	exec(char ***all_cmd, t_command *head)
 {
 	int			count_cmds;
 	int			is_built;
 	int			status;
 
-	glob.env = env;
-	glob.export = exp;
 	count_cmds = calculate_num_of_cmd(head);
 	if (count_cmds == 1)
 	{
-		head->path = set_path(head, env);
+		head->path = set_path(head);
 		is_built = check_if_buil(head->cmd);
 		if (head && is_built == 0)
 			if_onecmd_not_built(all_cmd[0], head);

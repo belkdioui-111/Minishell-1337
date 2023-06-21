@@ -16,9 +16,9 @@ void	exec_built_in_simple(int is_built, t_command *node)
 {
 	int	ret_red;
 
-	ret_red = redirection(node, glob.env);
+	ret_red = redirection(node);
 	if (ret_red == 0 && ret_red != 2)
-		exec_built(is_built, node, glob.env, glob.export);
+		exec_built(is_built, node);
 	exit(glob.exit_status);
 }
 
@@ -27,7 +27,7 @@ void	exec_cmd_in_simple(char **cmd, t_command *node)
 	int		ret_red;
 	char	**e;
 
-	ret_red = redirection(node, glob.env);
+	ret_red = redirection(node);
 	if (ret_red == 0 && ret_red != 2)
 	{
 		check_paths(node->path, cmd[0]);

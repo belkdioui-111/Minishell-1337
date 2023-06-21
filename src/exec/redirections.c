@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	redirection(t_command *head, t_env *env)
+int	redirection(t_command *head)
 {
 	t_pre_tokens	*out;
 	t_pre_tokens	*in;
@@ -23,11 +23,11 @@ int	redirection(t_command *head, t_env *env)
 	out = head->output_files;
 	in = head->input_files;
 	if (head->output_files)
-		if (check_if_output(&cmdn, head->cmd, out, env))
+		if (check_if_output(&cmdn, head->cmd, out))
 			return (1);
 	if (head->input_files)
 	{
-		check = check_if_input(&cmdn, env, head, in);
+		check = check_if_input(&cmdn, head, in);
 		if (check == 1)
 			return (1);
 		else if (check == 2)

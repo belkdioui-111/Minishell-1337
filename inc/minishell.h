@@ -139,7 +139,7 @@ int				valid_arguments(t_pre_tokens **head_args);
 int				valid_commands(t_command **head_commands, t_env *env_head);
 void			print_error(char *error_msg, int error_num);
 int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node, enum token_type type);
-int				ft_read_heredoc(t_command **command_ix, t_env *env_head);
+int				ft_read_heredoc(t_command **command_ix, t_env *_head);
 int				contains_quotes(char *content);
 char			*expand_variable(char *token, t_env *head_env, int state);
 t_sub			expand_variable_2(t_pre_tokens **node_ix, t_env *head_env);
@@ -152,28 +152,28 @@ void			set_node_type(t_pre_tokens **head, int contain_quotes);
 //execution part start
 
 //expanding
-char			*expand_redirs(char *var, t_env *env);
-char			*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head);
-int				get_len(char *var, t_env *env);
-char			*expnd(char *var, t_env *env, int *amb);
+char			*expand_redirs(char *var);
+char			*expand_red(t_pre_tokens *node, int *ambiguous);
+int				get_len(char *var);
+char			*expnd(char *var, int *amb);
 char			*get_index(char *idx);
 char			*get_value(char *idx, t_env **env);
 //end expanding
 
 //redirections start
-int				redirection(t_command *head, t_env *env);
+int				redirection(t_command *head);
 int				perr(char *arg, char *msg, int ret);
-int				check_if_output(int *cmdn, char *cmd, t_pre_tokens *out, t_env *env);
-int				check_if_input(int *cmdn, t_env *env, t_command *head, t_pre_tokens *in);
+int				check_if_output(int *cmdn, char *cmd, t_pre_tokens *out);
+int				check_if_input(int *cmdn,t_command *head, t_pre_tokens *in);
 int				check_if_heredocs(t_command *head);
 // redirections end
 
-char			**convert_link_to_2p(t_env *env);
+char			**convert_link_to_2p();
 int				calculate_len_of_w(t_command *all_cmd, int i);
 int				calculate_number_of_args_in_node(t_command *all_cmd);
 int				calculate_num_of_cmd(t_command *all_cmd);
 void			conver_l_args_to_p(t_command *head_command);
-void			exec(char ***all_cmd, t_command *head, t_env *exp, t_env *env);
+void			exec(char ***all_cmd, t_command *head);
 void			simple_execute(char **cmd, int *pipes, int fd, t_command *node);
 char			***convert_linked_list_to_tr_p(t_command *head_command);
 int				pr_err(char *str1, char *str2, char *str3, int status);
@@ -181,23 +181,23 @@ void			free_all_cmd(char ***all_cmd);
 void			check_paths(char *path, char *cmd);
 
 //set paths start
-char			*set_path(t_command *head_command, t_env *env_head);
+char			*set_path(t_command *head_command);
 char			*remove_quote(char *content);
 //set paths end
 
 //built part start
 void			mod_env_exp(t_env *env, t_env *exp, t_command *cmd);
-int				exec_export(t_env *export, t_command *cmds, t_env *env);
-int				exec_unset(t_env *env, char **args, t_env *export);
-int				exec_pwd(t_env *env);
-int				exec_env(t_env *env);
+int				exec_export(t_command *cmds);
+int				exec_unset(char **args);
+int				exec_pwd();
+int				exec_env();
 int				exec_echo(t_command *cmds);
-int				exec_cd(t_command *cmd, t_env *env, t_env *export);
+int				exec_cd(t_command *cmd);
 int				exec_exit(t_pre_tokens *args, int status);
 void			search_in_env_and_replace(t_env *env, char *index, char *str);
 char			*search_in_env(t_env *env, char *s);
 int				check_if_buil(char *s);
-int				exec_built(int n, t_command *cmds, t_env *env, t_env *export_head);
+int				exec_built(int n, t_command *cmds);
 //built part end
 
 //execution part end

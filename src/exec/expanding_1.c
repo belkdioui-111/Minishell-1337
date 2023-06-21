@@ -60,7 +60,7 @@ void	get_len_if_db_dollar(int *i, int *len, char *var, t_env *env)
 	free(value);
 }
 
-int	get_len(char *var, t_env *env)
+int	get_len(char *var)
 {
 	int		len;
 	int		i;
@@ -74,9 +74,9 @@ int	get_len(char *var, t_env *env)
 		if (var[i] == '\'' && ++i)
 			get_len_if_sin_quo(&i, &len, var);
 		else if (var[i] == '"' && ++i)
-			get_len_if_db_quo(&i, &len, var, env);
+			get_len_if_db_quo(&i, &len, var, glob.env);
 		else if (var[i] == '$' && ++i)
-			get_len_if_db_dollar(&i, &len, var, env);
+			get_len_if_db_dollar(&i, &len, var, glob.env);
 		else
 		{
 			i++;

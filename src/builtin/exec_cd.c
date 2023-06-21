@@ -12,35 +12,35 @@
 
 #include "../../inc/minishell.h"
 
-void	if_cmd_null_or_home(t_env *env, t_env *export)
+void	if_cmd_null_or_home()
 {
-	if (search_in_env(env, "HOME"))
+	if (search_in_env(glob.env, "HOME"))
 	{
-		search_in_env_and_replace(env, "OLDPWD", search_in_env(env, "PWD"));
-		search_in_env_and_replace(export, "OLDPWD", search_in_env(export,
+		search_in_env_and_replace(glob.env, "OLDPWD", search_in_env(glob.env, "PWD"));
+		search_in_env_and_replace(glob.export, "OLDPWD", search_in_env(glob.export,
 				"PWD"));
-		chdir(search_in_env(env, "HOME"));
-		search_in_env_and_replace(env, "PWD", getcwd(NULL, 0));
-		search_in_env_and_replace(export, "PWD", getcwd(NULL, 0));
+		chdir(search_in_env(glob.env, "HOME"));
+		search_in_env_and_replace(glob.env, "PWD", getcwd(NULL, 0));
+		search_in_env_and_replace(glob.export, "PWD", getcwd(NULL, 0));
 	}
 	else
 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 }
 
-int	exec_cd(t_command *cmd, t_env *env, t_env *export)
+int	exec_cd(t_command *cmd)
 {
 	if (access(cmd->db_args[0], F_OK) == 0)
 	{
-		search_in_env_and_replace(env, "OLDPWD", search_in_env(env, "PWD"));
-		search_in_env_and_replace(export, "OLDPWD", search_in_env(export,
+		search_in_env_and_replace(glob.env, "OLDPWD", search_in_env(glob.env, "PWD"));
+		search_in_env_and_replace(glob.export, "OLDPWD", search_in_env(glob.export,
 				"PWD"));
 		chdir(cmd->db_args[0]);
-		search_in_env_and_replace(env, "PWD", getcwd(NULL, 0));
-		search_in_env_and_replace(export, "PWD", getcwd(NULL, 0));
+		search_in_env_and_replace(glob.env, "PWD", getcwd(NULL, 0));
+		search_in_env_and_replace(glob.export, "PWD", getcwd(NULL, 0));
 	}
 	else if (!cmd->db_args[0] || ft_strncmp(cmd->db_args[0], "~", 2) == 0)
 	{
-		if_cmd_null_or_home(env, export);
+		if_cmd_null_or_home();
 	}
 	else
 	{

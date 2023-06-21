@@ -101,13 +101,13 @@ int	num_of_strs(char **strings)
 	return (i);
 }
 
-char	*expand_red(t_pre_tokens *node, int *ambiguous, t_env *env_head)
+char	*expand_red(t_pre_tokens *node, int *ambiguous)
 {
 	t_sub	strings;
 	int		total;
 	int		i;
 
-	strings = expand_variable_2(&node, env_head);
+	strings = expand_variable_2(&node, glob.env);
 	total = num_of_strs(strings.sub);
 	if ((total == 0 || total > 1))
 	{
@@ -125,7 +125,7 @@ int	check_in_err_help(t_pre_tokens *node, int *ambiguous, t_env *env_head)
 
 	if (node->prev->type == TYPE_RED_IN)
 	{
-		node->content = expand_red(node, ambiguous, env_head);
+		node->content = expand_red(node, ambiguous);
 		if (*ambiguous == 1)
 			return (1);
 		in_file_fd = open(node->content, O_RDONLY);
@@ -140,7 +140,7 @@ int	check_in_err_help(t_pre_tokens *node, int *ambiguous, t_env *env_head)
 	{
 		if ((node->prev->type != TYPE_ARG)
 			&& (node->prev->type != TYPE_RED_PIP))
-			node->content = expand_red(node, ambiguous, env_head);
+			node->content = expand_red(node, ambiguous);
 		if (*ambiguous == 1)
 			return (1);
 	}

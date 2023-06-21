@@ -12,11 +12,11 @@
 
 #include "../../inc/minishell.h"
 
-int	exec_env(t_env *env)
+int	exec_env()
 {
 	t_env	*tmp;
 
-	tmp = env;
+	tmp = glob.env;
 	while (tmp)
 	{
 		ft_putstr_fd(tmp->index, 1);

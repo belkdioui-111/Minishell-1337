@@ -23,7 +23,7 @@ int	pr_err(char *str1, char *str2, char *str3, int status)
 	return (status);
 }
 
-void	search_in_env_and_replace(t_env *env, char *index, char *str)
+void	search_in_env_and_replace(t_env *env,char *index, char *str)
 {
 	t_env	*tmp;
 	char	*newvalue;

@@ -12,13 +12,13 @@
 
 #include "../../inc/minishell.h"
 
-char	*expand_redirs(char *var, t_env *env)
+char	*expand_redirs(char *var)
 {
 	char	*exp;
 	char	**arr;
 	int		n;
 
-	exp = expnd(var, env, &n);
+	exp = expnd(var, &n);
 	arr = ft_split(exp, 2);
 	n = 0;
 	while (arr[n])
@@ -87,16 +87,15 @@ void	exp_if_dollar(int *i, int *j, char *var, char *exp)
 	free(value);
 }
 
-char	*expnd(char *var, t_env *env, int *amb)
+char	*expnd(char *var, int *amb)
 {
 	char	*exp;
 	int		i;
 	int		j;
 
-	exp = ft_calloc(get_len(var, env) + 1, 1);
+	exp = ft_calloc(get_len(var) + 1, 1);
 	i = 0;
 	j = 0;
-	glob.env = env;
 	while (var[i])
 	{
 		if (var[i] == '\'' && ++i)

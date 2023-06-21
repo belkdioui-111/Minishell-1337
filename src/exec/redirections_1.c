@@ -21,7 +21,7 @@ int	output(t_pre_tokens *out, t_env *env)
 	amb = 0;
 	while (out)
 	{
-		exp = expand_redirs(out->content, env);
+		exp = expand_redirs(out->content);
 		if (exp == NULL)
 			return (glob.exit_status = pr_err("minishell: ", NULL,
 					"ambiguous redirect\n", 1));
@@ -49,7 +49,7 @@ int	input(t_pre_tokens *in, t_env *env)
 	amb = 0;
 	while (in)
 	{
-		exp = expand_redirs(in->content, env);
+		exp = expand_redirs(in->content);
 		if (exp == NULL)
 			return (glob.exit_status = pr_err("minishell: ", NULL,
 					"ambiguous redirect\n", 1));
@@ -64,18 +64,18 @@ int	input(t_pre_tokens *in, t_env *env)
 	return (0);
 }
 
-int	check_if_output(int *cmdn, char *cmd, t_pre_tokens *out, t_env *env)
+int	check_if_output(int *cmdn, char *cmd, t_pre_tokens *out)
 {
-	if (output(out, env))
+	if (output(out, glob.env))
 		return (1);
 	if (cmd == NULL)
 		*cmdn = 2;
 	return (0);
 }
 
-int	check_if_input(int *cmdn, t_env *env, t_command *head, t_pre_tokens *in)
+int	check_if_input(int *cmdn, t_command *head, t_pre_tokens *in)
 {
-	if (input(in, env))
+	if (input(in, glob.env))
 		return (1);
 	if (head->in_type == TYPE_RED_HER)
 	{
@@ -84,7 +84,6 @@ int	check_if_input(int *cmdn, t_env *env, t_command *head, t_pre_tokens *in)
 			if (head->cmd == NULL)
 				return (2);
 			dup2(head->pipe_hd, 0);
-			printf("dup heredoc\n");
 			close(head->pipe_hd);
 		}
 	}

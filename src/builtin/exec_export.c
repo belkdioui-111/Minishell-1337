@@ -61,18 +61,14 @@ void	print_export(t_env *exp)
 	}
 }
 
-int	exec_export(t_env *export, t_command *cmds, t_env *envi)
+int	exec_export(t_command *cmds)
 {
-	t_env		*exp;
-	t_env		*env;
 	t_command	*cmd;
 
-	exp = export;
 	cmd = cmds;
-	env = envi;
 	if (!cmds->db_args[0])
-		print_export(exp);
+		print_export(glob.export);
 	else
-		mod_env_exp(env, exp, cmd);
+		mod_env_exp(glob.env, glob.export, cmd);
 	return (4);
 }

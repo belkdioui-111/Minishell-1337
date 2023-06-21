@@ -69,7 +69,7 @@ char	*if_not_file(char *cmd, t_env *env_head)
 	return (path);
 }
 
-char	*set_path(t_command *head_command, t_env *env_head)
+char	*set_path(t_command *head_command)
 {
 	t_command	*tmp1;
 
@@ -88,7 +88,7 @@ char	*set_path(t_command *head_command, t_env *env_head)
 			if (tmp1->cmd && ft_strchr(tmp1->cmd, '/'))
 				tmp1->path = ft_strdup("not");
 			else
-				tmp1->path = if_not_file(tmp1->cmd, env_head);
+				tmp1->path = if_not_file(tmp1->cmd, glob.env);
 		}
 	}
 	return (tmp1->path);

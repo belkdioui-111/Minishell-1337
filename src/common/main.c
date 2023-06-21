@@ -38,18 +38,18 @@ int	main(int argc, char const *argv[], char **env)
 
 	// signal(SIGINT, sigint_handler);
 	// signal(SIGQUIT, sigquit_handler);
-	env_head = ft_set_env(env);
-	export_head = ft_set_env(env);
+	glob.env = ft_set_env(env);
+	glob.export = ft_set_env(env);
 	glob.exit_status = 0;
 	while (1)
 	{
 		data.user_input = ft_read_input();
-		head_command = get_first_command(data.user_input, env_head);
+		head_command = get_first_command(data.user_input, glob.env);
 		if (head_command)
 		{
 			conver_l_args_to_p(head_command);
 			all_cmd = convert_linked_list_to_tr_p(head_command);
-			exec(all_cmd, head_command, export_head, env_head);
+			exec(all_cmd, head_command);
 			// printf_commands(head_command);
 			free_commands(&head_command);
 		}
