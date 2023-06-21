@@ -38,7 +38,7 @@ int	part_two_for_checking(char *s)
 
 int	check_if_buil(char *s)
 {
-	int			ret;
+	int	ret;
 
 	ret = part_one_for_checking(s);
 	if (ret)

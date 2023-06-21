@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:21:19 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/20 12:28:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 13:18:12 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	pr_err(char *str1, char *str2, char *str3, int status)
 	return (status);
 }
 
-void	search_in_env_and_replace(t_env *env,char *index, char *str)
+void	search_in_env_and_replace(t_env *env, char *index, char *str)
 {
 	t_env	*tmp;
 	char	*newvalue;

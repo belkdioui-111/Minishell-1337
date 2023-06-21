@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	exec_pwd()
+int	exec_pwd(void)
 {
 	ft_putstr_fd(search_in_env(glob.env, "PWD"), 1);
 	ft_putstr_fd("\n", 1);

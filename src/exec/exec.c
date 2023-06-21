@@ -46,7 +46,7 @@ void	if_onecmd_not_built(char **all_cmd, t_command *head)
 
 int	handling_pipes(int i, int fd, int count_cmds, int *pipes)
 {
-	int			tmp;
+	int	tmp;
 
 	if (i == 0)
 	{
@@ -70,11 +70,11 @@ int	handling_pipes(int i, int fd, int count_cmds, int *pipes)
 
 int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 {
-	int			pid;
-	int			i;
-	int			pipes[2];
-	int			status;
-	int			fd;
+	int	pid;
+	int	i;
+	int	pipes[2];
+	int	status;
+	int	fd;
 
 	fd = -1;
 	i = -1;
@@ -99,9 +99,9 @@ int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 
 void	exec(char ***all_cmd, t_command *head)
 {
-	int			count_cmds;
-	int			is_built;
-	int			status;
+	int	count_cmds;
+	int	is_built;
+	int	status;
 
 	count_cmds = calculate_num_of_cmd(head);
 	if (count_cmds == 1)

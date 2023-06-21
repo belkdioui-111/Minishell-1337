@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/20 16:45:57 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/21 14:50:55 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,9 @@ char			*remove_quote(char *content);
 //set paths end
 
 //built part start
-void			mod_env_exp(t_env *env, t_env *exp, t_command *cmd);
+int				loop_for_equal(char *args);
+int				check_syntax_export(char *args);
+void			mod_env_exp(t_command *cmd);
 int				exec_export(t_command *cmds);
 int				exec_unset(char **args);
 int				exec_pwd();

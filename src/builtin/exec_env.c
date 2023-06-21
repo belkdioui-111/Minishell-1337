@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	exec_env()
+int	exec_env(void)
 {
 	t_env	*tmp;
 
