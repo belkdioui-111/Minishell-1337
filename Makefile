@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/22 00:01:22 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/22 08:55:38 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,13 +14,14 @@ NAME = minishell
 
 LIBFT = ./inc/libft/libft.a
 
-SRC =src/common/main.c src/parsing/get_first_command.c src/parsing/error.c \
-	src/parsing/colorize.c src/parsing/free_double.c \
-	src/parsing/pre_t.c src/parsing/remove_quotes.c \
+SRC =src/common/main.c src/parsing/get_first_command.c src/parsing/get_first_command_1.c src/parsing/get_first_command_2.c src/parsing/get_first_command_3.c  \
+	src/parsing/free_double.c src/parsing/error.c\
+	src/parsing/pre_t.c \
+	src/parsing/remove_quotes.c src/parsing/remove_quotes_1.c src/parsing/remove_quotes_2.c src/parsing/remove_quotes_3.c \
 	src/parsing/set_env.c src/parsing/fill_commands.c \
 	src/parsing/lexer.c src/parsing/valid_arguments.c \
 	src/parsing/print_error.c src/parsing/valid_commands.c \
-	src/parsing/read_heredoc.c \
+	src/parsing/read_heredoc.c src/parsing/read_heredoc_1.c  \
 	src/exec/exec.c src/exec/conv_linked_list.c src/builtin/check_if_buil.c \
 	src/builtin/exec_built.c src/builtin/exec_cd.c src/builtin/built_utils.c \
 	src/builtin/exec_exit.c src/builtin/exec_echo.c src/builtin/exec_env.c \
@@ -37,7 +38,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = # -fsanitize=address -g #-Wall -Wextra -Werror
+CFLAGS = -fsanitize=address -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 
@@ -58,3 +59,5 @@ fclean:	clean
 	$(RM) $(NAME)
 
 re:	fclean all
+
+.PHONY: all clean fclean re

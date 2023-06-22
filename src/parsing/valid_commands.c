@@ -6,13 +6,13 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 04:26:41 by macbook           #+#    #+#             */
-/*   Updated: 2023/06/21 10:37:01 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/21 22:08:30 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	add_returned_to_files(char *data, t_command **command_ix, int ret_type)
+void	add_ret_to_fls(char *data, t_command **command_ix, int ret_type)
 {
 	t_command	*command;
 
@@ -77,8 +77,8 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 		{
 			if ((node->prev) && (node->prev->type != TYPE_ARG))
 			{
-				add_returned_to_files(ft_strdup(node->content), commands_ix,
-					node->prev->type);
+				add_ret_to_fls(ft_strdup(node->content),
+					commands_ix, node->prev->type);
 				node = node->next;
 				continue ;
 			}
@@ -87,26 +87,6 @@ t_pre_tokens	*ft_set_files(t_command **commands_ix)
 		node = node->next;
 	}
 	return (new_arguments);
-}
-
-int	check_in_error(t_command **commands_ix, t_env *env_head)
-{
-	t_command		*command;
-	t_pre_tokens	*node;
-	int				ambiguous;
-	int				ret;
-
-	command = *commands_ix;
-	node = command->args;
-	ambiguous = 0;
-	while (node)
-	{
-		if ((!node->prev) || ((node->prev) && (node->prev->type == TYPE_ARG
-					|| node->prev->type == TYPE_RED_PIP)))
-			node->content = remove_quote(node->content);
-		node = node->next;
-	}
-	return (0);
 }
 
 int	valid_commands_2(t_command **head_commands, int ret, t_env *env_head)
@@ -134,18 +114,17 @@ int	valid_commands_2(t_command **head_commands, int ret, t_env *env_head)
 int	valid_commands(t_command **head_commands, t_env *env_head)
 {
 	int				ret;
-	t_command		*command;
-	t_pre_tokens	*temp;
 	int				stpo;
+	t_pre_tokens	*temp;
+	t_command		*command;
 
-	stpo = 0;
 	ret = 0;
+	stpo = 0;
 	command = *head_commands;
 	while (command)
 	{
 		ret += check_redirections(&command);
 		temp = command->args;
-		// command->in_error = check_in_error(&command, env_head);
 		command->args = ft_set_files(&command);
 		free_linked(&temp);
 		command = command->next;

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:21:19 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 00:10:18 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:57:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ void	search_in_env_and_replace(t_env *env, char *index, char *str)
 	{
 		if (ft_strncmp(index, tmp->index, ft_strlen(index)) == 0)
 		{
-			if (tmp->value)
-				// free(tmp->value);
+			if (!str)
+			{
+				tmp->value = NULL;
+				return ;
+			}
 			newvalue = ft_strdup(str);
 			free(str);
 			tmp->value = newvalue;
@@ -44,18 +47,18 @@ void	search_in_env_and_replace(t_env *env, char *index, char *str)
 	}
 }
 
-char	*search_in_env(t_env *env, char *s)
+int	search_in_env(t_env *env, char *s)
 {
 	t_env	*tmp;
 
 	tmp = env;
 	while (tmp)
 	{
-		if (ft_strncmp(s, tmp->index, ft_strlen(s)) == 0)
+		if (ft_strncmp(s, tmp->index, ft_strlen(s) + 1) == 0)
 		{
-			return (tmp->value);
+			return (1);
 		}
 		tmp = tmp->next;
 	}
-	return (NULL);
+	return (0);
 }

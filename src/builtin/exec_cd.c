@@ -6,21 +6,37 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:19:47 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 12:35:54 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 09:22:01 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+char	*search_in_env_and_return_value(t_env *env, char *s)
+{
+	t_env	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (ft_strncmp(s, tmp->index, ft_strlen(s) + 1) == 0)
+		{
+			return (tmp->value);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 void	if_cmd_null_or_home(void)
 {
 	if (search_in_env(glob.env, "HOME"))
 	{
-		search_in_env_and_replace(glob.env, "OLDPWD", search_in_env(glob.env,
-				"PWD"));
+		search_in_env_and_replace(glob.env, "OLDPWD",
+			search_in_env_and_return_value(glob.env, "PWD"));
 		search_in_env_and_replace(glob.export, "OLDPWD",
-			search_in_env(glob.export, "PWD"));
-		chdir(search_in_env(glob.env, "HOME"));
+			search_in_env_and_return_value(glob.export, "PWD"));
+		chdir(search_in_env_and_return_value(glob.env, "HOME"));
 		search_in_env_and_replace(glob.env, "PWD", getcwd(NULL, 0));
 		search_in_env_and_replace(glob.export, "PWD", getcwd(NULL, 0));
 	}
@@ -32,10 +48,10 @@ int	exec_cd(t_command *cmd)
 {
 	if (access(cmd->db_args[0], F_OK) == 0)
 	{
-		search_in_env_and_replace(glob.env, "OLDPWD", search_in_env(glob.env,
-				"PWD"));
+		search_in_env_and_replace(glob.env, "OLDPWD",
+			search_in_env_and_return_value(glob.env, "PWD"));
 		search_in_env_and_replace(glob.export, "OLDPWD",
-			search_in_env(glob.export, "PWD"));
+			search_in_env_and_return_value(glob.export, "PWD"));
 		chdir(cmd->db_args[0]);
 		search_in_env_and_replace(glob.env, "PWD", getcwd(NULL, 0));
 		search_in_env_and_replace(glob.export, "PWD", getcwd(NULL, 0));

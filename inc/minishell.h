@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 16:35:00 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 09:19:57 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_globals	 {
+typedef struct s_globals
+{
 	int		exit_status;
 	int		in_herdoc;
 	t_env	*export;
@@ -52,6 +53,11 @@ enum token_type
 	TYPE_RED_PIP = 6,
 };
 
+typedef struct s_token_list
+{
+	char	**tokens;
+	int		count;
+}	t_token_list;
 
 typedef struct s_check_arg
 {
@@ -82,7 +88,7 @@ typedef struct s_pre_tokens
 typedef struct tokenizer_s
 {
 	int				in_double_quotes;
-	char			*user_input;
+	char			*us_in;
 	int				in_quotes;
 	t_pre_tokens	*head;
 	int				start;
@@ -117,7 +123,6 @@ typedef struct s_command
 
 void			ft_error(char *message);
 void			free_double(char **array);
-char			*ft_colorize(char *message, char *color);
 int				add_pre_t(t_pre_tokens **head, char *content, int state);
 void			free_linked(t_pre_tokens **head);
 void			ft_remove_quotes(t_pre_tokens **head, t_env *head_env);
@@ -129,29 +134,43 @@ t_pre_tokens	*ft_tokenizer(char *user_input);
 int				ft_tokenizer_loop(tokenizer_t *tok);
 void			*ft_init_zeros(tokenizer_t *tok);
 void			free_commands(t_command **head);
-int				add_symbol(t_pre_tokens **head, char *user_input, int start, int *end);
+int				add_symbol(t_pre_tokens **head, char *user_input,
+					int start, int *end);
 int				is_symbol(char symbol);
-int				sub_and_add(char *user_input, int start, int end, t_pre_tokens **head);
+int				sub_and_add(char *user_input, int start, int end,
+					t_pre_tokens **head);
 void			printf_env(t_env *head);
 void			printf_commands(t_command *head);
-char			*ft_read_input();
-int				ft_cnt(char *string);
-void			print_leaks();
+char			*ft_read_input(void);
+int				sb_ad_ad(char *us_in, int start, int end, t_pre_tokens **head);
+int				is_symbol(char symbol);
+int				ad_sbl(t_pre_tokens **head, char *us_in, int start, int *end);
+void			*ft_init_zeros(tokenizer_t *tok);
+void			free_linked(t_pre_tokens **head);
+void			free_commands(t_command **head);
+void			reset_here(char **herdoc);
+void			print_leaks(void);
 t_command		*get_first_command(char *user_input, t_env *env_head);
 int				valid_arguments(t_pre_tokens **head_args);
 int				valid_commands(t_command **head_commands, t_env *env_head);
 void			print_error(char *error_msg, int error_num);
-int				add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node, enum token_type type);
+int				add_pre_t_2(t_pre_tokens **head, char *content,
+					t_pre_tokens *node, enum token_type type);
 int				ft_read_heredoc(t_command **command_ix, t_env *_head);
 int				contains_quotes(char *content);
 char			*expand_variable(char *token, t_env *head_env, int state);
 t_sub			expand_variable_2(t_pre_tokens *node_ix, t_env *head_env);
 void			set_node_type(t_pre_tokens **head, int contain_quotes);
-
 char			**expand_redirs_2(char *var, t_env *env);
 int				is_valid_variable(char after_dollar);
-
-
+void			four_free(char **tk, char **sf, char **evix, char **evvl);
+char			*get_new_token(char **token, char *new, t_env *head_env, int i);
+void			expand_loop_1(char **token, int in_single_quote,
+					int in_double_quote, int i);
+void			expand_loop_2(char **token, int in_single_quote,
+					int in_double_quote, int i);
+int				set_up_remove_vars(int *j, int *in_single, int *in_double);
+t_sub			get_sub_from_node(t_pre_tokens **node_ix);
 
 //execution part start
 
@@ -169,11 +188,11 @@ char			*get_value(char *idx, t_env **env);
 int				redirection(t_command *head);
 int				perr(char *arg, char *msg, int ret);
 int				check_if_output(int *cmdn, char *cmd, t_pre_tokens *out);
-int				check_if_input(int *cmdn,t_command *head, t_pre_tokens *in);
+int				check_if_input(int *cmdn, t_command *head, t_pre_tokens *in);
 int				check_if_heredocs(t_command *head);
 // redirections end
 
-char			**convert_link_to_2p();
+char			**convert_link_to_2p(void);
 int				calculate_len_of_w(t_command *all_cmd, int i);
 int				calculate_number_of_args_in_node(t_command *all_cmd);
 int				calculate_num_of_cmd(t_command *all_cmd);
@@ -191,25 +210,23 @@ char			*remove_quote(char *content);
 //set paths end
 
 //built part start
+char			*search_in_env_and_return_value(t_env *env, char *s);
 int				loop_for_equal(char *args);
 int				check_syntax_export(char *args);
 void			mod_env_exp(t_command *cmd);
 int				exec_export(t_command *cmds);
 int				exec_unset(char **args);
-int				exec_pwd();
-int				exec_env();
+int				exec_pwd(void);
+int				exec_env(void);
 int				exec_echo(t_command *cmds);
 int				exec_cd(t_command *cmd);
 int				exec_exit(t_pre_tokens *args, int status);
 void			search_in_env_and_replace(t_env *env, char *index, char *str);
-char			*search_in_env(t_env *env, char *s);
+int				search_in_env(t_env *env, char *s);
 int				check_if_buil(char *s);
 int				exec_built(int n, t_command *cmds);
 //built part end
 
 //execution part end
-
-
-
 
 #endif

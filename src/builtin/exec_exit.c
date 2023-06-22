@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:23:14 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 13:28:40 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 07:32:36 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	if_args_exist(char *args_content, int status)
 {
 	if (check_numric(args_content) == 1)
 		status = pr_err("minishell: exit: ", args_content,
-			": numeric argument required\n", 255);
+				": numeric argument required\n", 255);
 	else if (check_numric(args_content) == 2)
 		exit((unsigned char)status);
 	else
@@ -80,7 +80,7 @@ int	exec_exit(t_pre_tokens *args, int status)
 		{
 			if (check_numric(args->content) == 1)
 				status = pr_err("minishell: exit: ", args->content,
-					": numeric argument required\n", 255);
+						": numeric argument required\n", 255);
 			else
 				status = ft_atoi(args->content);
 		}

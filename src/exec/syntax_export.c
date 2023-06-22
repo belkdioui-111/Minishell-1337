@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 14:48:38 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 14:58:34 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:49:56 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int	loop_for_equal(char *args)
 	while (args[j])
 	{
 		if (args[j] == '=')
-			break ;
+			return (j);
 		j++;
 	}
-	return (j);
+	return (0);
 }
 
 int	syntax_with_equal(char *args)
@@ -78,7 +78,7 @@ int	check_syntax_export(char *args)
 		if (syntax_with_equal(args))
 		{
 			glob.exit_status = pr_err("minishell: export: `", args,
-				"': not a valid identifier\n", 1);
+					"': not a valid identifier\n", 1);
 			return (1);
 		}
 	}
@@ -87,7 +87,7 @@ int	check_syntax_export(char *args)
 		if (syntax_without_equal(args))
 		{
 			glob.exit_status = pr_err("minishell: export: `", args,
-				"': not a valid identifier\n", 1);
+					"': not a valid identifier\n", 1);
 			return (1);
 		}
 	}

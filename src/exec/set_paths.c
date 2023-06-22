@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 22:50:22 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 09:20:24 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**get_path(t_env *envp)
 
 	i = 0;
 	check = 0;
-	trimmed = search_in_env(envp, "PATH");
+	trimmed = search_in_env_and_return_value(envp, "PATH");
 	if (!trimmed)
 		return (NULL);
 	path = ft_split(trimmed, ':');
@@ -75,7 +75,7 @@ char	*set_path(t_command *head_command)
 	t_command	*tmp1;
 
 	tmp1 = head_command;
-	tmp1->path =ft_strdup("\0");
+	tmp1->path = ft_strdup("\0");
 	if (!tmp1->cmd)
 	{
 		free(tmp1->path);
@@ -86,9 +86,7 @@ char	*set_path(t_command *head_command)
 	{
 		free(tmp1->path);
 		if (access(tmp1->cmd, F_OK | X_OK) != -1)
-			{
-				tmp1->path = if_is_file(tmp1->cmd);
-			}
+			tmp1->path = if_is_file(tmp1->cmd);
 		else
 		{
 			if (tmp1->cmd && ft_strchr(tmp1->cmd, '/'))

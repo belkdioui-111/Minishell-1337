@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 09:46:02 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 00:11:19 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:57:31 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,42 @@ void	if_there_is_index_and_value(char *args)
 	j = loop_for_equal(args);
 	if (check_syntax_export(args))
 		return ;
-	index = ft_substr(args, 0, j);
-	if (!search_in_env(glob.export, index))
-	{
-		str = ft_substr(args, j + 1, ft_strlen(args));
-		new_node = ft_lstnew_env(index, str);
-		ft_lstadd_back_env(&glob.env, new_node);
-		new_node = ft_lstnew_env(index, str);
-		ft_lstadd_back_env(&glob.export, new_node);
-	}
+	if (j)
+		index = ft_substr(args, 0, j);
 	else
+		index = ft_strdup(args);
+	if (j != 0)
 	{
-		search_in_env_and_replace(glob.export, index,
-			ft_substr(args, j + 1, ft_strlen(args)));
-		search_in_env_and_replace(glob.env, index,
-			ft_substr(args, j + 1, ft_strlen(args)));
+		if (!search_in_env(glob.export, index))
+		{
+			str = ft_substr(args, j + 1, ft_strlen(args));
+			new_node = ft_lstnew_env(index, str);
+			ft_lstadd_back_env(&glob.env, new_node);
+			new_node = ft_lstnew_env(index, str);
+			ft_lstadd_back_env(&glob.export, new_node);
+		}
+		else
+		{
+			search_in_env_and_replace(glob.export, index,
+				ft_substr(args, j + 1, ft_strlen(args)));
+			if (!search_in_env(glob.env, index))
+			{
+				str = ft_substr(args, j + 1, ft_strlen(args));
+				new_node = ft_lstnew_env(index, str);
+				ft_lstadd_back_env(&glob.env, new_node);
+			}
+			search_in_env_and_replace(glob.env, index,
+				ft_substr(args, j + 1, ft_strlen(args)));
+		}
 	}
-	// free(str);
-	// free(index);
+	else if (!j)
+	{
+		if (!search_in_env(glob.export, index))
+		{
+			new_node = ft_lstnew_env(index, NULL);
+			ft_lstadd_back_env(&glob.export, new_node);
+		}
+	}
 }
 
 void	mod_env_exp(t_command *cmd)
@@ -92,19 +110,7 @@ void	mod_env_exp(t_command *cmd)
 	i = 0;
 	while (cmd->db_args[i])
 	{
-		if (ft_strchr(cmd->db_args[i], '='))
-			if_there_is_index_and_value(cmd->db_args[i]);
-		else
-		{
-			if (check_syntax_export(cmd->db_args[i]))
-			{
-				i++;
-				continue ;
-			}
-			new_node = ft_lstnew_env(ft_substr(cmd->db_args[i], 0,
-					ft_strlen(cmd->db_args[i])), NULL);
-			ft_lstadd_back_env(&glob.export, new_node);
-		}
+		if_there_is_index_and_value(cmd->db_args[i]);
 		i++;
 	}
 }

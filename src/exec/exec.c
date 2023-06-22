@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 21:58:31 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 07:36:08 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	if_onecmd_not_built(char **all_cmd, t_command *head)
 		simple_execute(all_cmd, NULL, -1, head);
 	else
 	{
-		// free_double(all_cmd);
 		waitpid(pid, &status, 0);
 		glob.exit_status = status >> 8;
 	}
@@ -82,7 +81,6 @@ int	if_mult_cmds(t_command *head, int count_cmds, char ***all_cmd)
 	while (all_cmd[++i])
 	{
 		head->path = set_path(head);
-		
 		if (i != count_cmds - 1)
 			pipe(pipes);
 		fd = handling_pipes(i, fd, count_cmds, pipes);
@@ -109,7 +107,6 @@ void	exec(char ***all_cmd, t_command *head)
 	{
 		head->path = set_path(head);
 		is_built = check_if_buil(head->cmd);
-		// free_all_cmd(all_cmd);
 		if (head && is_built == 0)
 			if_onecmd_not_built(all_cmd[0], head);
 		else
@@ -117,11 +114,9 @@ void	exec(char ***all_cmd, t_command *head)
 	}
 	else
 	{
-	
 		status = if_mult_cmds(head, count_cmds, all_cmd);
 		glob.exit_status = status >> 8;
 		while (waitpid(-1, &status, 0) != -1)
-		{
-		}
+			;
 	}
 }

@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_pwd.c                                         :+:      :+:    :+:   */
+/*   read_heredoc_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/08 22:28:13 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 09:20:11 by bel-kdio         ###   ########.fr       */
+/*   Created: 2023/06/21 19:39:11 by ylabrahm          #+#    #+#             */
+/*   Updated: 2023/06/21 19:39:28 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	exec_pwd(void)
+void	reset_here(char **herdoc)
 {
-	ft_putstr_fd(search_in_env_and_return_value(glob.env, "PWD"), 1);
-	ft_putstr_fd("\n", 1);
-	glob.exit_status = 0;
-	return (3);
+	free(*herdoc);
+	*herdoc = ft_calloc(1, 1);
 }

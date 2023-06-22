@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:42 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 12:48:05 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/21 19:32:51 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ int	add_pre_t(t_pre_tokens **head, char *content, int state)
 
 	if (!(content))
 		return (1);
-	if (!(created_node = malloc(sizeof(t_pre_tokens))))
+	created_node = malloc(sizeof(t_pre_tokens));
+	if (!(created_node))
 		return (1);
 	if (state == 0)
 	{
@@ -105,14 +106,15 @@ int	add_pre_t(t_pre_tokens **head, char *content, int state)
 	return (0);
 }
 
-int	add_pre_t_2(t_pre_tokens **head, char *content, t_pre_tokens *node,
-		enum token_type type)
+int	add_pre_t_2(t_pre_tokens **head, char *content,
+	t_pre_tokens *node, enum token_type type)
 {
 	t_pre_tokens	*created_node;
 
 	if (!(content))
 		return (1);
-	if (!(created_node = malloc(sizeof(t_pre_tokens))))
+	created_node = malloc(sizeof(t_pre_tokens));
+	if (!(created_node))
 		return (1);
 	if (ft_strlen(content) == 0)
 	{

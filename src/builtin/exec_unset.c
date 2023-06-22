@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:29:39 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 13:30:30 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 07:32:09 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	check_syntax(char *args)
 		else
 		{
 			glob.exit_status = pr_err("minishell: unset: `", args,
-				"': not a valid identifier\n", 1);
+					"': not a valid identifier\n", 1);
 			return (1);
 		}
 		i++;

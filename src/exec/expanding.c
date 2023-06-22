@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 14:50:34 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 16:35:36 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 07:38:29 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*expand_redirs(char *var)
 	if (n > 1)
 		return (free_double(arr), NULL);
 	else if (n == 0 && (ft_strchr(exp, 2) || (!ft_strchr(var, '"')
-					&& !ft_strchr(var, '\''))))
+				&& !ft_strchr(var, '\''))))
 		return (free_double(arr), NULL);
 	free(exp);
 	exp = arr[0];
