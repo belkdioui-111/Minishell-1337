@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pre_t.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:42 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 19:32:51 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:10:11 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	add_pre_t(t_pre_tokens **head, char *content, int state)
 }
 
 int	add_pre_t_2(t_pre_tokens **head, char *content,
-	t_pre_tokens *node, enum token_type type)
+	t_pre_tokens *node, enum e_token_type type)
 {
 	t_pre_tokens	*created_node;
 

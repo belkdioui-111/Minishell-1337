@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:29:39 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 07:32:09 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:35:04 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_syntax(char *args)
 		}
 		else
 		{
-			glob.exit_status = pr_err("minishell: unset: `", args,
+			g_glob.exit_status = pr_err("minishell: unset: `", args,
 					"': not a valid identifier\n", 1);
 			return (1);
 		}
@@ -39,6 +39,8 @@ int	check_syntax(char *args)
 
 int	mod_env_and_exp(t_env *env_tmp, char *args, t_env *prev_env, t_env **env)
 {
+	t_env	*tmp;
+
 	if (check_syntax(args))
 		return (1);
 	while (env_tmp)
@@ -49,10 +51,10 @@ int	mod_env_and_exp(t_env *env_tmp, char *args, t_env *prev_env, t_env **env)
 				prev_env->next = env_tmp->next;
 			else
 				*env = env_tmp->next;
-			if (prev_env != NULL)
-				env_tmp = prev_env->next;
-			else
-				env_tmp = *env;
+			free(env_tmp->index);
+			free(env_tmp->value);
+			free(env_tmp);
+			return (0);
 		}
 		else
 		{
@@ -75,7 +77,9 @@ void	check_and_free_unset(t_env **env, char *args, t_env **export)
 	export_tmp = *export;
 	prev_export = NULL;
 	if (mod_env_and_exp(env_tmp, args, prev_env, env))
+	{
 		return ;
+	}
 	mod_env_and_exp(export_tmp, args, prev_export, export);
 }
 
@@ -86,7 +90,7 @@ int	exec_unset(char **args)
 	i = 0;
 	while (args[i])
 	{
-		check_and_free_unset(&glob.env, args[i], &glob.export);
+		check_and_free_unset(&g_glob.env, args[i], &g_glob.export);
 		i++;
 	}
 	return (7);

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 14:21:18 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 07:36:08 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	if_onecmd_not_built(char **all_cmd, t_command *head)
 	else
 	{
 		waitpid(pid, &status, 0);
-		glob.exit_status = status >> 8;
+		g_glob.exit_status = status >> 8;
 	}
 }
 
@@ -115,7 +115,7 @@ void	exec(char ***all_cmd, t_command *head)
 	else
 	{
 		status = if_mult_cmds(head, count_cmds, all_cmd);
-		glob.exit_status = status >> 8;
+		g_glob.exit_status = status >> 8;
 		while (waitpid(-1, &status, 0) != -1)
 			;
 	}

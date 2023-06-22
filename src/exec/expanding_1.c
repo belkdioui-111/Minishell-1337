@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 15:03:00 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 16:52:14 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	get_len_if_db_dollar(int *i, int *len, char *var, t_env *env)
 	{
 		key = get_index(var + *i);
 		if (ft_strncmp(key, "?", 2) == 0)
-			value = ft_itoa(glob.exit_status);
+			value = ft_itoa(g_glob.exit_status);
 		else
 			value = get_value(key, &env);
 		*i += ft_strlen(key);
@@ -92,9 +92,9 @@ int	get_len(char *var)
 		if (var[i] == '\'' && ++i)
 			get_len_if_sin_quo(&i, &len, var);
 		else if (var[i] == '"' && ++i)
-			get_len_if_db_quo(&i, &len, var, glob.env);
+			get_len_if_db_quo(&i, &len, var, g_glob.env);
 		else if (var[i] == '$' && ++i)
-			get_len_if_db_dollar(&i, &len, var, glob.env);
+			get_len_if_db_dollar(&i, &len, var, g_glob.env);
 		else
 		{
 			i++;

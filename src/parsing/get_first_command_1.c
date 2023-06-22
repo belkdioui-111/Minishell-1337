@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_first_command_1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 19:19:44 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 19:22:55 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:13:53 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	ad_sbl(t_pre_tokens **head, char *us_in, int start, int *end)
 	return (ret);
 }
 
-void	*ft_init_zeros(tokenizer_t *tok)
+void	*ft_init_zeros(t_tokenizer_t *tok)
 {
 	tok->end = -1;
 	tok->start = 0;

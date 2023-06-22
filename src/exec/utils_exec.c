@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 13:15:58 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 07:38:11 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ char	*exit_st(char *key)
 	char	*value;
 
 	if (ft_strncmp(key, "?", 2) == 0)
-		value = ft_itoa(glob.exit_status);
+		value = ft_itoa(g_glob.exit_status);
 	else
-		value = get_value(key, &glob.env);
+		value = get_value(key, &g_glob.env);
 	return (value);
 }
 
@@ -71,26 +71,26 @@ void	check_paths(char *path, char *cmd)
 {
 	if ((path) && (ft_strncmp(path, "cmdnull", 8) == 0))
 	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n",
+		g_glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n",
 				127);
-		exit(glob.exit_status);
+		exit(g_glob.exit_status);
 	}
 	if ((path) && (ft_strncmp(path, "not", 4) == 0))
 	{
-		glob.exit_status = pr_err("minishell: ", cmd,
+		g_glob.exit_status = pr_err("minishell: ", cmd,
 				": No such file or directory\n", 127);
-		exit(glob.exit_status);
+		exit(g_glob.exit_status);
 	}
 	else if ((path) && (ft_strncmp(path, "dir", 4) == 0))
 	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": is a directory\n",
+		g_glob.exit_status = pr_err("minishell: ", cmd, ": is a directory\n",
 				126);
-		exit(glob.exit_status);
+		exit(g_glob.exit_status);
 	}
 	else if (!path)
 	{
-		glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n",
+		g_glob.exit_status = pr_err("minishell: ", cmd, ": command not found\n",
 				127);
-		exit(glob.exit_status);
+		exit(g_glob.exit_status);
 	}
 }

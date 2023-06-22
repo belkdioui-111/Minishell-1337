@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 20:12:44 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 21:52:01 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	expand_loop_1(char **token, int in_s_q,
 		{
 			if (!((*token)[i + 1]))
 				return ;
-			new = get_new_token(token, new, glob.env, i);
+			new = get_new_token(token, new, g_glob.env, i);
 			if ((ft_strlen(new) == 0))
 			{
 				*token = ft_strdup("");
@@ -57,7 +57,7 @@ void	expand_loop_2(char **token, int in_s_q, int in_d_q, int i)
 		{
 			if (!((*token)[i + 1]))
 				return ;
-			new = get_new_token(token, new, glob.env, i);
+			new = get_new_token(token, new, g_glob.env, i);
 			if ((ft_strlen(new) == 0))
 			{
 				*token = ft_strdup("");

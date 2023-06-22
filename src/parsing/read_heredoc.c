@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 19:57:41 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int	ft_read_heredoc_while(char *string, t_pre_tokens **herdoc,
 
 int	handle_gigs(void)
 {
-	if (glob.in_herdoc == 3)
+	if (g_glob.in_herdoc == 3)
 	{
-		glob.in_herdoc = 0;
+		g_glob.in_herdoc = 0;
 		return (1);
 	}
 	return (0);
@@ -86,7 +86,7 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	command->here_doc_data = ft_calloc(1, 1);
 	while (herdoc)
 	{
-		glob.in_herdoc = 1;
+		g_glob.in_herdoc = 1;
 		if (ft_read_heredoc_while(string, &herdoc, command, env_head))
 			break ;
 	}

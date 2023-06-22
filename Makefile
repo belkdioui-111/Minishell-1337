@@ -6,7 +6,7 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/22 08:55:38 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/22 13:35:18 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -fsanitize=address -g #-Wall -Wextra -Werror
+CFLAGS = #-fsanitize=address -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 

@@ -6,21 +6,21 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 08:56:27 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:35:27 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_globals	glob;
+t_globals	g_glob;
 
 // void	sigint_handler(int sig_num)
 // {
-// 	glob.exit_status = 1;
+// 	g_glob.exit_status = 1;
 // 	write(1, "\n", 1);
-// 	if (glob.in_herdoc == 1)
+// 	if (g_glob.in_herdoc == 1)
 // 	{
-// 		glob.in_herdoc = 3;
+// 		g_glob.in_herdoc = 3;
 // 		close(0);
 // 	}
 // 	else
@@ -31,7 +31,7 @@ t_globals	glob;
 // 	}
 // }
 
-void if_cmd_true(t_command	*head_command)
+void	if_cmd_true(t_command	*head_command)
 {
 	char		***all_cmd;
 
@@ -54,15 +54,15 @@ int	main(int ac, char *av[], char **env)
 
 	// signal(SIGINT, sigint_handler);
 	// signal(SIGQUIT, SIG_IGN);
-	glob.dup = dup(0);
+	g_glob.dup = dup(0);
 	env_head = ft_set_env(env);
-	glob.exit_status = 0;
-	glob.in_herdoc = 0;
-	glob.env = ft_set_env(env);
-	glob.export = ft_set_env(env);
+	g_glob.exit_status = 0;
+	g_glob.in_herdoc = 0;
+	g_glob.env = ft_set_env(env);
+	g_glob.export = ft_set_env(env);
 	while (1)
 	{
-		dup2(glob.dup, 0);
+		dup2(g_glob.dup, 0);
 		data.user_input = ft_read_input();
 		head_command = get_first_command(data.user_input, env_head);
 		if_cmd_true(head_command);

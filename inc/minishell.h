@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 09:19:57 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:13:48 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ typedef struct s_globals
 	int		dup;
 }t_globals;
 
-extern t_globals	glob;
+extern t_globals	g_glob;
 
-enum token_type
+enum e_token_type
 {
 	TYPE_ARG = 1,
 	TYPE_RED_IN = 2,
@@ -72,13 +72,13 @@ typedef struct s_check_arg
 typedef struct s_sub
 {
 	char				**sub;
-	enum token_type		type;
+	enum e_token_type	type;
 }	t_sub;
 
 typedef struct s_pre_tokens
 {
 	char				*content;
-	enum token_type		type;
+	enum e_token_type	type;
 	int					contain_quotes;
 	t_sub				sub;
 	struct s_pre_tokens	*next;
@@ -93,7 +93,7 @@ typedef struct tokenizer_s
 	t_pre_tokens	*head;
 	int				start;
 	int				end;
-}	tokenizer_t;
+}	t_tokenizer_t;
 
 typedef struct s_user_data
 {
@@ -131,8 +131,8 @@ t_command		*ft_fill_commands(t_pre_tokens **head);
 void			printf_linked(t_pre_tokens *head);
 void			ft_lexer(t_command **head);
 t_pre_tokens	*ft_tokenizer(char *user_input);
-int				ft_tokenizer_loop(tokenizer_t *tok);
-void			*ft_init_zeros(tokenizer_t *tok);
+int				ft_tokenizer_loop(t_tokenizer_t *tok);
+void			*ft_init_zeros(t_tokenizer_t *tok);
 void			free_commands(t_command **head);
 int				add_symbol(t_pre_tokens **head, char *user_input,
 					int start, int *end);
@@ -145,7 +145,7 @@ char			*ft_read_input(void);
 int				sb_ad_ad(char *us_in, int start, int end, t_pre_tokens **head);
 int				is_symbol(char symbol);
 int				ad_sbl(t_pre_tokens **head, char *us_in, int start, int *end);
-void			*ft_init_zeros(tokenizer_t *tok);
+void			*ft_init_zeros(t_tokenizer_t *tok);
 void			free_linked(t_pre_tokens **head);
 void			free_commands(t_command **head);
 void			reset_here(char **herdoc);
@@ -155,7 +155,7 @@ int				valid_arguments(t_pre_tokens **head_args);
 int				valid_commands(t_command **head_commands, t_env *env_head);
 void			print_error(char *error_msg, int error_num);
 int				add_pre_t_2(t_pre_tokens **head, char *content,
-					t_pre_tokens *node, enum token_type type);
+					t_pre_tokens *node, enum e_token_type type);
 int				ft_read_heredoc(t_command **command_ix, t_env *_head);
 int				contains_quotes(char *content);
 char			*expand_variable(char *token, t_env *head_env, int state);
@@ -210,6 +210,7 @@ char			*remove_quote(char *content);
 //set paths end
 
 //built part start
+void			if_there_is_index_and_value(char *args);
 char			*search_in_env_and_return_value(t_env *env, char *s);
 int				loop_for_equal(char *args);
 int				check_syntax_export(char *args);

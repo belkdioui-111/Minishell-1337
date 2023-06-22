@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:26:59 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/15 13:13:02 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	exec_env(void)
 {
 	t_env	*tmp;
 
-	tmp = glob.env;
+	tmp = g_glob.env;
 	while (tmp)
 	{
 		ft_putstr_fd(tmp->index, 1);

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:31:54 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/21 23:20:15 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:47:19 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	exec_export(t_command *cmds)
 
 	cmd = cmds;
 	if (!cmds->db_args[0])
-		print_export(glob.export);
+		print_export(g_glob.export);
 	else
 		mod_env_exp(cmd);
 	return (4);

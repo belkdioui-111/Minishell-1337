@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_first_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 19:24:50 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:14:10 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_tokenizer_loop(tokenizer_t *tok)
+int	ft_tokenizer_loop(t_tokenizer_t *tok)
 {
 	int	ret;
 
@@ -43,8 +43,8 @@ int	ft_tokenizer_loop(tokenizer_t *tok)
 
 t_pre_tokens	*ft_tokenizer(char *us_in)
 {
-	tokenizer_t	tok;
-	char		*error;
+	t_tokenizer_t	tok;
+	char			*error;
 
 	tok.head = ft_init_zeros(&tok);
 	tok.us_in = ft_strdup(us_in);
