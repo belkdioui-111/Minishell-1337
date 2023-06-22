@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 10:43:06 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 14:13:48 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 14:48:42 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_globals
 	t_env	*export;
 	t_env	*env;
 	int		dup;
+	int		is_running;
+	int		is_interupted;
 }t_globals;
 
 extern t_globals	g_glob;

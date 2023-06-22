@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 14:35:27 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:09:17 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,37 @@
 
 t_globals	g_glob;
 
-// void	sigint_handler(int sig_num)
-// {
-// 	g_glob.exit_status = 1;
-// 	write(1, "\n", 1);
-// 	if (g_glob.in_herdoc == 1)
-// 	{
-// 		g_glob.in_herdoc = 3;
-// 		close(0);
-// 	}
-// 	else
-// 	{
-// 		rl_on_new_line();
-// 		rl_replace_line("", 0);
-// 		rl_redisplay();
-// 	}
-// }
+void	sigint_handler(int sig_num)
+{
+	g_glob.exit_status = 130;
+	write(1, "\n", 1);
+	if (g_glob.in_herdoc == 1)
+	{
+		g_glob.in_herdoc = 3;
+		close(0);
+	}
+	else
+	{
+		rl_on_new_line();
+		// rl_replace_line("", 0);
+		g_glob.is_interupted = 1;
+		if (!g_glob.is_running)
+		{
+			g_glob.exit_status = 1;
+			g_glob.is_interupted = 0;
+			rl_redisplay();
+		}
+	}
+}
+
+void	siguit_handler(int sig_num)
+{
+	if (g_glob.is_running)
+	{
+		g_glob.exit_status = 131;
+		g_glob.is_interupted = 1;
+	}
+}
 
 void	if_cmd_true(t_command	*head_command)
 {
@@ -53,7 +68,7 @@ int	main(int ac, char *av[], char **env)
 	int			is_built;
 
 	// signal(SIGINT, sigint_handler);
-	// signal(SIGQUIT, SIG_IGN);
+	// signal(SIGQUIT, siguit_handler);
 	g_glob.dup = dup(0);
 	env_head = ft_set_env(env);
 	g_glob.exit_status = 0;
@@ -63,11 +78,13 @@ int	main(int ac, char *av[], char **env)
 	while (1)
 	{
 		dup2(g_glob.dup, 0);
+		// g_glob.is_running = 0;
 		data.user_input = ft_read_input();
+		// g_glob.is_running = 1;
 		head_command = get_first_command(data.user_input, env_head);
 		if_cmd_true(head_command);
 		free(data.user_input);
-		// print_leaks();
+		print_leaks();
 	}
 	return (0);
 }
