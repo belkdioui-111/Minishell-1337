@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 14:54:31 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 15:23:50 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:02:10 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	output(t_pre_tokens *out, t_env *env)
 	int		fd;
 
 	amb = 0;
+	(void)env;
 	while (out)
 	{
 		exp = expand_redirs(out->content);
@@ -47,6 +48,7 @@ int	input(t_pre_tokens *in, t_env *env)
 	int		fd;
 
 	amb = 0;
+	(void)env;
 	while (in)
 	{
 		exp = expand_redirs(in->content);

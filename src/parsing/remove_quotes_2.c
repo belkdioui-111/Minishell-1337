@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 20:12:44 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:53:08 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	expand_loop_1(char **token, int in_s_q,
 	int in_d_q, int i)
 {
-	t_pre_tokens	*head;
 	char			*new;
 
 	new = NULL;
@@ -43,7 +42,6 @@ void	expand_loop_1(char **token, int in_s_q,
 
 void	expand_loop_2(char **token, int in_s_q, int in_d_q, int i)
 {
-	t_pre_tokens	*head;
 	char			*new;
 
 	new = NULL;
@@ -76,6 +74,7 @@ char	*expand_variable(char *token, t_env *head_env, int state)
 	int	i;
 
 	i = -1;
+	(void)head_env;
 	in_s_q = 0;
 	in_d_q = 0;
 	if (state == 1)
@@ -92,6 +91,7 @@ char	**expand_redirs_2(char *var, t_env *env)
 	int		n;
 
 	exp = expnd(var, &n);
+	(void)env;
 	arr = ft_split(exp, 2);
 	free(exp);
 	if (!arr[0] && (ft_strchr(var, '\"') || ft_strchr(var, '\'')))

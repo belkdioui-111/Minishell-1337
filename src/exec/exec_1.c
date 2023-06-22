@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:44:11 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:40:57 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void	exec_cmd_in_simple(char **cmd, t_command *node)
 void	simple_execute(char **cmd, int *pipes, int fd, t_command *node)
 {
 	int		is_built;
-	char	**e;
-	int		ret_red;
 
 	if (fd > -1)
 		close(fd);
@@ -54,6 +52,7 @@ void	simple_execute(char **cmd, int *pipes, int fd, t_command *node)
 		close(pipes[0]);
 		close(pipes[1]);
 	}
+	signal(SIGQUIT, SIG_DFL);
 	is_built = check_if_buil(node->cmd);
 	if (is_built >= 1 && is_built <= 7)
 		exec_built_in_simple(is_built, node);

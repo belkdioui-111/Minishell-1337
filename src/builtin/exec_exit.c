@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:23:14 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:58:19 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	check_neg(char *content)
 int	check_numric(char *content)
 {
 	int	i;
-	int	num;
 	int	ret_check_neg;
 
 	i = 0;

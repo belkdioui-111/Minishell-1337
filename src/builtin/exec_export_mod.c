@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 09:46:02 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 15:06:43 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:05:43 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,9 @@ void	if_there_is_an_equal(char *args, int j, char *str, char *index)
 
 void	if_there_is_index_and_value(char *args)
 {
-	char	*str;
 	t_env	*new_node;
 	int		j;
 	char	*index;
-	char	*tmp;
 
 	new_node = NULL;
 	j = loop_for_equal(args);
@@ -108,18 +106,4 @@ void	if_there_is_index_and_value(char *args)
 		}
 	}
 	free(index);
-}
-
-void	mod_env_exp(t_command *cmd)
-{
-	int		i;
-	t_env	*new_node;
-	char	*str;
-
-	i = 0;
-	while (cmd->db_args[i])
-	{
-		if_there_is_index_and_value(cmd->db_args[i]);
-		i++;
-	}
 }

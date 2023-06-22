@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 19:01:18 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:57:57 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 {
 	t_command		*command;
 	t_pre_tokens	*herdoc;
-	char			*string;
 	int				pipe_hd[2];
 
 	command = *command_ix;
@@ -87,7 +86,7 @@ int	ft_read_heredoc(t_command **command_ix, t_env *env_head)
 	while (herdoc)
 	{
 		g_glob.in_herdoc = 1;
-		if (ft_read_heredoc_while(string, &herdoc, command, env_head))
+		if (ft_read_heredoc_while(NULL, &herdoc, command, env_head))
 			break ;
 	}
 	if (handle_gigs())

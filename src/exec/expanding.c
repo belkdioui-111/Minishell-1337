@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 14:50:34 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 15:31:07 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:01:05 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ char	*expnd(char *var, int *amb)
 	int		i;
 	int		j;
 
+	(void)amb;
 	exp = ft_calloc(get_len(var) + 1, 1);
 	i = 0;
 	j = 0;

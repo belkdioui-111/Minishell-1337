@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:57:16 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:00:19 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	*if_is_file(char *cmd)
 	char		*path;
 	struct stat	filestat;
 
+	path = NULL;
 	if (stat(cmd, &filestat) == 0)
 	{
 		if (!(filestat.st_mode & S_IFDIR))

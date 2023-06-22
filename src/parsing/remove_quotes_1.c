@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 20:11:37 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:51:51 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*get_value(char *index, t_env **head_env)
 {
 	t_env	*node;
 	int		cmp;
-	int		nlen;
 	int		ilen;
 
 	node = *head_env;
@@ -42,7 +41,7 @@ char	*get_value(char *index, t_env **head_env)
 	{
 		cmp = ft_strncmp(index, node->index, ft_strlen(node->index));
 		ilen = ft_strlen(index);
-		if (cmp == 0 && (ilen == ft_strlen(node->index)))
+		if (cmp == 0 && (ilen == (int)ft_strlen(node->index)))
 			return (ft_strdup(node->value));
 		node = node->next;
 	}

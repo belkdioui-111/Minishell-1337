@@ -6,13 +6,15 @@
 #    By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/04 16:42:27 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/06/22 13:35:18 by bel-kdio         ###   ########.fr        #
+#    Updated: 2023/06/22 17:29:38 by bel-kdio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 LIBFT = ./inc/libft/libft.a
+
+LDFLAGS=-L/goinfre/bel-kdio/brew/opt/readline/lib
 
 SRC =src/common/main.c src/parsing/get_first_command.c src/parsing/get_first_command_1.c src/parsing/get_first_command_2.c src/parsing/get_first_command_3.c  \
 	src/parsing/free_double.c src/parsing/error.c\
@@ -38,13 +40,13 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = #-fsanitize=address -g #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I/goinfre/bel-kdio/brew/opt/readline/include 
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C ./inc/libft/
-	$(CC) $(OBJ) $(LIBFT) $(CFLAGS) -lreadline -o $(NAME)
+	$(CC) $(OBJ) $(LIBFT) $(LDFLAGS) $(CFLAGS) -lreadline -o $(NAME)
 
 obj/%.o: %.c inc/minishell.h
 	@mkdir -p $(shell dirname $@)
@@ -60,4 +62,6 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+bonus: all
+
+.PHONY: all clean fclean re bonus

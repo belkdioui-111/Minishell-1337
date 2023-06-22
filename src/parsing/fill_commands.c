@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:13:40 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/21 22:39:04 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:56:48 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,24 @@ void	set_null_memeber(t_command **command, int state)
 {
 	t_command	*new_command;
 
-	if (state)
+	if (state == 1)
 	{
 		new_command = *command;
 		new_command->args->prev = NULL;
+		new_command->next = NULL;
+		new_command->cmd = NULL;
+		new_command->output_files = NULL;
+		new_command->input_files = NULL;
+		new_command->append_files = NULL;
+		new_command->herdoc_files = NULL;
+		new_command->in_type = 0;
+		new_command->out_type = 0;
+		new_command->here_doc_data = NULL;
+		new_command->path = NULL;
+		new_command->db_args = NULL;
+		new_command->has_error = 0;
+		new_command->in_error = 0;
 	}
-	new_command->next = NULL;
-	new_command->cmd = NULL;
-	new_command->output_files = NULL;
-	new_command->input_files = NULL;
-	new_command->append_files = NULL;
-	new_command->herdoc_files = NULL;
-	new_command->in_type = 0;
-	new_command->out_type = 0;
-	new_command->here_doc_data = NULL;
-	new_command->path = NULL;
-	new_command->db_args = NULL;
-	new_command->has_error = 0;
-	new_command->in_error = 0;
 }
 
 t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
@@ -52,7 +52,6 @@ t_pre_tokens	*add_to_command(t_pre_tokens *node, t_command **f_command)
 	t_command		*last_command;
 	t_pre_tokens	*temp_node;
 	t_pre_tokens	*ret_node;
-	t_pre_tokens	*temp_free;
 
 	new_command = malloc(sizeof(t_command));
 	if (!new_command)

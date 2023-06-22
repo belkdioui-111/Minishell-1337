@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:29:39 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 14:35:04 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:58:38 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ int	check_syntax(char *args)
 
 int	mod_env_and_exp(t_env *env_tmp, char *args, t_env *prev_env, t_env **env)
 {
-	t_env	*tmp;
-
 	if (check_syntax(args))
 		return (1);
 	while (env_tmp)

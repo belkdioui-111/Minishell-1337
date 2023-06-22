@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 22:25:52 by bel-kdio          #+#    #+#             */
-/*   Updated: 2023/06/22 12:41:13 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:58:28 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	there_is_option(int *is_n, int *inv_flag, t_pre_tokens **args)
 int	exec_echo(t_command *cmds)
 {
 	int				ret;
-	int				i;
 	int				is_n;
 	int				inv_flag;
 	t_pre_tokens	*args;

@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 16:43:08 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 14:14:10 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 17:20:18 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_tokenizer_loop(t_tokenizer_t *tok)
 			tok->in_quotes = !(tok->in_quotes);
 		if (!(tok->in_quotes) && !(tok->in_double_quotes))
 		{
-			if (tok->us_in[tok->end] == ' ')
+			if (tok->us_in[tok->end] == ' ' || tok->us_in[tok->end] == '\t')
 			{
 				ret += sb_ad_ad(tok->us_in, tok->start, tok->end, &tok->head);
 				tok->start = tok->end + 1;
@@ -44,7 +44,6 @@ int	ft_tokenizer_loop(t_tokenizer_t *tok)
 t_pre_tokens	*ft_tokenizer(char *us_in)
 {
 	t_tokenizer_t	tok;
-	char			*error;
 
 	tok.head = ft_init_zeros(&tok);
 	tok.us_in = ft_strdup(us_in);
@@ -103,7 +102,6 @@ t_command	*get_first_command(char *us_in, t_env *env_head)
 {
 	t_pre_tokens	*head_args;
 	t_command		*head_command;
-	char			*error;
 
 	head_args = ft_tokenizer(us_in);
 	ft_remove_quotes(&head_args, env_head);
