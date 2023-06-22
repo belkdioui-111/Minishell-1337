@@ -6,7 +6,7 @@
 /*   By: bel-kdio <bel-kdio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 00:49:33 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/06/22 15:09:17 by bel-kdio         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:39:49 by bel-kdio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	main(int ac, char *av[], char **env)
 		head_command = get_first_command(data.user_input, env_head);
 		if_cmd_true(head_command);
 		free(data.user_input);
-		print_leaks();
 	}
 	return (0);
 }
